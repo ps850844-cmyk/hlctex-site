@@ -1,0 +1,18 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Local editor files
+.vscode/
+.idea/
+
+# Temporary archives / logs
+*.zip
+*.tar.gz
+*.log
+
+# Keep the production site clean
+node_modules/
+dist/
+.env
+.env.*
