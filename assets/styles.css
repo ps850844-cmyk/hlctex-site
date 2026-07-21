@@ -1188,6 +1188,22 @@ body.header-compact .mega-menu {
   text-decoration: none;
 }
 
+.development-language {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  color: var(--deep);
+  text-decoration: none;
+}
+
+.development-language svg {
+  width: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.55;
+}
+
 .development-detail-main {
   width: min(1280px, calc(100% - 56px));
   margin: 0 auto;
