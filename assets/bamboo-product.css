@@ -23,6 +23,14 @@
   letter-spacing: .005em;
 }
 
+.product-detail-section:has(.product-description-panel.is-active) {
+  padding-bottom: 64px;
+}
+
+.product-detail-wrap:has(.product-description-panel.is-active) .product-detail-tabs {
+  margin-bottom: 48px;
+}
+
 .detail-features-tab {
   margin-top: 0;
 }
@@ -85,6 +93,10 @@
   .product-description-panel p {
     font-size: 17px;
     line-height: 1.8;
+  }
+
+  .product-detail-wrap:has(.product-description-panel.is-active) .product-detail-tabs {
+    margin-bottom: 32px;
   }
 
   .performance-report-intro {
