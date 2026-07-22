@@ -810,31 +810,29 @@ body.header-compact .mega-menu {
 }
 
 .home-process-media-stack-image-top {
+  z-index: 1;
   top: 0;
-  height: 60%;
+  height: 58%;
   object-position: 50% 58%;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 74%, rgba(0, 0, 0, .92) 82%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 74%, rgba(0, 0, 0, .92) 82%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 78%, rgba(0, 0, 0, .85) 86%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 78%, rgba(0, 0, 0, .85) 86%, transparent 100%);
 }
 
 .home-process-media-stack-image-bottom {
+  z-index: 0;
   bottom: 0;
-  height: 58%;
+  height: 55%;
   object-position: 50% 50%;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, .92) 18%, #000 28%, #000 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, .92) 18%, #000 28%, #000 100%);
 }
 
 .home-process-media-stack-blend {
   position: absolute;
   z-index: 1;
-  top: 44%;
+  top: 46%;
   right: 0;
   left: 0;
-  height: 20%;
-  background: linear-gradient(180deg, rgba(23, 37, 53, 0), rgba(23, 37, 53, .22) 42%, rgba(23, 37, 53, .18) 60%, rgba(23, 37, 53, 0));
-  -webkit-backdrop-filter: blur(3.5px);
-  backdrop-filter: blur(3.5px);
+  height: 12%;
+  background: linear-gradient(180deg, rgba(23, 37, 53, 0), rgba(23, 37, 53, .10) 48%, rgba(23, 37, 53, 0));
   pointer-events: none;
 }
 
