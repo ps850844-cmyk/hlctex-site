@@ -4,7 +4,7 @@
 }
 
 .product-detail-tabs button {
-  font-size: clamp(24px, 2.45vw, 34px);
+  font-size: clamp(20px, 1.85vw, 28px);
 }
 
 .product-detail-tabs button + button::before {
@@ -27,6 +27,41 @@
   margin-top: 0;
 }
 
+.performance-report {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+}
+
+.performance-report-intro {
+  max-width: 940px;
+  margin: 0 0 28px;
+  color: #263b50;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.performance-report a,
+.performance-report img {
+  display: block;
+  width: 100%;
+}
+
+.performance-report a {
+  border: 1px solid #d8e0e7;
+  background: #fff;
+}
+
+.performance-report img {
+  height: auto;
+}
+
+.performance-report figcaption {
+  margin-top: 14px;
+  color: #637487;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 @media (max-width: 760px) {
   .product-detail-tabs {
     align-items: flex-start;
@@ -34,7 +69,7 @@
   }
 
   .product-detail-tabs button {
-    font-size: 21px;
+    font-size: 18px;
   }
 
   .product-detail-tabs button + button::before {
@@ -50,5 +85,10 @@
   .product-description-panel p {
     font-size: 17px;
     line-height: 1.8;
+  }
+
+  .performance-report-intro {
+    margin-bottom: 20px;
+    font-size: 16px;
   }
 }
