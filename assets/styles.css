@@ -2490,6 +2490,32 @@ body.lazy-is-open {
   width: 78px;
 }
 
+.footer-sitelinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 28px;
+  min-height: 58px;
+  padding: 14px clamp(20px, 5vw, 72px);
+  border-top: 1px solid #e7e9eb;
+  background: #fff;
+}
+
+.footer-sitelinks a {
+  color: #34465a;
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: .035em;
+  text-decoration: none;
+  transition: color .2s ease;
+}
+
+.footer-sitelinks a:hover,
+.footer-sitelinks a:focus-visible {
+  color: var(--blue);
+}
+
 .material-hero {
   position: relative;
   height: calc(100vh - 112px);
@@ -3626,6 +3652,12 @@ body.report-is-open {
   .footer-cert-mark {
     width: 78px;
     height: 54px;
+  }
+
+  .footer-sitelinks {
+    gap: 9px 18px;
+    min-height: 0;
+    padding: 18px 22px 20px;
   }
 
   .copyright {
