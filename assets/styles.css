@@ -3720,7 +3720,7 @@ body.report-is-open {
 }
 
 .company-story {
-  padding: 14px 0 118px;
+  padding: 14px 0 64px;
   overflow: hidden;
   background: #fff;
 }
@@ -3728,7 +3728,7 @@ body.report-is-open {
 .company-story-stage {
   position: relative;
   width: min(1030px, calc(100% - 60px));
-  min-height: 960px;
+  min-height: 850px;
   margin: 0 auto;
 }
 
@@ -3818,14 +3818,13 @@ body.report-is-open {
 .company-facilities {
   padding: 0;
   overflow: hidden;
-  border-top: 1px solid #ece9e3;
   background: #fff;
 }
 
 .company-facilities-frame {
   display: block;
   width: 100%;
-  min-height: 1180px;
+  min-height: 1110px;
   border: 0;
   background: #fff;
 }
@@ -3884,7 +3883,7 @@ body.report-is-open {
   }
 
   .company-facilities-frame {
-    min-height: 1740px;
+    min-height: 1790px;
   }
 }
 

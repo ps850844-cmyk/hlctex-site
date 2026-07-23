@@ -33,18 +33,40 @@ body {
   font-family: var(--motion-sans);
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+}
+
 .panel {
   position: relative;
   min-height: 760px;
   height: 100vh;
   overflow: hidden;
-  border-bottom: 1px solid #e6e2df;
   background: var(--paper);
 }
 
 .factory-panel {
+  order: 1;
   height: 440px;
   min-height: 420px;
+}
+.factory-intro {
+  position: absolute;
+  z-index: 5;
+  top: 72px;
+  left: max(5vw, calc((100vw - 1090px) / 2));
+  width: 40%;
+  max-width: 350px;
+}
+.factory-intro p {
+  margin: 0;
+  color: #1e1e1e;
+  font-family: var(--motion-sans);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: .04em;
 }
 .factory-panel .copy {
   left: 50%;
@@ -185,8 +207,9 @@ body {
 .vent-3 { animation-delay: -2s; }
 
 .capacity-panel {
-  height: 300px;
-  min-height: 280px;
+  order: 3;
+  height: 280px;
+  min-height: 260px;
 }
 .capacity-heading {
   position: absolute;
@@ -262,8 +285,9 @@ body {
 .scanner { animation: scan 2.2s ease-in-out infinite !important; transform-origin: center; }
 
 .hours-panel {
-  height: 440px;
-  min-height: 420px;
+  order: 2;
+  height: 390px;
+  min-height: 370px;
 }
 .hours-copy {
   left: max(7vw, calc((100vw - 950px) / 2));
@@ -377,11 +401,19 @@ body {
 
 @media (max-width: 850px) {
   .panel { height: auto; padding: 48px 22px; }
-  .factory-panel { min-height: 560px; }
+  .factory-panel { min-height: 610px; }
   .capacity-panel { min-height: 480px; }
   .hours-panel { min-height: 700px; }
+  .factory-intro {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
+    max-width: 520px;
+  }
+  .factory-intro p { font-size: 14px; }
   .copy { position: relative; left: auto; top: auto; width: auto; transform: none; }
-  .factory-panel .copy { left: auto; top: auto; width: auto; margin-top: 0; }
+  .factory-panel .copy { left: auto; top: auto; width: auto; margin-top: 36px; }
   .factory-panel .copy h1 { margin-top: 0; }
   .copy h1 { margin-bottom: 20px; }
   .value strong { font-size: 82px; }
