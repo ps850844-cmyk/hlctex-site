@@ -3921,6 +3921,7 @@ body.report-is-open {
   letter-spacing: .18em;
 }
 
+.company-profile-heading h1,
 .company-profile-heading h2 {
   margin: 0;
   color: #202020;
@@ -3929,6 +3930,10 @@ body.report-is-open {
   font-weight: 420;
   line-height: 1.1;
   letter-spacing: -.02em;
+}
+
+.company-profile-standalone {
+  padding-top: 86px;
 }
 
 .company-profile-table {
@@ -4016,6 +4021,10 @@ body.report-is-open {
 @media (max-width: 900px) {
   .company-profile {
     padding: 0 0 80px;
+  }
+
+  .company-profile-standalone {
+    padding-top: 52px;
   }
 
   .company-profile-heading,
