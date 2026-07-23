@@ -3792,6 +3792,18 @@ body.report-is-open {
   margin: 0 0 18px;
 }
 
+.company-story-lead {
+  position: absolute;
+  top: 562px;
+  left: 0;
+  width: 330px;
+  margin: 0;
+  color: #202020;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
 .company-story-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -3875,6 +3887,13 @@ body.report-is-open {
     width: auto;
     margin: 50px 0 0;
     font-size: 15px;
+  }
+
+  .company-story-lead {
+    position: static;
+    width: auto;
+    margin: 44px 0 0;
+    font-size: 16px;
   }
 
   .company-story-stats {
