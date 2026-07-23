@@ -3752,44 +3752,53 @@ body.report-is-open {
   position: absolute;
   top: 116px;
   left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 305px;
   min-height: 400px;
-  padding: 70px 0 58px;
+  padding: 48px 28px;
+  text-align: center;
   background: #eee8d8;
 }
 
 .company-story-title span {
+  position: absolute;
+  top: 18px;
+  left: -46px;
   display: block;
-  margin: 0 0 34px -46px;
+  margin: 0;
   color: #252525;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: .02em;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: .04em;
   text-transform: uppercase;
 }
 
 .company-story-title h1 {
-  width: 440px;
-  margin: 0 0 0 -46px;
+  width: 100%;
+  margin: 0;
   color: #202020;
   font-family: var(--font-editorial);
-  font-size: clamp(44px, 3.5vw, 52px);
-  font-weight: 420;
-  line-height: 1.02;
-  letter-spacing: -.025em;
+  font-size: clamp(44px, 3.5vw, 50px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: .02em;
 }
 
 .company-story-copy {
   width: 475px;
   margin: 92px 0 0 475px;
   color: #333;
+  font-family: var(--font-sans);
   font-size: 15px;
-  font-weight: 350;
-  line-height: 1.62;
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: .04em;
 }
 
 .company-story-copy p {
-  margin: 0 0 18px;
+  margin: 0 0 20px;
 }
 
 .company-story-lead {
@@ -3799,9 +3808,11 @@ body.report-is-open {
   width: 330px;
   margin: 0;
   color: #202020;
+  font-family: var(--font-sans);
   font-size: 16px;
-  font-weight: 650;
-  line-height: 1.55;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: .04em;
 }
 
 .company-story-stats {
@@ -3866,17 +3877,17 @@ body.report-is-open {
     width: min(88%, 460px);
     min-height: 0;
     margin: -76px 0 0;
-    padding: 40px 34px 44px;
+    padding: 58px 34px 52px;
   }
 
   .company-story-title span,
   .company-story-title h1 {
     width: auto;
-    margin-left: 0;
   }
 
   .company-story-title span {
-    margin-bottom: 20px;
+    top: 18px;
+    left: 20px;
   }
 
   .company-story-title h1 {
