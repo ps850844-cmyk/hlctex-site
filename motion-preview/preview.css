@@ -273,7 +273,7 @@ main {
   min-height: 340px;
 }
 .hours-copy {
-  left: max(7vw, calc((100vw - 950px) / 2));
+  left: calc(50% - 270px);
   width: 250px;
 }
 .hours-copy h1 {
@@ -300,7 +300,7 @@ main {
 .time-art {
   top: 50%;
   right: auto;
-  left: calc(50% - 70px);
+  left: calc(50% + 30px);
   width: min(34vw, 286px);
   transform: translateY(-49%);
 }
@@ -364,7 +364,7 @@ main {
     position: relative; top: auto; right: auto; width: 100%; margin: 40px auto 0; transform: none;
   }
   .time-art {
-    position: relative; top: auto; right: auto; width: min(82%, 286px); margin: 40px auto 0; transform: none;
+    position: relative; top: auto; right: auto; left: auto; width: min(82%, 286px); margin: 40px auto 0; transform: none;
   }
   .capacity-heading { position: relative; top: auto; left: auto; right: auto; width: auto; transform: none; }
   .capacity-heading strong {
