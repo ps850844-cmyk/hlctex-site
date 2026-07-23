@@ -3912,7 +3912,8 @@ body.report-is-open {
   margin-bottom: 38px;
 }
 
-.company-profile-heading > span {
+.company-profile-heading > span,
+.company-profile-heading-copy > span {
   display: block;
   margin-bottom: 10px;
   color: #77736b;
@@ -3933,7 +3934,52 @@ body.report-is-open {
 }
 
 .company-profile-standalone {
-  padding-top: 86px;
+  padding-top: 0;
+}
+
+.company-profile-standalone .company-profile-heading {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 340px;
+  margin-bottom: 64px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.company-profile-hero-image {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 52%;
+}
+
+.company-profile-hero-shade {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  margin: 0;
+  background:
+    linear-gradient(90deg, rgba(8, 20, 30, .72) 0%, rgba(8, 20, 30, .42) 52%, rgba(8, 20, 30, .2) 100%),
+    linear-gradient(0deg, rgba(8, 20, 30, .18), rgba(8, 20, 30, .04));
+}
+
+.company-profile-heading-copy {
+  width: min(1000px, calc(100% - 60px));
+  margin: 0 auto;
+}
+
+.company-profile-heading-copy > span {
+  color: rgba(255, 255, 255, .78);
+}
+
+.company-profile-heading-copy h1 {
+  color: #fff;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, .24);
 }
 
 .company-profile-table {
@@ -4024,11 +4070,21 @@ body.report-is-open {
   }
 
   .company-profile-standalone {
-    padding-top: 52px;
+    padding-top: 0;
   }
 
   .company-profile-heading,
   .company-profile-table-wrap {
+    width: min(100% - 36px, 720px);
+  }
+
+  .company-profile-standalone .company-profile-heading {
+    width: 100%;
+    min-height: 280px;
+    margin-bottom: 44px;
+  }
+
+  .company-profile-heading-copy {
     width: min(100% - 36px, 720px);
   }
 }
@@ -4036,6 +4092,11 @@ body.report-is-open {
 @media (max-width: 640px) {
   .company-profile-heading {
     margin-bottom: 26px;
+  }
+
+  .company-profile-standalone .company-profile-heading {
+    min-height: 250px;
+    margin-bottom: 34px;
   }
 
   .company-profile-table,
