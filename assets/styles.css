@@ -3720,7 +3720,7 @@ body.report-is-open {
 }
 
 .company-story {
-  padding: 14px 0 64px;
+  padding: 14px 0 20px;
   overflow: hidden;
   background: #fff;
 }
@@ -3728,7 +3728,7 @@ body.report-is-open {
 .company-story-stage {
   position: relative;
   width: min(1030px, calc(100% - 60px));
-  min-height: 850px;
+  min-height: 780px;
   margin: 0 auto;
 }
 
@@ -3824,7 +3824,7 @@ body.report-is-open {
 .company-facilities-frame {
   display: block;
   width: 100%;
-  min-height: 1110px;
+  min-height: 1080px;
   border: 0;
   background: #fff;
 }
@@ -3883,7 +3883,7 @@ body.report-is-open {
   }
 
   .company-facilities-frame {
-    min-height: 1790px;
+    min-height: 1640px;
   }
 }
 
