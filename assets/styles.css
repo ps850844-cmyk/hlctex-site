@@ -3954,8 +3954,7 @@ body.report-is-open {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center 52%;
+  object-fit: fill;
 }
 
 .company-profile-hero-shade {
