@@ -3816,53 +3816,16 @@ body.report-is-open {
 }
 
 .company-facilities {
-  padding: 108px 0 0;
+  padding: 0;
   overflow: hidden;
   border-top: 1px solid #ece9e3;
   background: #fff;
 }
 
-.company-facilities-heading {
-  width: min(1090px, calc(100% - 60px));
-  margin: 0 auto 92px;
-}
-
-.company-facilities-heading p {
-  margin: 0 0 28px;
-  color: #1e1e1e;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 300;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-}
-
-.company-facilities-heading h2 {
-  max-width: 950px;
-  margin: 0;
-  color: #1e1e1e;
-  font-family: var(--font-editorial);
-  font-size: clamp(32px, 3.25vw, 46px);
-  font-weight: 300;
-  line-height: 1.22;
-  letter-spacing: .02em;
-}
-
-.company-facilities-summary {
-  max-width: 650px;
-  margin-top: 36px;
-  color: #373737;
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 300;
-  line-height: 1.6;
-  letter-spacing: .04em;
-}
-
 .company-facilities-frame {
   display: block;
   width: 100%;
-  min-height: 1540px;
+  min-height: 1180px;
   border: 0;
   background: #fff;
 }
@@ -3920,37 +3883,8 @@ body.report-is-open {
     font-size: 16px;
   }
 
-  .company-facilities {
-    padding-top: 72px;
-  }
-
-  .company-facilities-heading {
-    width: min(100% - 44px, 720px);
-    margin-bottom: 58px;
-  }
-
-  .company-facilities-heading p {
-    margin-bottom: 20px;
-    font-size: 11px;
-  }
-
-  .company-facilities-heading h2 {
-    font-size: clamp(28px, 7vw, 38px);
-  }
-
-  .company-facilities-summary {
-    margin-top: 28px;
-    font-size: 14px;
-  }
-
   .company-facilities-frame {
-    min-height: 2340px;
-  }
-}
-
-@media (max-width: 640px) {
-  .company-facilities {
-    padding-top: 58px;
+    min-height: 1740px;
   }
 }
 

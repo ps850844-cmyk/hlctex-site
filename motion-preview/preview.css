@@ -43,33 +43,17 @@ body {
 }
 
 .factory-panel {
-  height: 600px;
-  min-height: 560px;
-}
-.factory-intro {
-  position: absolute;
-  top: 100px;
-  left: max(5vw, calc((100vw - 1090px) / 2));
-  width: 40%;
-  max-width: 350px;
-}
-.factory-intro p {
-  margin: 0;
-  color: #1e1e1e;
-  font-family: var(--motion-sans);
-  font-size: 15px;
-  font-weight: 300;
-  line-height: 1.6;
-  letter-spacing: .04em;
+  height: 440px;
+  min-height: 420px;
 }
 .factory-panel .copy {
   left: 50%;
-  top: 100px;
+  top: 72px;
   width: min(45vw, 545px);
   transform: none;
 }
 .factory-panel .copy h1 {
-  margin: 50px 0 15px;
+  margin: 0 0 15px;
   font-family: var(--motion-sans);
   font-size: 13px;
   font-weight: 300;
@@ -155,7 +139,7 @@ body {
 
 .art { position: absolute; }
 .factory-art {
-  top: 248px;
+  top: 138px;
   right: max(5vw, calc((100vw - 1090px) / 2));
   width: min(45vw, 437px);
   transform: none;
@@ -201,8 +185,8 @@ body {
 .vent-3 { animation-delay: -2s; }
 
 .capacity-panel {
-  height: 390px;
-  min-height: 360px;
+  height: 300px;
+  min-height: 280px;
 }
 .capacity-heading {
   position: absolute;
@@ -278,8 +262,8 @@ body {
 .scanner { animation: scan 2.2s ease-in-out infinite !important; transform-origin: center; }
 
 .hours-panel {
-  height: 590px;
-  min-height: 540px;
+  height: 440px;
+  min-height: 420px;
 }
 .hours-copy {
   left: max(7vw, calc((100vw - 950px) / 2));
@@ -392,23 +376,27 @@ body {
 }
 
 @media (max-width: 850px) {
-  .panel { min-height: 780px; height: auto; padding: 70px 22px; }
-  .factory-intro { position: relative; top: auto; left: auto; width: auto; max-width: 520px; }
-  .factory-intro p { font-size: 14px; }
+  .panel { height: auto; padding: 48px 22px; }
+  .factory-panel { min-height: 560px; }
+  .capacity-panel { min-height: 480px; }
+  .hours-panel { min-height: 700px; }
   .copy { position: relative; left: auto; top: auto; width: auto; transform: none; }
-  .factory-panel .copy { left: auto; top: auto; width: auto; margin-top: 48px; }
+  .factory-panel .copy { left: auto; top: auto; width: auto; margin-top: 0; }
   .factory-panel .copy h1 { margin-top: 0; }
   .copy h1 { margin-bottom: 20px; }
   .value strong { font-size: 82px; }
-  .factory-art, .time-art {
-    position: relative; top: auto; right: auto; width: 100%; margin: 55px auto 0; transform: none;
+  .factory-art {
+    position: relative; top: auto; right: auto; width: 100%; margin: 40px auto 0; transform: none;
+  }
+  .time-art {
+    position: relative; top: auto; right: auto; width: min(82%, 286px); margin: 40px auto 0; transform: none;
   }
   .capacity-heading { position: relative; top: auto; left: auto; right: auto; width: auto; transform: none; }
   .capacity-heading strong {
     font-size: clamp(42px, 13vw, 58px);
     white-space: nowrap;
   }
-  .production-art { position: relative; left: auto; top: auto; bottom: auto; width: 100%; margin-top: 90px; transform: none; }
+  .production-art { position: relative; left: auto; top: auto; bottom: auto; width: 100%; margin-top: 55px; transform: none; }
   .capacity-copy { position: relative; left: auto; bottom: auto; margin-top: 35px; }
   .hours-copy { left: auto; }
   .mini-production { bottom: 4%; }
