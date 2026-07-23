@@ -3815,43 +3815,56 @@ body.report-is-open {
   letter-spacing: .04em;
 }
 
-.company-story-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  width: min(1030px, calc(100% - 60px));
-  margin: 0 auto;
-  border-top: 1px solid #dedbd3;
-  border-bottom: 1px solid #dedbd3;
+.company-facilities {
+  padding: 108px 0 0;
+  overflow: hidden;
+  border-top: 1px solid #ece9e3;
+  background: #fff;
 }
 
-.company-story-stats div {
-  padding: 30px 34px 32px;
+.company-facilities-heading {
+  width: min(1090px, calc(100% - 60px));
+  margin: 0 auto 92px;
 }
 
-.company-story-stats div + div {
-  border-left: 1px solid #dedbd3;
-}
-
-.company-story-stats strong,
-.company-story-stats span {
-  display: block;
-}
-
-.company-story-stats strong {
-  color: #202020;
-  font-family: var(--font-editorial);
-  font-size: clamp(38px, 4vw, 54px);
-  font-weight: 420;
-  line-height: 1;
-}
-
-.company-story-stats span {
-  margin-top: 10px;
-  color: #64615a;
-  font-size: 11px;
-  font-weight: 550;
-  letter-spacing: .16em;
+.company-facilities-heading p {
+  margin: 0 0 28px;
+  color: #1e1e1e;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: .04em;
   text-transform: uppercase;
+}
+
+.company-facilities-heading h2 {
+  max-width: 950px;
+  margin: 0;
+  color: #1e1e1e;
+  font-family: var(--font-editorial);
+  font-size: clamp(32px, 3.25vw, 46px);
+  font-weight: 300;
+  line-height: 1.22;
+  letter-spacing: .02em;
+}
+
+.company-facilities-summary {
+  max-width: 650px;
+  margin-top: 36px;
+  color: #373737;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: .04em;
+}
+
+.company-facilities-frame {
+  display: block;
+  width: 100%;
+  min-height: 1540px;
+  border: 0;
+  background: #fff;
 }
 
 @media (max-width: 900px) {
@@ -3907,23 +3920,37 @@ body.report-is-open {
     font-size: 16px;
   }
 
-  .company-story-stats {
-    width: min(100% - 36px, 720px);
+  .company-facilities {
+    padding-top: 72px;
+  }
+
+  .company-facilities-heading {
+    width: min(100% - 44px, 720px);
+    margin-bottom: 58px;
+  }
+
+  .company-facilities-heading p {
+    margin-bottom: 20px;
+    font-size: 11px;
+  }
+
+  .company-facilities-heading h2 {
+    font-size: clamp(28px, 7vw, 38px);
+  }
+
+  .company-facilities-summary {
+    margin-top: 28px;
+    font-size: 14px;
+  }
+
+  .company-facilities-frame {
+    min-height: 2340px;
   }
 }
 
 @media (max-width: 640px) {
-  .company-story-stats {
-    grid-template-columns: 1fr;
-  }
-
-  .company-story-stats div {
-    padding: 24px 26px 26px;
-  }
-
-  .company-story-stats div + div {
-    border-top: 1px solid #dedbd3;
-    border-left: 0;
+  .company-facilities {
+    padding-top: 58px;
   }
 }
 
