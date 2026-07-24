@@ -4978,6 +4978,17 @@ body.report-is-open {
   height: auto;
 }
 
+.wl-diagonal-image-link {
+  display: block;
+  cursor: zoom-in;
+}
+
+.wl-diagonal-image-link:focus-visible,
+.wl-diagonal-mobile-link:focus-visible {
+  outline: 2px solid #173f2b;
+  outline-offset: 4px;
+}
+
 .wl-diagonal-copy {
   position: absolute;
   display: flex;
@@ -5021,6 +5032,10 @@ body.report-is-open {
 }
 
 .wl-diagonal-mobile-image {
+  display: none;
+}
+
+.wl-diagonal-mobile-link {
   display: none;
 }
 
@@ -5095,6 +5110,11 @@ body.report-is-open {
   .wl-diagonal-mobile-image {
     display: block;
     margin-bottom: 36px;
+  }
+
+  .wl-diagonal-mobile-link {
+    display: block;
+    cursor: zoom-in;
   }
 
   .wl-diagonal-copy h2 {
