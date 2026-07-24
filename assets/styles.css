@@ -4485,6 +4485,49 @@ body.report-is-open {
   }
 }
 
+/* Inspection and testing centre video hero */
+.quality-video-hero {
+  position: relative;
+  width: 100%;
+  height: calc(100svh - 96px);
+  min-height: 520px;
+  overflow: hidden;
+  background: #050505;
+}
+
+.quality-video-hero video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.quality-video-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .quality-video-hero {
+    height: calc(100svh - 112px);
+    min-height: 480px;
+  }
+}
+
+@media (max-width: 560px) {
+  .quality-video-hero {
+    min-height: 420px;
+  }
+}
+
 /* Inspection and testing centre equipment */
 .quality-equipment-section {
   padding: 0 0 120px;
