@@ -4962,7 +4962,7 @@ body.report-is-open {
 
 .wl-diagonal-layout {
   position: relative;
-  width: min(1360px, 100%);
+  width: 100%;
   margin: 0 auto clamp(80px, 8vw, 132px);
   background: #fff;
 }
