@@ -4726,6 +4726,42 @@ body.report-is-open {
   line-height: 1.65;
 }
 
+.wl-hero.wl-hero-landscape {
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #174e31;
+}
+
+.wl-hero-landscape > img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wl-hero-landscape-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(6, 26, 17, 0.33) 0%, rgba(6, 26, 17, 0.08) 52%, rgba(6, 26, 17, 0.03) 100%);
+}
+
+.wl-hero-landscape h1 {
+  position: absolute;
+  left: clamp(28px, 7vw, 132px);
+  bottom: clamp(38px, 8vw, 140px);
+  margin: 0;
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(58px, 8vw, 138px);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+  text-shadow: 0 3px 22px rgba(0, 0, 0, 0.26);
+}
+
 .wl-manifest {
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
@@ -5222,6 +5258,12 @@ body.report-is-open {
 
   .wl-hero-card h1 {
     font-size: clamp(45px, 14vw, 64px);
+  }
+
+  .wl-hero-landscape h1 {
+    left: 20px;
+    bottom: 20px;
+    font-size: clamp(38px, 12vw, 54px);
   }
 
   .wl-manifest {
