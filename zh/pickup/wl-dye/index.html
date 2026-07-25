@@ -105,6 +105,19 @@
         <p>针织面料可获得更明亮的外观、更好的色牢度和抗起球表现，让工艺优势最终体现在成衣的视觉与触感上。</p>
       </article>
     </section>
+    <section class="section lazy-secret-section">
+      <div class="wrap">
+        <div class="lazy-secret-card">
+          <button class="lazy-cat-button" type="button" data-lazy-open aria-label="打开 LAZY君的无水染色小秘密">
+            <img src="/assets/lazy-cat-official.png" alt="HLC 吉祥物 LAZY君">
+          </button>
+          <div class="lazy-secret-copy">
+            <h2>LAZY君告诉你</h2>
+            <p>关于无水染色的小秘密<button type="button" class="lazy-secret-link" data-lazy-open>（请点击我）</button></p>
+          </div>
+        </div>
+      </div>
+    </section>
     <dialog class="wl-image-lightbox" id="wlImageLightbox" aria-label="高清无水染色图片">
       <div class="wl-image-lightbox-inner">
         <button class="wl-image-lightbox-close" type="button" aria-label="关闭高清图片">×</button>
@@ -139,7 +152,66 @@
       });
     }());
     </script>
-  </main><footer class="site-footer">
+  </main>
+  <div class="lazy-modal" data-lazy-modal aria-hidden="true">
+    <button class="lazy-modal-backdrop" type="button" data-lazy-close aria-label="关闭 LAZY君小秘密"></button>
+    <div class="lazy-modal-vortex" aria-hidden="true"><span></span></div>
+    <div class="lazy-modal-panel" data-lazy-panel role="dialog" aria-modal="true" aria-label="LAZY君的无水染色小秘密">
+      <button class="lazy-close" type="button" data-lazy-close aria-label="关闭">×</button>
+      <button class="lazy-modal-cat" type="button" data-lazy-close aria-label="点击 LAZY君收回小秘密">
+        <img src="/assets/lazy-cat-official.png" alt="LAZY君">
+      </button>
+      <h2>LAZY君的无水染色小秘密</h2>
+      <ol>
+        <li>① 更少的湿加工环节，有助于减少用水、蒸汽和电力投入哟～</li>
+        <li>② 着色时纤维摩擦更少，成品布面会更平整、更柔软呢！</li>
+        <li>③ 降低综合染色成本的同时，还能兼顾色牢度、抗起球与手感表现！</li>
+      </ol>
+      <p class="lazy-sample-contact">想要获取样布，还请联系 <a href="mailto:sam@hlctex.com?subject=Waterless%20Dyeing%20Fabric%20Sample%20Request">sam@hlctex.com</a></p>
+    </div>
+  </div>
+  <script>
+  (function () {
+    var lazyModal = document.querySelector('[data-lazy-modal]');
+    var lazyOpenButtons = document.querySelectorAll('[data-lazy-open]');
+    var lazyPanel = document.querySelector('[data-lazy-panel]');
+    var lazyLastTrigger = null;
+
+    function openLazyModal() {
+      if (!lazyModal) return;
+      lazyLastTrigger = document.activeElement;
+      lazyModal.classList.remove('is-open');
+      void lazyModal.offsetWidth;
+      lazyModal.classList.add('is-open');
+      lazyModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lazy-is-open');
+    }
+
+    function closeLazyModal() {
+      if (!lazyModal) return;
+      lazyModal.classList.remove('is-open');
+      lazyModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('lazy-is-open');
+      if (lazyLastTrigger && typeof lazyLastTrigger.focus === 'function') lazyLastTrigger.focus();
+    }
+
+    lazyOpenButtons.forEach(function (button) {
+      button.addEventListener('click', openLazyModal);
+    });
+    document.querySelectorAll('[data-lazy-close]').forEach(function (button) {
+      button.addEventListener('click', closeLazyModal);
+    });
+    if (lazyPanel) {
+      lazyPanel.addEventListener('click', function (event) {
+        if (event.target === lazyPanel) closeLazyModal();
+      });
+    }
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && lazyModal && lazyModal.classList.contains('is-open')) closeLazyModal();
+    });
+  }());
+  </script>
+  <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="footer-company">
       <img class="footer-logo-img" src="/assets/hlc-logo-v1.png" alt="HLC GROUP CO., LTD.">

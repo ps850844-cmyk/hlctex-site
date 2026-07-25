@@ -105,6 +105,19 @@
         <p>The resulting knit fabric is designed for brighter appearance, improved colour fastness and better resistance to pilling - performance that can be seen and felt in the finished garment.</p>
       </article>
     </section>
+    <section class="section lazy-secret-section">
+      <div class="wrap">
+        <div class="lazy-secret-card">
+          <button class="lazy-cat-button" type="button" data-lazy-open aria-label="Open LAZY Cat's Waterless dyeing notes">
+            <img src="/assets/lazy-cat-official.png" alt="LAZY Cat, HLC mascot">
+          </button>
+          <div class="lazy-secret-copy">
+            <h2>LAZY CAT shares</h2>
+            <p>Three notes on Waterless dyeing <button type="button" class="lazy-secret-link" data-lazy-open>(click to open)</button></p>
+          </div>
+        </div>
+      </div>
+    </section>
     <dialog class="wl-image-lightbox" id="wlImageLightbox" aria-label="High-resolution Waterless image">
       <div class="wl-image-lightbox-inner">
         <button class="wl-image-lightbox-close" type="button" aria-label="Close high-resolution image">×</button>
@@ -139,7 +152,66 @@
       });
     }());
     </script>
-  </main><footer class="site-footer">
+  </main>
+  <div class="lazy-modal" data-lazy-modal aria-hidden="true">
+    <button class="lazy-modal-backdrop" type="button" data-lazy-close aria-label="Close LAZY Cat notes"></button>
+    <div class="lazy-modal-vortex" aria-hidden="true"><span></span></div>
+    <div class="lazy-modal-panel" data-lazy-panel role="dialog" aria-modal="true" aria-label="LAZY Cat's Waterless dyeing notes">
+      <button class="lazy-close" type="button" data-lazy-close aria-label="Close">×</button>
+      <button class="lazy-modal-cat" type="button" data-lazy-close aria-label="Click LAZY Cat to close">
+        <img src="/assets/lazy-cat-official.png" alt="LAZY Cat">
+      </button>
+      <h2>LAZY CAT'S WATERLESS NOTES</h2>
+      <ol>
+        <li>① Fewer wet-processing steps help reduce water, steam and electricity input.</li>
+        <li>② Lower fibre friction during colouration supports a smoother, softer fabric surface.</li>
+        <li>③ Lower total dyeing cost can still support colour fastness, pilling resistance and hand feel.</li>
+      </ol>
+      <p class="lazy-sample-contact">Need sample yardage? Contact <a href="mailto:sam@hlctex.com?subject=Waterless%20Dyeing%20Fabric%20Sample%20Request">sam@hlctex.com</a></p>
+    </div>
+  </div>
+  <script>
+  (function () {
+    var lazyModal = document.querySelector('[data-lazy-modal]');
+    var lazyOpenButtons = document.querySelectorAll('[data-lazy-open]');
+    var lazyPanel = document.querySelector('[data-lazy-panel]');
+    var lazyLastTrigger = null;
+
+    function openLazyModal() {
+      if (!lazyModal) return;
+      lazyLastTrigger = document.activeElement;
+      lazyModal.classList.remove('is-open');
+      void lazyModal.offsetWidth;
+      lazyModal.classList.add('is-open');
+      lazyModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lazy-is-open');
+    }
+
+    function closeLazyModal() {
+      if (!lazyModal) return;
+      lazyModal.classList.remove('is-open');
+      lazyModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('lazy-is-open');
+      if (lazyLastTrigger && typeof lazyLastTrigger.focus === 'function') lazyLastTrigger.focus();
+    }
+
+    lazyOpenButtons.forEach(function (button) {
+      button.addEventListener('click', openLazyModal);
+    });
+    document.querySelectorAll('[data-lazy-close]').forEach(function (button) {
+      button.addEventListener('click', closeLazyModal);
+    });
+    if (lazyPanel) {
+      lazyPanel.addEventListener('click', function (event) {
+        if (event.target === lazyPanel) closeLazyModal();
+      });
+    }
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && lazyModal && lazyModal.classList.contains('is-open')) closeLazyModal();
+    });
+  }());
+  </script>
+  <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="footer-company">
       <img class="footer-logo-img" src="/assets/hlc-logo-v1.png" alt="HLC GROUP CO., LTD.">
