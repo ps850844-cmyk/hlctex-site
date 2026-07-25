@@ -4728,7 +4728,7 @@ body.report-is-open {
 
 .wl-hero.wl-hero-landscape {
   min-height: 0;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 3.6 / 1;
   overflow: hidden;
   background: #174e31;
 }
@@ -4745,20 +4745,22 @@ body.report-is-open {
 .wl-hero-landscape-shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(6, 26, 17, 0.33) 0%, rgba(6, 26, 17, 0.08) 52%, rgba(6, 26, 17, 0.03) 100%);
+  background: rgba(6, 26, 17, 0.18);
 }
 
 .wl-hero-landscape h1 {
   position: absolute;
-  left: clamp(28px, 7vw, 132px);
-  bottom: clamp(38px, 8vw, 140px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   margin: 0;
   color: #fff;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(58px, 8vw, 138px);
+  font-size: clamp(42px, 4.4vw, 74px);
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.95;
+  white-space: nowrap;
   text-shadow: 0 3px 22px rgba(0, 0, 0, 0.26);
 }
 
@@ -5261,9 +5263,10 @@ body.report-is-open {
   }
 
   .wl-hero-landscape h1 {
-    left: 20px;
-    bottom: 20px;
-    font-size: clamp(38px, 12vw, 54px);
+    top: 50%;
+    left: 50%;
+    bottom: auto;
+    font-size: clamp(28px, 8vw, 42px);
   }
 
   .wl-manifest {
