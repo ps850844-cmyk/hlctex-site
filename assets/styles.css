@@ -5076,6 +5076,17 @@ body.report-is-open {
   bottom: 0;
 }
 
+.finishing-diagonal-layout .wl-diagonal-image-link {
+  height: 50%;
+  overflow: hidden;
+}
+
+.finishing-diagonal-layout .wl-diagonal-image-link img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .wl-diagonal-image-link:focus-visible,
 .wl-diagonal-mobile-link:focus-visible {
   outline: 2px solid #173f2b;
@@ -5272,6 +5283,11 @@ body.report-is-open {
     border: 0;
     background: transparent;
     cursor: zoom-in;
+  }
+
+  .finishing-diagonal-layout .wl-diagonal-mobile-image {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
   }
 
   .wl-diagonal-copy h2 {
