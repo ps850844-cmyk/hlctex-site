@@ -1868,6 +1868,109 @@ body:not(.home-page).header-compact .mega-menu {
   font-size: 22px;
 }
 
+.related-product-card {
+  position: relative;
+  display: block;
+  min-height: 360px;
+  overflow: hidden;
+  background: #172333;
+  color: #fff;
+  isolation: isolate;
+}
+
+.related-product-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.related-product-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 30px;
+  background: linear-gradient(180deg, rgba(8, 18, 28, 0.04) 24%, rgba(8, 18, 28, 0.82) 100%);
+  transition: background-color 0.35s ease;
+}
+
+.related-product-card small {
+  margin-bottom: 10px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.related-product-card h3 {
+  max-width: 92%;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(20px, 1.7vw, 27px);
+  line-height: 1.3;
+}
+
+.related-product-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 12px;
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: max-height 0.35s ease, margin-top 0.35s ease, opacity 0.35s ease, transform 0.35s ease;
+}
+
+.related-product-card:hover img,
+.related-product-card:focus-visible img {
+  transform: scale(1.045);
+}
+
+.related-product-card:hover .related-product-overlay,
+.related-product-card:focus-visible .related-product-overlay {
+  background-color: rgba(7, 20, 32, 0.24);
+}
+
+.related-product-card:hover .related-product-link,
+.related-product-card:focus-visible .related-product-link {
+  max-height: 30px;
+  margin-top: 18px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.related-product-card:focus-visible {
+  outline: 3px solid #07879b;
+  outline-offset: 3px;
+}
+
+@media (hover: none) {
+  .related-product-link {
+    max-height: 30px;
+    margin-top: 14px;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .related-product-card img,
+  .related-product-link {
+    transition: none;
+  }
+}
+
 .split {
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
