@@ -5040,7 +5040,7 @@ body.report-is-open {
 .wl-diagonal-canvas {
   position: relative;
   margin: 0;
-  aspect-ratio: 7304 / 3732;
+  aspect-ratio: 2 / 1;
 }
 
 .wl-diagonal-canvas img,
@@ -5053,7 +5053,7 @@ body.report-is-open {
 .wl-diagonal-image-link {
   position: absolute;
   display: block;
-  width: 48.9%;
+  width: 50%;
   margin: 0;
   padding: 0;
   border: 0;
