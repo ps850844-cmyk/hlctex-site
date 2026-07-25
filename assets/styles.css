@@ -4764,6 +4764,11 @@ body.report-is-open {
   text-shadow: 0 3px 22px rgba(0, 0, 0, 0.26);
 }
 
+.wl-hero-landscape .mercerization-hero-title {
+  width: calc(100% - 48px);
+  text-align: center;
+}
+
 .wl-manifest {
   position: relative;
   z-index: 2;
@@ -5300,6 +5305,11 @@ body.report-is-open {
     left: 50%;
     bottom: auto;
     font-size: clamp(28px, 8vw, 42px);
+  }
+
+  .wl-hero-landscape .mercerization-hero-title {
+    width: calc(100% - 36px);
+    white-space: normal;
   }
 
   .wl-manifest {
