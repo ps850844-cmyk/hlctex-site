@@ -5000,7 +5000,7 @@ body.report-is-open {
 
 .wl-diagonal-layout {
   position: relative;
-  width: 100%;
+  width: calc(100% - clamp(48px, 8vw, 144px));
   margin: 0 auto clamp(80px, 8vw, 132px);
   background: #fff;
 }
