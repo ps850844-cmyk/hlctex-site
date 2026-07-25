@@ -105,16 +105,13 @@
         <p>针织面料可获得更明亮的外观、更好的色牢度和抗起球表现，让工艺优势最终体现在成衣的视觉与触感上。</p>
       </article>
     </section>
-    <section class="section lazy-secret-section">
+    <section class="section waterless-related-products" aria-labelledby="waterless-related-products-title">
       <div class="wrap">
-        <div class="lazy-secret-card">
-          <button class="lazy-cat-button" type="button" data-lazy-open aria-label="打开 LAZY君的无水染色小秘密">
-            <img src="/assets/lazy-cat-official.png" alt="HLC 吉祥物 LAZY君">
-          </button>
-          <div class="lazy-secret-copy">
-            <h2>LAZY君告诉你</h2>
-            <p>关于无水染色的小秘密<button type="button" class="lazy-secret-link" data-lazy-open>（请点击我）</button></p>
-          </div>
+        <div class="section-title"><h2 id="waterless-related-products-title">相关产品</h2><span>03 / PRODUCTS</span></div>
+        <div class="business-grid related-product-grid">
+          <a class="related-product-card" href="/zh/contact/" aria-label="查看详情并咨询无水染色竹纤维与莫代尔针织面料"><img src="/assets/bamboo-knit-hero.jpg" width="1920" height="2560" loading="lazy" decoding="async" alt="适用于婴童服装与睡衣的柔软无水染色竹纤维和莫代尔针织面料"><span class="related-product-overlay"><small>无水染色纤维素面料</small><h3>竹纤维与莫代尔针织面料</h3><span class="related-product-link">查看详情 <span aria-hidden="true">→</span></span></span><span class="related-product-meta"><span>款号<strong>待补充</strong></span><span>价格<strong>待更新</strong></span></span></a>
+          <a class="related-product-card" href="/zh/contact/" aria-label="查看详情并咨询无水染色棉麻混纺面料"><img src="/assets/bvcf-knit-hero.png" width="1200" height="1200" loading="lazy" decoding="async" alt="代表无水染色棉麻混纺开发的深蓝色平整针织面料"><span class="related-product-overlay"><small>无水染色混纺面料</small><h3>棉麻混纺面料</h3><span class="related-product-link">查看详情 <span aria-hidden="true">→</span></span></span><span class="related-product-meta"><span>款号<strong>待补充</strong></span><span>价格<strong>待更新</strong></span></span></a>
+          <a class="related-product-card" href="/zh/contact/" aria-label="查看详情并咨询无水染色超柔纯棉针织面料"><img src="/assets/brown-mercerized-liquid-ammonia-knit-fabric.png" width="1000" height="750" loading="lazy" decoding="async" alt="布面光洁且手感柔软的无水染色超柔纯棉针织面料"><span class="related-product-overlay"><small>超柔纯棉</small><h3>无水染色纯棉针织面料</h3><span class="related-product-link">查看详情 <span aria-hidden="true">→</span></span></span><span class="related-product-meta"><span>款号<strong>待补充</strong></span><span>价格<strong>待更新</strong></span></span></a>
         </div>
       </div>
     </section>
@@ -153,64 +150,6 @@
     }());
     </script>
   </main>
-  <div class="lazy-modal" data-lazy-modal aria-hidden="true">
-    <button class="lazy-modal-backdrop" type="button" data-lazy-close aria-label="关闭 LAZY君小秘密"></button>
-    <div class="lazy-modal-vortex" aria-hidden="true"><span></span></div>
-    <div class="lazy-modal-panel" data-lazy-panel role="dialog" aria-modal="true" aria-label="LAZY君的无水染色小秘密">
-      <button class="lazy-close" type="button" data-lazy-close aria-label="关闭">×</button>
-      <button class="lazy-modal-cat" type="button" data-lazy-close aria-label="点击 LAZY君收回小秘密">
-        <img src="/assets/lazy-cat-official.png" alt="LAZY君">
-      </button>
-      <h2>LAZY君的无水染色小秘密</h2>
-      <ol>
-        <li>① 如需无水染色的竹纤维、莫代尔或棉麻面料样品，还请联系我哟～</li>
-        <li>② 无水染色还可以呈现仿丝光处理效果哟！</li>
-        <li>③ 搭配无水染色工艺的超柔纯棉面料，手感远超普通棉花，柔软顺滑得仿佛经过液氨整理一般。</li>
-      </ol>
-      <p class="lazy-sample-contact">想要获取样布，还请联系 <a href="mailto:sam@hlctex.com?subject=Waterless%20Dyeing%20Fabric%20Sample%20Request">sam@hlctex.com</a></p>
-    </div>
-  </div>
-  <script>
-  (function () {
-    var lazyModal = document.querySelector('[data-lazy-modal]');
-    var lazyOpenButtons = document.querySelectorAll('[data-lazy-open]');
-    var lazyPanel = document.querySelector('[data-lazy-panel]');
-    var lazyLastTrigger = null;
-
-    function openLazyModal() {
-      if (!lazyModal) return;
-      lazyLastTrigger = document.activeElement;
-      lazyModal.classList.remove('is-open');
-      void lazyModal.offsetWidth;
-      lazyModal.classList.add('is-open');
-      lazyModal.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('lazy-is-open');
-    }
-
-    function closeLazyModal() {
-      if (!lazyModal) return;
-      lazyModal.classList.remove('is-open');
-      lazyModal.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('lazy-is-open');
-      if (lazyLastTrigger && typeof lazyLastTrigger.focus === 'function') lazyLastTrigger.focus();
-    }
-
-    lazyOpenButtons.forEach(function (button) {
-      button.addEventListener('click', openLazyModal);
-    });
-    document.querySelectorAll('[data-lazy-close]').forEach(function (button) {
-      button.addEventListener('click', closeLazyModal);
-    });
-    if (lazyPanel) {
-      lazyPanel.addEventListener('click', function (event) {
-        if (event.target === lazyPanel) closeLazyModal();
-      });
-    }
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && lazyModal && lazyModal.classList.contains('is-open')) closeLazyModal();
-    });
-  }());
-  </script>
   <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="footer-company">

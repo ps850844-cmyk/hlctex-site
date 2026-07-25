@@ -105,16 +105,13 @@
         <p>The resulting knit fabric is designed for brighter appearance, improved colour fastness and better resistance to pilling - performance that can be seen and felt in the finished garment.</p>
       </article>
     </section>
-    <section class="section lazy-secret-section">
+    <section class="section waterless-related-products" aria-labelledby="waterless-related-products-title">
       <div class="wrap">
-        <div class="lazy-secret-card">
-          <button class="lazy-cat-button" type="button" data-lazy-open aria-label="Open LAZY Cat's Waterless dyeing notes">
-            <img src="/assets/lazy-cat-official.png" alt="LAZY Cat, HLC mascot">
-          </button>
-          <div class="lazy-secret-copy">
-            <h2>LAZY CAT shares</h2>
-            <p>Three notes on Waterless dyeing <button type="button" class="lazy-secret-link" data-lazy-open>(click to open)</button></p>
-          </div>
+        <div class="section-title"><h2 id="waterless-related-products-title">Related Products</h2><span>03 / PRODUCTS</span></div>
+        <div class="business-grid related-product-grid">
+          <a class="related-product-card" href="/contact/" aria-label="View details and enquire about waterless-dyed bamboo viscose and modal knit fabrics"><img src="/assets/bamboo-knit-hero.jpg" width="1920" height="2560" loading="lazy" decoding="async" alt="Smooth waterless-dyed bamboo viscose and modal knit fabric for babywear and sleepwear"><span class="related-product-overlay"><small>WATERLESS CELLULOSE</small><h3>Bamboo Viscose &amp; Modal Knits</h3><span class="related-product-link">View details <span aria-hidden="true">→</span></span></span><span class="related-product-meta"><span>Style No.<strong>To be added</strong></span><span>Price<strong>Coming soon</strong></span></span></a>
+          <a class="related-product-card" href="/contact/" aria-label="View details and enquire about waterless-dyed cotton and linen blend fabrics"><img src="/assets/bvcf-knit-hero.png" width="1200" height="1200" loading="lazy" decoding="async" alt="Dark blue smooth knit fabric representing waterless-dyed cotton and linen blend development"><span class="related-product-overlay"><small>WATERLESS BLENDS</small><h3>Cotton &amp; Linen Blend Fabrics</h3><span class="related-product-link">View details <span aria-hidden="true">→</span></span></span><span class="related-product-meta"><span>Style No.<strong>To be added</strong></span><span>Price<strong>Coming soon</strong></span></span></a>
+          <a class="related-product-card" href="/contact/" aria-label="View details and enquire about waterless-dyed ultra-soft cotton knit fabric"><img src="/assets/brown-mercerized-liquid-ammonia-knit-fabric.png" width="1000" height="750" loading="lazy" decoding="async" alt="Ultra-soft waterless-dyed cotton knit fabric with a smooth clean surface"><span class="related-product-overlay"><small>ULTRA-SOFT COTTON</small><h3>Waterless-Dyed Cotton Knits</h3><span class="related-product-link">View details <span aria-hidden="true">→</span></span></span><span class="related-product-meta"><span>Style No.<strong>To be added</strong></span><span>Price<strong>Coming soon</strong></span></span></a>
         </div>
       </div>
     </section>
@@ -153,64 +150,6 @@
     }());
     </script>
   </main>
-  <div class="lazy-modal" data-lazy-modal aria-hidden="true">
-    <button class="lazy-modal-backdrop" type="button" data-lazy-close aria-label="Close LAZY Cat notes"></button>
-    <div class="lazy-modal-vortex" aria-hidden="true"><span></span></div>
-    <div class="lazy-modal-panel" data-lazy-panel role="dialog" aria-modal="true" aria-label="LAZY Cat's Waterless dyeing notes">
-      <button class="lazy-close" type="button" data-lazy-close aria-label="Close">×</button>
-      <button class="lazy-modal-cat" type="button" data-lazy-close aria-label="Click LAZY Cat to close">
-        <img src="/assets/lazy-cat-official.png" alt="LAZY Cat">
-      </button>
-      <h2>LAZY CAT'S WATERLESS NOTES</h2>
-      <ol>
-        <li>① Need samples of waterless-dyed bamboo viscose, modal or cotton-linen fabric? Please contact me.</li>
-        <li>② Waterless dyeing can also create a mercerized-look finish.</li>
-        <li>③ Waterless-dyed ultra-soft 100% cotton fabric offers a hand feel far softer than ordinary cotton—as though it had undergone liquid ammonia finishing.</li>
-      </ol>
-      <p class="lazy-sample-contact">Need sample yardage? Contact <a href="mailto:sam@hlctex.com?subject=Waterless%20Dyeing%20Fabric%20Sample%20Request">sam@hlctex.com</a></p>
-    </div>
-  </div>
-  <script>
-  (function () {
-    var lazyModal = document.querySelector('[data-lazy-modal]');
-    var lazyOpenButtons = document.querySelectorAll('[data-lazy-open]');
-    var lazyPanel = document.querySelector('[data-lazy-panel]');
-    var lazyLastTrigger = null;
-
-    function openLazyModal() {
-      if (!lazyModal) return;
-      lazyLastTrigger = document.activeElement;
-      lazyModal.classList.remove('is-open');
-      void lazyModal.offsetWidth;
-      lazyModal.classList.add('is-open');
-      lazyModal.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('lazy-is-open');
-    }
-
-    function closeLazyModal() {
-      if (!lazyModal) return;
-      lazyModal.classList.remove('is-open');
-      lazyModal.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('lazy-is-open');
-      if (lazyLastTrigger && typeof lazyLastTrigger.focus === 'function') lazyLastTrigger.focus();
-    }
-
-    lazyOpenButtons.forEach(function (button) {
-      button.addEventListener('click', openLazyModal);
-    });
-    document.querySelectorAll('[data-lazy-close]').forEach(function (button) {
-      button.addEventListener('click', closeLazyModal);
-    });
-    if (lazyPanel) {
-      lazyPanel.addEventListener('click', function (event) {
-        if (event.target === lazyPanel) closeLazyModal();
-      });
-    }
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape' && lazyModal && lazyModal.classList.contains('is-open')) closeLazyModal();
-    });
-  }());
-  </script>
   <footer class="site-footer">
   <div class="wrap footer-inner">
     <div class="footer-company">
