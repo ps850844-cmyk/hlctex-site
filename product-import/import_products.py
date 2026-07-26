@@ -18,10 +18,10 @@ from bs4 import BeautifulSoup
 from openpyxl import load_workbook
 
 
-BASIC_SHEET = "Product Basics"
-CONTENT_SHEET = "Product Content SEO"
-IMAGE_SHEET = "Product Images"
-RELATED_SHEET = "Related Products"
+BASIC_SHEET = "产品基础信息"
+CONTENT_SHEET = "产品内容与SEO"
+IMAGE_SHEET = "产品图片"
+RELATED_SHEET = "相关产品"
 HEADER_ROW = 4
 DATA_START_ROW = 5
 SITE_ORIGIN = "https://hlctex.com"
@@ -30,35 +30,35 @@ FIELDS = {
     "breadcrumb": "产品名称（英文）",
     "collection": "系列名称（英文）",
     "product-name": "产品名称（英文）",
-    "style-number": "Style#",
+    "style-number": "款号（Style#）",
     "yard-price": "实时价格 USD/码",
     "kg-price": "实时价格 USD/KG",
-    "composition": "成分 Composition",
-    "weight": "克重 GSM",
-    "width": "有效幅宽 CM",
-    "construction": "组织结构 Construction",
-    "yarn-count": "纱支 Yarn count",
-    "finishing": "后整理 Finishing",
-    "moq": "MOQ / MCQ",
-    "applications": "适用产品 Applications",
+    "composition": "成分",
+    "weight": "克重（g/m²）",
+    "width": "有效幅宽（cm）",
+    "construction": "织物组织",
+    "yarn-count": "纱支",
+    "finishing": "后整理",
+    "moq": "起订量 / 单色起订量",
+    "applications": "适用产品",
 }
 
 CONTENT_FIELDS = {
-    "short-description": "Product description",
-    "technical-details": "Details",
-    "test-results": "Test results",
-    "other-details": "Other",
-    "seo-kicker": "SEO Kicker",
-    "seo-heading": "SEO Heading",
-    "seo-paragraph-1": "SEO Paragraph 1",
-    "seo-paragraph-2": "SEO Paragraph 2",
+    "short-description": "产品描述（英文）",
+    "technical-details": "详细信息（英文）",
+    "test-results": "测试结果（英文）",
+    "other-details": "其他信息（英文）",
+    "seo-kicker": "SEO分类标签（英文）",
+    "seo-heading": "SEO主标题（英文）",
+    "seo-paragraph-1": "SEO段落1（英文）",
+    "seo-paragraph-2": "SEO段落2（英文）",
 }
 
 ALT_FIELDS = [
-    "主图ALT",
-    "图2 ALT",
-    "图3 ALT",
-    "图4 ALT",
+    "主图ALT（英文）",
+    "图2 ALT（英文）",
+    "图3 ALT（英文）",
+    "图4 ALT（英文）",
 ]
 
 IMAGE_HEADERS = [
@@ -305,9 +305,9 @@ def related_product_data(
         return {
             "href": f"/textile/products/{slug}/",
             "name": clean(row.get("产品名称（英文）")) or slug,
-            "style": f"Style#: {clean(row.get('Style#'))}",
+            "style": f"Style#: {clean(row.get('款号（Style#）'))}",
             "image": image_maps.get(slug, {}).get("主图（必填）", "/assets/bamboo-knit-hero.jpg"),
-            "alt": clean(content.get(slug, {}).get("主图ALT")) or clean(row.get("产品名称（英文）")),
+            "alt": clean(content.get(slug, {}).get("主图ALT（英文）")) or clean(row.get("产品名称（英文）")),
         }
     if slug in {"bvf", "bvcf"}:
         return {
@@ -398,7 +398,7 @@ def generate_page(
     template_path = repo / "textile" / "product-template" / "index.html"
     output_path = repo / "textile" / "products" / slug / "index.html"
     product_name = clean(basic.get("产品名称（英文）"))
-    style_number = clean(basic.get("Style#"))
+    style_number = clean(basic.get("款号（Style#）"))
     canonical = f"{SITE_ORIGIN}/textile/products/{slug}/"
 
     soup = BeautifulSoup(template_path.read_text(encoding="utf-8"), "html.parser")
@@ -433,13 +433,13 @@ def generate_page(
     if editorial is not None and editorial_source:
         editorial["src"] = editorial_source
         editorial["alt"] = (
-            clean(content_row.get("SEO内容图ALT"))
+            clean(content_row.get("SEO内容图ALT（英文）"))
             or f"{product_name} fabric development detail"
         )
 
-    seo_title = clean(content_row.get("SEO Title")) or f"{product_name} | HLC"
-    meta_description = clean(content_row.get("Meta Description")) or clean(
-        content_row.get("Product description")
+    seo_title = clean(content_row.get("SEO标题（英文）")) or f"{product_name} | HLC"
+    meta_description = clean(content_row.get("Meta描述（英文）")) or clean(
+        content_row.get("产品描述（英文）")
     )
     soup.title.string = seo_title
     ensure_meta(soup, name="description")["content"] = meta_description
@@ -473,7 +473,7 @@ def generate_page(
         "brand": {"@type": "Brand", "name": "HLC"},
         "manufacturer": {"@type": "Organization", "name": "HLC Group Co., Ltd."},
         "countryOfOrigin": clean(basic.get("原产国")) or "China",
-        "material": clean(basic.get("成分 Composition")),
+        "material": clean(basic.get("成分")),
     }
     if sources:
         structured_data["image"] = [
@@ -589,12 +589,12 @@ def main() -> int:
             continue
         content_row = contents.get(slug, {})
         required = {
-            "Style#": basic.get("Style#"),
+            "Style#": basic.get("款号（Style#）"),
             "Product name": basic.get("产品名称（英文）"),
-            "Composition": basic.get("成分 Composition"),
-            "Product description": content_row.get("Product description"),
-            "SEO Title": content_row.get("SEO Title"),
-            "Meta Description": content_row.get("Meta Description"),
+            "Composition": basic.get("成分"),
+            "Product description": content_row.get("产品描述（英文）"),
+            "SEO Title": content_row.get("SEO标题（英文）"),
+            "Meta Description": content_row.get("Meta描述（英文）"),
         }
         missing = [label for label, value in required.items() if not clean(value)]
         if not image_maps.get(slug, {}).get("主图（必填）"):

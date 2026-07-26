@@ -1,7 +1,8 @@
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$workbookPath = Join-Path $repoRoot "outputs\product-import\HLC_Product_Import.xlsx"
+$workbookName = "HLC_" + (-join @(0x4EA7, 0x54C1, 0x8D44, 0x6599, 0x5BFC, 0x5165, 0x8868 | ForEach-Object { [char]$_ })) + ".xlsx"
+$workbookPath = Join-Path $repoRoot (Join-Path "outputs\product-import" $workbookName)
 $requirementsPath = Join-Path $PSScriptRoot "requirements.txt"
 $importerPath = Join-Path $PSScriptRoot "import_products.py"
 

@@ -11,11 +11,11 @@ if (!outputPath || !previewDir) {
 
 const workbook = Workbook.create();
 console.error("builder: workbook created");
-const guide = workbook.worksheets.add("Guide");
-const basics = workbook.worksheets.add("Product Basics");
-const content = workbook.worksheets.add("Product Content SEO");
-const images = workbook.worksheets.add("Product Images");
-const related = workbook.worksheets.add("Related Products");
+const guide = workbook.worksheets.add("使用说明");
+const basics = workbook.worksheets.add("产品基础信息");
+const content = workbook.worksheets.add("产品内容与SEO");
+const images = workbook.worksheets.add("产品图片");
+const related = workbook.worksheets.add("相关产品");
 console.error("builder: worksheets created");
 
 const colors = {
@@ -118,7 +118,7 @@ guide.getRange("A13:H13").merge();
 guide.getRange("A13").values = [["填写规则"]];
 guide.getRange("A13:H13").format = sectionFormat;
 guide.getRange("A14:H19").values = [
-  ["必填", "产品URL标识、Style#、英文产品名、Composition、Product description、SEO title、Meta description、至少一张主图。", null, null, null, null, null, null],
+  ["必填", "产品URL标识、款号、英文产品名、成分、英文产品描述、SEO标题、Meta描述、至少一张主图。", null, null, null, null, null, null],
   ["URL标识", "仅使用小写英文字母、数字与短横线，例如 bamboo-viscose-single-jersey。", null, null, null, null, null, null],
   ["价格", "码价与KG价请填写数字，不要输入“US$”；有效期填写真实日期。价格暂缺可留空。", null, null, null, null, null, null],
   ["图片", "建议横向高清图，主图至少1600px宽。插入图片时将左上角放在对应黄色图片格内。", null, null, null, null, null, null],
@@ -156,21 +156,21 @@ console.error("builder: basics title");
 const basicHeaders = [
   "发布",
   "产品URL标识",
-  "Style#",
+  "款号（Style#）",
   "产品名称（英文）",
   "系列名称（英文）",
   "实时价格 USD/码",
   "实时价格 USD/KG",
   "价格有效期",
   "每KG等于多少码",
-  "成分 Composition",
-  "克重 GSM",
-  "有效幅宽 CM",
-  "组织结构 Construction",
-  "纱支 Yarn count",
-  "后整理 Finishing",
-  "MOQ / MCQ",
-  "适用产品 Applications",
+  "成分",
+  "克重（g/m²）",
+  "有效幅宽（cm）",
+  "织物组织",
+  "纱支",
+  "后整理",
+  "起订量 / 单色起订量",
+  "适用产品",
   "HS编码（选填）",
   "原产国",
   "完整URL（自动）",
@@ -244,21 +244,21 @@ setupTitle(
 );
 const contentHeaders = [
   "产品URL标识",
-  "Product description",
-  "Details",
-  "Test results",
-  "Other",
-  "SEO Kicker",
-  "SEO Heading",
-  "SEO Paragraph 1",
-  "SEO Paragraph 2",
-  "SEO Title",
-  "Meta Description",
-  "主图ALT",
-  "图2 ALT",
-  "图3 ALT",
-  "图4 ALT",
-  "SEO内容图ALT",
+  "产品描述（英文）",
+  "详细信息（英文）",
+  "测试结果（英文）",
+  "其他信息（英文）",
+  "SEO分类标签（英文）",
+  "SEO主标题（英文）",
+  "SEO段落1（英文）",
+  "SEO段落2（英文）",
+  "SEO标题（英文）",
+  "Meta描述（英文）",
+  "主图ALT（英文）",
+  "图2 ALT（英文）",
+  "图3 ALT（英文）",
+  "图4 ALT（英文）",
+  "SEO内容图ALT（英文）",
 ];
 content.getRange("A4:P4").values = [contentHeaders];
 content.getRange("A4:P4").format = headerFormat;
@@ -364,7 +364,7 @@ const verifiedWorkbook = await SpreadsheetFile.importXlsx(await FileBlob.load(ou
 console.error("builder: inspecting");
 const inspection = await verifiedWorkbook.inspect({
   kind: "table",
-  range: "Product Basics!A1:V8",
+  range: "产品基础信息!A1:V8",
   include: "values,formulas",
   tableMaxRows: 8,
   tableMaxCols: 22,
@@ -382,11 +382,11 @@ console.log(errors.ndjson);
 
 if (process.env.HLC_RENDER_WITH_ARTIFACT === "1") {
   for (const [sheetName, range, fileName] of [
-    ["Guide", "A1:H19", "guide.png"],
-    ["Product Basics", "A1:V8", "basics.png"],
-    ["Product Content SEO", "A1:P7", "content.png"],
-    ["Product Images", "A1:F8", "images.png"],
-    ["Related Products", "A1:D8", "related.png"],
+    ["使用说明", "A1:H19", "guide.png"],
+    ["产品基础信息", "A1:V8", "basics.png"],
+    ["产品内容与SEO", "A1:P7", "content.png"],
+    ["产品图片", "A1:F8", "images.png"],
+    ["相关产品", "A1:D8", "related.png"],
   ]) {
     console.error(`builder: rendering ${sheetName}`);
     const preview = await verifiedWorkbook.render({

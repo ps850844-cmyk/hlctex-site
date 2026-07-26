@@ -10,6 +10,10 @@ Thumbs.db
 *.zip
 *.tar.gz
 *.log
+~$*.xlsx
+outputs/product-import/HLC_Product_Import.xlsx
+outputs/product-import/import-test*/
+outputs/product-import/preview*/
 
 # Keep the production site clean
 node_modules/
