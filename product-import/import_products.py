@@ -37,10 +37,6 @@ FIELDS = {
     "weight": "克重（g/m²）",
     "width": "有效幅宽（cm）",
     "construction": "织物组织",
-    "yarn-count": "纱支",
-    "finishing": "后整理",
-    "moq": "起订量 / 单色起订量",
-    "applications": "适用产品",
 }
 
 CONTENT_FIELDS = {
@@ -209,6 +205,28 @@ def set_text(soup: BeautifulSoup, field: str, value: Any) -> None:
     if node is not None and clean(value):
         node.clear()
         node.append(clean(value))
+
+
+def set_or_remove_detail(soup: BeautifulSoup, field: str, value: Any) -> None:
+    node = soup.find(attrs={"data-template-field": field})
+    if node is None:
+        return
+    if clean(value):
+        node.clear()
+        node.append(clean(value))
+        return
+    row = node.find_parent(attrs={"data-detail-row": True})
+    if row is not None:
+        row.decompose()
+
+
+def remove_product_tab(soup: BeautifulSoup, name: str) -> None:
+    button = soup.find(attrs={"data-product-tab": name})
+    panel = soup.find(attrs={"data-product-panel": name})
+    if button is not None:
+        button.decompose()
+    if panel is not None:
+        panel.decompose()
 
 
 def ensure_meta(soup: BeautifulSoup, *, name: str | None = None, prop: str | None = None):
@@ -413,19 +431,31 @@ def generate_page(
         set_text(soup, field, content_row.get(header))
 
     details = clean(content_row.get("详细信息（英文）"))
-    finishing = clean(basic.get("后整理"))
-    if finishing and finishing.casefold() not in details.casefold():
-        finishing_note = f"Finishing: {finishing.rstrip('.')}."
-        details = f"{details.rstrip()} {finishing_note}".strip()
     if details:
         set_text(soup, "technical-details", details)
+    else:
+        details_intro = soup.find(attrs={"data-template-field": "technical-details"})
+        if details_intro is not None:
+            details_intro.decompose()
+
+    yards_per_kg = clean(basic.get("每KG等于多少码"))
+    detail_values = {
+        "detail-yarn-count": basic.get("纱支"),
+        "detail-moq": basic.get("起订量 / 单色起订量"),
+        "detail-weight-conversion": f"1 KG = {yards_per_kg} YDS" if yards_per_kg else "",
+        "detail-sample-lead": basic.get("样品交期（英文）"),
+        "detail-bulk-lead": basic.get("大货交期（英文）"),
+        "detail-applications": basic.get("适用产品"),
+        "detail-finishing": basic.get("后整理"),
+    }
+    for field, value in detail_values.items():
+        set_or_remove_detail(soup, field, value)
+
+    if not clean(content_row.get("其他信息（英文）")):
+        remove_product_tab(soup, "other")
 
     set_text(soup, "currency", "US$")
     set_text(soup, "currency-kg", "US$")
-    yards_per_kg = clean(basic.get("每KG等于多少码"))
-    if yards_per_kg:
-        set_text(soup, "yards-per-kg", f"1 KG = {yards_per_kg} YDS")
-
     price_date_display, price_date_iso = format_date(basic.get("价格有效期"))
     price_label = soup.select_one(".catalog-price-label")
     if price_label is not None and price_date_display:

@@ -415,6 +415,12 @@
   margin: 0;
 }
 
+.catalog-tab-panel .catalog-detail-specs {
+  max-width: 860px;
+  margin-top: 22px;
+  font-family: "HLC Source Sans", Arial, sans-serif;
+}
+
 .catalog-editorial {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);

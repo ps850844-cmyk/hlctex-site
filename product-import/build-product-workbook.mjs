@@ -148,7 +148,7 @@ console.error("builder: guide complete");
 
 setupTitle(
   basics,
-  "A1:V1",
+  "A1:X1",
   "产品基础信息",
   "一行代表一个产品。黄色单元格为输入区；最后两列由公式自动生成。"
 );
@@ -170,6 +170,8 @@ const basicHeaders = [
   "纱支",
   "后整理",
   "起订量 / 单色起订量",
+  "样品交期（英文）",
+  "大货交期（英文）",
   "适用产品",
   "HS编码（选填）",
   "原产国",
@@ -177,8 +179,8 @@ const basicHeaders = [
   "资料检查（自动）",
   "备注（不发布）",
 ];
-basics.getRange("A4:V4").values = [basicHeaders];
-basics.getRange("A4:V4").format = headerFormat;
+basics.getRange("A4:X4").values = [basicHeaders];
+basics.getRange("A4:X4").format = headerFormat;
 const basicExample = [
   "NO",
   "example-bamboo-knit",
@@ -196,6 +198,8 @@ const basicExample = [
   "32S + 30D",
   "Waterless dyeing",
   "500 kg / 100 kg per colour",
+  "5–7 working days",
+  "25–35 days after approval",
   "Babywear, sleepwear and loungewear",
   "6006.32",
   "China",
@@ -203,20 +207,20 @@ const basicExample = [
   null,
   "示例行，请复制后填写真实产品",
 ];
-basics.getRange("A5:V5").values = [basicExample];
-basics.getRange("T5").formulas = [['=IF(B5="","","https://hlctex.com/textile/products/"&B5&"/")']];
-basics.getRange("U5").formulas = [['=IF(B5="","",IF(A5<>"YES","未发布",IF(OR(C5="",D5="",J5=""),"缺少必填项","可生成")))']];
-basics.getRange("T5:T104").fillDown();
-basics.getRange("U5:U104").fillDown();
-basics.getRange("A5:V104").format = inputFormat;
-basics.getRange("T5:U104").format.fill = colors.green;
+basics.getRange("A5:X5").values = [basicExample];
+basics.getRange("V5").formulas = [['=IF(B5="","","https://hlctex.com/textile/products/"&B5&"/")']];
+basics.getRange("W5").formulas = [['=IF(B5="","",IF(A5<>"YES","未发布",IF(OR(C5="",D5="",J5=""),"缺少必填项","可生成")))']];
+basics.getRange("V5:V104").fillDown();
+basics.getRange("W5:W104").fillDown();
+basics.getRange("A5:X104").format = inputFormat;
+basics.getRange("V5:W104").format.fill = colors.green;
 basics.getRange("A5:A104").dataValidation = { rule: { type: "list", values: ["NO", "YES"] } };
 basics.getRange("A5:A104").conditionalFormats.add("cellIs", {
   operator: "equal",
   formula: '"YES"',
   format: { fill: colors.green, font: { bold: true, color: "#246B3C" } },
 });
-basics.getRange("U5:U104").conditionalFormats.add("containsText", {
+basics.getRange("W5:W104").conditionalFormats.add("containsText", {
   text: "缺少",
   format: { fill: colors.red, font: { bold: true, color: "#A61B1B" } },
 });
@@ -225,15 +229,15 @@ basics.getRange("H5:H104").format.numberFormat = "yyyy-mm-dd";
 basics.getRange("I5:I104").format.numberFormat = '0.00" yd/kg"';
 basics.getRange("K5:K104").format.numberFormat = '0" g/m²"';
 basics.getRange("L5:L104").format.numberFormat = '0" cm"';
-basics.getRange("A4:V104").format.rowHeight = 30;
+basics.getRange("A4:X104").format.rowHeight = 30;
 basics.getRange("D5:E104").format.rowHeight = 42;
-const basicWidths = [9, 28, 16, 36, 30, 17, 17, 15, 18, 34, 12, 14, 22, 18, 24, 24, 34, 18, 14, 45, 18, 34];
+const basicWidths = [9, 28, 16, 36, 30, 17, 17, 15, 18, 34, 12, 14, 22, 18, 24, 24, 22, 24, 34, 18, 14, 45, 18, 34];
 basicWidths.forEach((width, index) => {
   basics.getRangeByIndexes(3, index, 101, 1).format.columnWidth = width;
 });
 basics.freezePanes.freezeRows(4);
 basics.freezePanes.freezeColumns(3);
-basics.tables.add("A4:V104", true, "ProductBasicsTable").style = "TableStyleMedium2";
+basics.tables.add("A4:X104", true, "ProductBasicsTable").style = "TableStyleMedium2";
 console.error("builder: basics complete");
 
 setupTitle(
@@ -364,10 +368,10 @@ const verifiedWorkbook = await SpreadsheetFile.importXlsx(await FileBlob.load(ou
 console.error("builder: inspecting");
 const inspection = await verifiedWorkbook.inspect({
   kind: "table",
-  range: "产品基础信息!A1:V8",
+  range: "产品基础信息!A1:X8",
   include: "values,formulas",
   tableMaxRows: 8,
-  tableMaxCols: 22,
+  tableMaxCols: 24,
 });
 console.log(inspection.ndjson);
 
@@ -383,7 +387,7 @@ console.log(errors.ndjson);
 if (process.env.HLC_RENDER_WITH_ARTIFACT === "1") {
   for (const [sheetName, range, fileName] of [
     ["使用说明", "A1:H19", "guide.png"],
-    ["产品基础信息", "A1:V8", "basics.png"],
+    ["产品基础信息", "A1:X8", "basics.png"],
     ["产品内容与SEO", "A1:P7", "content.png"],
     ["产品图片", "A1:F8", "images.png"],
     ["相关产品", "A1:D8", "related.png"],
