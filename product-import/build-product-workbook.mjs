@@ -13,6 +13,7 @@ const workbook = Workbook.create();
 console.error("builder: workbook created");
 const guide = workbook.worksheets.add("使用说明");
 const basics = workbook.worksheets.add("产品基础信息");
+const details = workbook.worksheets.add("产品细节");
 const content = workbook.worksheets.add("产品内容与SEO");
 const images = workbook.worksheets.add("产品图片");
 const related = workbook.worksheets.add("相关产品");
@@ -95,11 +96,11 @@ guide.getRange("A4").values = [["使用步骤"]];
 guide.getRange("A4:H4").format = sectionFormat;
 guide.getRange("A5:H11").values = [
   ["1", "在“产品基础信息”填写一行产品资料；每个产品必须有唯一的“产品URL标识”。", null, null, null, null, null, null],
-  ["2", "在“产品内容与SEO”使用同一个URL标识填写描述、测试结果与SEO内容。", null, null, null, null, null, null],
-  ["3", "在“产品图片”同一行的图片格中直接插入图片，或填写图片文件路径。", null, null, null, null, null, null],
-  ["4", "确认“发布”选择 YES，且“资料检查”显示“可生成”。", null, null, null, null, null, null],
-  ["5", "关闭Excel，右键运行 product-import/更新产品.ps1。", null, null, null, null, null, null],
-  ["6", "脚本会生成 /textile/products/产品URL标识/，同步产品结构化数据并更新 sitemap.xml。", null, null, null, null, null, null],
+  ["2", "在“产品细节”使用同一个URL标识填写纱支、MOQ/MCQ、重量换算、交期、Applications与后整理。", null, null, null, null, null, null],
+  ["3", "在“产品内容与SEO”使用同一个URL标识填写描述、测试结果、其他信息与SEO内容。", null, null, null, null, null, null],
+  ["4", "在“产品图片”同一行的图片格中直接插入图片，或填写图片文件路径。", null, null, null, null, null, null],
+  ["5", "确认“发布”选择 YES，且“资料检查”显示“可生成”。", null, null, null, null, null, null],
+  ["6", "关闭Excel，右键运行 product-import/更新产品.ps1；系统会生成产品页并更新 sitemap.xml。", null, null, null, null, null, null],
   ["7", "检查 Git 修改后提交并推送；服务器执行 git pull 即可上线。", null, null, null, null, null, null],
 ];
 for (let row = 5; row <= 11; row += 1) {
@@ -148,7 +149,7 @@ console.error("builder: guide complete");
 
 setupTitle(
   basics,
-  "A1:X1",
+  "A1:Q1",
   "产品基础信息",
   "一行代表一个产品。黄色单元格为输入区；最后两列由公式自动生成。"
 );
@@ -162,25 +163,18 @@ const basicHeaders = [
   "实时价格 USD/码",
   "实时价格 USD/KG",
   "价格有效期",
-  "每KG等于多少码",
   "成分",
   "克重（g/m²）",
   "有效幅宽（cm）",
   "织物组织",
-  "纱支",
-  "后整理",
-  "起订量 / 单色起订量",
-  "样品交期（英文）",
-  "大货交期（英文）",
-  "适用产品",
   "HS编码（选填）",
   "原产国",
   "完整URL（自动）",
   "资料检查（自动）",
   "备注（不发布）",
 ];
-basics.getRange("A4:X4").values = [basicHeaders];
-basics.getRange("A4:X4").format = headerFormat;
+basics.getRange("A4:Q4").values = [basicHeaders];
+basics.getRange("A4:Q4").format = headerFormat;
 const basicExample = [
   "NO",
   "example-bamboo-knit",
@@ -190,66 +184,100 @@ const basicExample = [
   6.8,
   15.4,
   new Date("2026-08-30"),
-  2.26,
   "95% bamboo viscose / 5% spandex",
   200,
   150,
   "Single jersey",
-  "32S + 30D",
-  "Waterless dyeing",
-  "500 kg / 100 kg per colour",
-  "5–7 working days",
-  "25–35 days after approval",
-  "Babywear, sleepwear and loungewear",
   "6006.32",
   "China",
   null,
   null,
   "示例行，请复制后填写真实产品",
 ];
-basics.getRange("A5:X5").values = [basicExample];
-basics.getRange("V5").formulas = [['=IF(B5="","","https://hlctex.com/textile/products/"&B5&"/")']];
-basics.getRange("W5").formulas = [['=IF(B5="","",IF(A5<>"YES","未发布",IF(OR(C5="",D5="",J5=""),"缺少必填项","可生成")))']];
-basics.getRange("V5:V104").fillDown();
-basics.getRange("W5:W104").fillDown();
-basics.getRange("A5:X104").format = inputFormat;
-basics.getRange("V5:W104").format.fill = colors.green;
+basics.getRange("A5:Q5").values = [basicExample];
+basics.getRange("O5").formulas = [['=IF(B5="","","https://hlctex.com/textile/products/"&B5&"/")']];
+basics.getRange("P5").formulas = [['=IF(B5="","",IF(A5<>"YES","未发布",IF(OR(C5="",D5="",I5=""),"缺少必填项","可生成")))']];
+basics.getRange("O5:O104").fillDown();
+basics.getRange("P5:P104").fillDown();
+basics.getRange("A5:Q104").format = inputFormat;
+basics.getRange("O5:P104").format.fill = colors.green;
 basics.getRange("A5:A104").dataValidation = { rule: { type: "list", values: ["NO", "YES"] } };
 basics.getRange("A5:A104").conditionalFormats.add("cellIs", {
   operator: "equal",
   formula: '"YES"',
   format: { fill: colors.green, font: { bold: true, color: "#246B3C" } },
 });
-basics.getRange("W5:W104").conditionalFormats.add("containsText", {
+basics.getRange("P5:P104").conditionalFormats.add("containsText", {
   text: "缺少",
   format: { fill: colors.red, font: { bold: true, color: "#A61B1B" } },
 });
 basics.getRange("F5:G104").format.numberFormat = '"US$"0.00';
 basics.getRange("H5:H104").format.numberFormat = "yyyy-mm-dd";
-basics.getRange("I5:I104").format.numberFormat = '0.00" yd/kg"';
-basics.getRange("K5:K104").format.numberFormat = '0" g/m²"';
-basics.getRange("L5:L104").format.numberFormat = '0" cm"';
-basics.getRange("A4:X104").format.rowHeight = 30;
+basics.getRange("J5:J104").format.numberFormat = '0" g/m²"';
+basics.getRange("K5:K104").format.numberFormat = '0" cm"';
+basics.getRange("A4:Q104").format.rowHeight = 30;
 basics.getRange("D5:E104").format.rowHeight = 42;
-const basicWidths = [9, 28, 16, 36, 30, 17, 17, 15, 18, 34, 12, 14, 22, 18, 24, 24, 22, 24, 34, 18, 14, 45, 18, 34];
+const basicWidths = [9, 28, 16, 36, 30, 17, 17, 15, 34, 12, 14, 22, 18, 14, 45, 18, 34];
 basicWidths.forEach((width, index) => {
   basics.getRangeByIndexes(3, index, 101, 1).format.columnWidth = width;
 });
 basics.freezePanes.freezeRows(4);
 basics.freezePanes.freezeColumns(3);
-basics.tables.add("A4:X104", true, "ProductBasicsTable").style = "TableStyleMedium2";
+basics.tables.add("A4:Q104", true, "ProductBasicsTable").style = "TableStyleMedium2";
 console.error("builder: basics complete");
 
 setupTitle(
+  details,
+  "A1:I1",
+  "产品细节",
+  "使用与基础信息完全相同的产品URL标识。除URL标识外，其余字段可按产品实际情况填写；留空的细节行不会显示在网页中。"
+);
+const detailHeaders = [
+  "产品URL标识",
+  "细节说明（英文，选填）",
+  "纱支",
+  "MOQ / MCQ（英文）",
+  "每KG等于多少码",
+  "Sample lead time（英文）",
+  "Bulk lead time（英文）",
+  "Applications（英文）",
+  "后整理（英文）",
+];
+details.getRange("A4:I4").values = [detailHeaders];
+details.getRange("A4:I4").format = headerFormat;
+details.getRange("A5:I5").values = [[
+  "example-bamboo-knit",
+  "Buyer-facing production and delivery details for this fabric programme.",
+  "32S + 30D",
+  "500 kg / 100 kg per colour",
+  2.26,
+  "5–7 working days",
+  "25–35 days after approval",
+  "Babywear, sleepwear and loungewear",
+  "Waterless dyeing",
+]];
+details.getRange("A5:I104").format = inputFormat;
+details.getRange("E5:E104").format.numberFormat = '0.00" yd/kg"';
+details.getRange("A4:I104").format.rowHeight = 36;
+details.getRange("B5:I104").format.rowHeight = 54;
+const detailWidths = [28, 48, 18, 30, 20, 26, 28, 38, 28];
+detailWidths.forEach((width, index) => {
+  details.getRangeByIndexes(3, index, 101, 1).format.columnWidth = width;
+});
+details.freezePanes.freezeRows(4);
+details.freezePanes.freezeColumns(1);
+details.tables.add("A4:I104", true, "ProductDetailsTable").style = "TableStyleMedium2";
+console.error("builder: details complete");
+
+setupTitle(
   content,
-  "A1:P1",
+  "A1:O1",
   "产品内容与 SEO",
-  "使用与基础信息完全相同的产品URL标识。文本支持换行；请优先使用采购与设计师会搜索的自然关键词。"
+  "使用与基础信息完全相同的产品URL标识。此处填写产品描述、测试结果、其他信息与SEO内容；文本支持换行。"
 );
 const contentHeaders = [
   "产品URL标识",
   "产品描述（英文）",
-  "详细信息（英文）",
   "测试结果（英文）",
   "其他信息（英文）",
   "SEO分类标签（英文）",
@@ -264,12 +292,11 @@ const contentHeaders = [
   "图4 ALT（英文）",
   "SEO内容图ALT（英文）",
 ];
-content.getRange("A4:P4").values = [contentHeaders];
-content.getRange("A4:P4").format = headerFormat;
-content.getRange("A5:P5").values = [[
+content.getRange("A4:O4").values = [contentHeaders];
+content.getRange("A4:O4").format = headerFormat;
+content.getRange("A5:O5").values = [[
   "example-bamboo-knit",
   "A soft bamboo viscose stretch single jersey developed for babywear, sleepwear and loungewear.",
-  "Single jersey construction with custom colour development, lab dips and bulk production support.",
   "Test results may include shrinkage, colourfastness, pilling and stretch recovery to agreed standards.",
   "OEKO-TEX certification and sample support are available according to the selected fabric programme.",
   "BAMBOO KNIT FABRIC",
@@ -284,17 +311,17 @@ content.getRange("A5:P5").values = [[
   "Close-up texture of bamboo knit fabric",
   "Bamboo viscose knit fabric for babywear development",
 ]];
-content.getRange("A5:P104").format = inputFormat;
-content.getRange("B5:K104").format.rowHeight = 72;
-content.getRange("A4:P104").format.rowHeight = 42;
+content.getRange("A5:O104").format = inputFormat;
+content.getRange("B5:J104").format.rowHeight = 72;
+content.getRange("A4:O104").format.rowHeight = 42;
 content.getRange("A5:A104").format.columnWidth = 28;
-content.getRange("B5:E104").format.columnWidth = 46;
-content.getRange("F5:G104").format.columnWidth = 34;
-content.getRange("H5:K104").format.columnWidth = 52;
-content.getRange("L5:P104").format.columnWidth = 36;
+content.getRange("B5:D104").format.columnWidth = 46;
+content.getRange("E5:F104").format.columnWidth = 34;
+content.getRange("G5:J104").format.columnWidth = 52;
+content.getRange("K5:O104").format.columnWidth = 36;
 content.freezePanes.freezeRows(4);
 content.freezePanes.freezeColumns(1);
-content.tables.add("A4:P104", true, "ProductContentTable").style = "TableStyleMedium2";
+content.tables.add("A4:O104", true, "ProductContentTable").style = "TableStyleMedium2";
 console.error("builder: content complete");
 
 setupTitle(
@@ -368,12 +395,21 @@ const verifiedWorkbook = await SpreadsheetFile.importXlsx(await FileBlob.load(ou
 console.error("builder: inspecting");
 const inspection = await verifiedWorkbook.inspect({
   kind: "table",
-  range: "产品基础信息!A1:X8",
+  range: "产品基础信息!A1:Q8",
   include: "values,formulas",
   tableMaxRows: 8,
-  tableMaxCols: 24,
+  tableMaxCols: 17,
 });
 console.log(inspection.ndjson);
+
+const detailInspection = await verifiedWorkbook.inspect({
+  kind: "table",
+  range: "产品细节!A1:I8",
+  include: "values,formulas",
+  tableMaxRows: 8,
+  tableMaxCols: 9,
+});
+console.log(detailInspection.ndjson);
 
 console.error("builder: scanning errors");
 const errors = await verifiedWorkbook.inspect({
@@ -387,8 +423,9 @@ console.log(errors.ndjson);
 if (process.env.HLC_RENDER_WITH_ARTIFACT === "1") {
   for (const [sheetName, range, fileName] of [
     ["使用说明", "A1:H19", "guide.png"],
-    ["产品基础信息", "A1:X8", "basics.png"],
-    ["产品内容与SEO", "A1:P7", "content.png"],
+    ["产品基础信息", "A1:Q8", "basics.png"],
+    ["产品细节", "A1:I8", "details.png"],
+    ["产品内容与SEO", "A1:O7", "content.png"],
     ["产品图片", "A1:F8", "images.png"],
     ["相关产品", "A1:D8", "related.png"],
   ]) {

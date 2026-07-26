@@ -19,6 +19,7 @@ from openpyxl import load_workbook
 
 
 BASIC_SHEET = "产品基础信息"
+DETAIL_SHEET = "产品细节"
 CONTENT_SHEET = "产品内容与SEO"
 IMAGE_SHEET = "产品图片"
 RELATED_SHEET = "相关产品"
@@ -41,7 +42,6 @@ FIELDS = {
 
 CONTENT_FIELDS = {
     "short-description": "产品描述（英文）",
-    "technical-details": "详细信息（英文）",
     "test-results": "测试结果（英文）",
     "other-details": "其他信息（英文）",
     "seo-kicker": "SEO分类标签（英文）",
@@ -405,6 +405,7 @@ def generate_page(
     repo: Path,
     slug: str,
     basic: dict[str, Any],
+    detail_row: dict[str, Any],
     content_row: dict[str, Any],
     image_map: dict[str, str],
     related_slugs: list[str],
@@ -430,23 +431,23 @@ def generate_page(
     for field, header in CONTENT_FIELDS.items():
         set_text(soup, field, content_row.get(header))
 
-    details = clean(content_row.get("详细信息（英文）"))
-    if details:
-        set_text(soup, "technical-details", details)
+    detail_intro = clean(detail_row.get("细节说明（英文，选填）"))
+    if detail_intro:
+        set_text(soup, "technical-details", detail_intro)
     else:
         details_intro = soup.find(attrs={"data-template-field": "technical-details"})
         if details_intro is not None:
             details_intro.decompose()
 
-    yards_per_kg = clean(basic.get("每KG等于多少码"))
+    yards_per_kg = clean(detail_row.get("每KG等于多少码"))
     detail_values = {
-        "detail-yarn-count": basic.get("纱支"),
-        "detail-moq": basic.get("起订量 / 单色起订量"),
+        "detail-yarn-count": detail_row.get("纱支"),
+        "detail-moq": detail_row.get("MOQ / MCQ（英文）"),
         "detail-weight-conversion": f"1 KG = {yards_per_kg} YDS" if yards_per_kg else "",
-        "detail-sample-lead": basic.get("样品交期（英文）"),
-        "detail-bulk-lead": basic.get("大货交期（英文）"),
-        "detail-applications": basic.get("适用产品"),
-        "detail-finishing": basic.get("后整理"),
+        "detail-sample-lead": detail_row.get("Sample lead time（英文）"),
+        "detail-bulk-lead": detail_row.get("Bulk lead time（英文）"),
+        "detail-applications": detail_row.get("Applications（英文）"),
+        "detail-finishing": detail_row.get("后整理（英文）"),
     }
     for field, value in detail_values.items():
         set_or_remove_detail(soup, field, value)
@@ -581,11 +582,18 @@ def main() -> int:
         raise FileNotFoundError("HLC product template not found in repository")
 
     workbook = load_workbook(workbook_path, data_only=False)
-    for required_sheet in [BASIC_SHEET, CONTENT_SHEET, IMAGE_SHEET, RELATED_SHEET]:
+    for required_sheet in [
+        BASIC_SHEET,
+        DETAIL_SHEET,
+        CONTENT_SHEET,
+        IMAGE_SHEET,
+        RELATED_SHEET,
+    ]:
         if required_sheet not in workbook.sheetnames:
             raise ValueError(f"Missing worksheet: {required_sheet}")
 
     basics, _, _ = read_rows(workbook[BASIC_SHEET])
+    details, _, _ = read_rows(workbook[DETAIL_SHEET])
     contents, _, _ = read_rows(workbook[CONTENT_SHEET])
     image_rows, image_row_slug, image_headers = read_rows(workbook[IMAGE_SHEET])
     related_rows, _, _ = read_rows(workbook[RELATED_SHEET])
@@ -655,6 +663,7 @@ def main() -> int:
             repo=repo,
             slug=slug,
             basic=basic,
+            detail_row=details.get(slug, {}),
             content_row=content_row,
             image_map=image_maps.get(slug, {}),
             related_slugs=related_slugs,
