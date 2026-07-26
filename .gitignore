@@ -13,6 +13,8 @@ Thumbs.db
 
 # Keep the production site clean
 node_modules/
+product-import/.python-deps/
+__pycache__/
 dist/
 .env
 .env.*
