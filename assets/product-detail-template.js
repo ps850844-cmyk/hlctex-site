@@ -19,6 +19,19 @@
         });
       });
     });
+
+    var mainImageButton = gallery.querySelector("[data-gallery-open]");
+    if (mainImageButton) {
+      mainImageButton.addEventListener("pointermove", function (event) {
+        var bounds = mainImageButton.getBoundingClientRect();
+        var x = ((event.clientX - bounds.left) / bounds.width) * 100;
+        var y = ((event.clientY - bounds.top) / bounds.height) * 100;
+        mainImage.style.transformOrigin = x.toFixed(2) + "% " + y.toFixed(2) + "%";
+      });
+      mainImageButton.addEventListener("pointerleave", function () {
+        mainImage.style.transformOrigin = "50% 50%";
+      });
+    }
   }
 
   function openGallery() {
@@ -44,19 +57,6 @@
     });
   }
 
-  var quantity = document.querySelector("[data-quantity]");
-  function updateQuantity(delta) {
-    if (!quantity) return;
-    var current = Math.max(1, Number(quantity.value) || 1);
-    quantity.value = String(Math.max(1, current + delta));
-  }
-  document.querySelectorAll("[data-quantity-minus]").forEach(function (button) {
-    button.addEventListener("click", function () { updateQuantity(-1); });
-  });
-  document.querySelectorAll("[data-quantity-plus]").forEach(function (button) {
-    button.addEventListener("click", function () { updateQuantity(1); });
-  });
-
   document.querySelectorAll("[data-product-tabs]").forEach(function (tabs) {
     tabs.querySelectorAll("[data-product-tab]").forEach(function (button) {
       button.addEventListener("click", function () {
@@ -75,7 +75,77 @@
     });
   });
 
+  var sampleDialog = document.querySelector("[data-sample-dialog]");
+  var sampleForm = document.querySelector("[data-sample-form]");
+  var sampleEmail = document.querySelector("[data-sample-email]");
+  var sampleError = document.querySelector("[data-sample-error]");
+
+  function openSampleDialog() {
+    if (!sampleDialog) return;
+    if (typeof sampleDialog.showModal === "function") {
+      sampleDialog.showModal();
+      if (sampleEmail) sampleEmail.focus();
+    }
+  }
+
+  function closeSampleDialog() {
+    if (sampleDialog && sampleDialog.open) sampleDialog.close();
+  }
+
+  document.querySelectorAll("[data-sample-open]").forEach(function (button) {
+    button.addEventListener("click", openSampleDialog);
+  });
+  document.querySelectorAll("[data-sample-close]").forEach(function (button) {
+    button.addEventListener("click", closeSampleDialog);
+  });
+
+  if (sampleDialog) {
+    sampleDialog.addEventListener("click", function (event) {
+      if (event.target === sampleDialog) closeSampleDialog();
+    });
+  }
+
+  if (sampleForm) {
+    sampleForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var email = sampleEmail ? sampleEmail.value.trim() : "";
+      if (!email || !sampleEmail.checkValidity()) {
+        if (sampleError) sampleError.textContent = "Please enter a valid business email.";
+        if (sampleEmail) sampleEmail.focus();
+        return;
+      }
+
+      if (sampleError) sampleError.textContent = "";
+      var styleElement = document.querySelector("[data-template-field='style-number']");
+      var productElement = document.querySelector("[data-template-field='product-name']");
+      var styleNumber = styleElement ? styleElement.textContent.trim() : "HLC product";
+      var productName = productElement ? productElement.textContent.trim() : "Fabric sample";
+      var subject = "Sample Request - " + styleNumber;
+      var body = [
+        "Hello HLC,",
+        "",
+        "I would like to request a fabric sample.",
+        "",
+        "Product: " + productName,
+        "Style#: " + styleNumber,
+        "Requester email: " + email,
+        "Product page: " + window.location.href,
+        "",
+        "Please contact me regarding sample delivery and freight collect details.",
+        "",
+        "Thank you."
+      ].join("\n");
+
+      window.location.href = "mailto:sam@hlctex.com?subject=" +
+        encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+      closeSampleDialog();
+    });
+  }
+
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") closeGallery();
+    if (event.key === "Escape") {
+      closeGallery();
+      closeSampleDialog();
+    }
   });
 })();

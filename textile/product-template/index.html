@@ -48,6 +48,14 @@
 
     <section class="catalog-product-shell" aria-labelledby="catalogProductTitle">
       <div class="catalog-gallery" data-product-gallery>
+        <button class="catalog-main-image" type="button" data-gallery-open aria-label="Open high-resolution product image">
+          <img src="/assets/bamboo-knit-hero.jpg" alt="HLC fabric product main view" data-gallery-main data-template-field="product-images">
+          <span class="catalog-zoom-hint" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5M10.5 7.5v6M7.5 10.5h6"></path></svg>
+            View detail
+          </span>
+        </button>
+
         <div class="catalog-thumbnails" role="tablist" aria-label="Product images">
           <button class="catalog-thumbnail is-active" type="button" role="tab" aria-selected="true"
             data-gallery-thumb data-image="/assets/bamboo-knit-hero.jpg"
@@ -70,51 +78,45 @@
             <img src="/assets/waterless-blue-texture.jpg" alt="">
           </button>
         </div>
-
-        <button class="catalog-main-image" type="button" data-gallery-open aria-label="Open high-resolution product image">
-          <img src="/assets/bamboo-knit-hero.jpg" alt="HLC fabric product main view" data-gallery-main data-template-field="product-images">
-          <span class="catalog-zoom-hint" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5M10.5 7.5v6M7.5 10.5h6"></path></svg>
-            View detail
-          </span>
-        </button>
       </div>
 
       <article class="catalog-buy-panel">
         <p class="catalog-collection-label" data-template-field="collection">HLC KNIT COLLECTION</p>
         <h1 id="catalogProductTitle" data-template-field="product-name">Premium Knit Fabric</h1>
-        <p class="catalog-sku">SKU: <strong data-template-field="sku">HLC-0000</strong></p>
-        <p class="catalog-colour-note">Colour may vary slightly depending on monitor settings and dye lot.</p>
+        <p class="catalog-sku">Style#: <strong data-template-field="style-number">HLC-0000</strong></p>
 
         <div class="catalog-price-row">
           <div>
-            <span class="catalog-price-label">Indicative price</span>
-            <p class="catalog-price"><span data-template-field="currency">US$</span> <strong data-template-field="price">—</strong><small>/m</small></p>
+            <span class="catalog-price-label">Current price <em>(valid through Aug 30)</em></span>
+            <p class="catalog-price">
+              <span data-template-field="currency">US$</span>
+              <strong data-template-field="yard-price">—</strong><small>/yd</small>
+              <span class="catalog-kg-price">
+                <span data-template-field="currency-kg">US$</span>
+                <b data-template-field="kg-price">—</b><small>/kg</small>
+              </span>
+            </p>
           </div>
-          <span class="catalog-price-status" data-template-field="price-status">Price on request</span>
         </div>
 
-        <p class="catalog-unit-note">Quoted per running metre · 1 m = 1.09 yd</p>
+        <p class="catalog-unit-note">Weight conversion: <strong data-template-field="yards-per-kg">1 KG = — YDS</strong></p>
 
-        <div class="catalog-order-row">
-          <label class="catalog-quantity">
-            <span>Quantity</span>
-            <span class="catalog-stepper">
-              <button type="button" data-quantity-minus aria-label="Decrease quantity">−</button>
-              <input type="number" min="1" value="1" inputmode="numeric" data-quantity data-template-field="quantity">
-              <button type="button" data-quantity-plus aria-label="Increase quantity">+</button>
-            </span>
-          </label>
-          <span class="catalog-order-unit">metre(s)</span>
-        </div>
+        <button class="catalog-primary-action" type="button" data-sample-open>Request a sample</button>
+        <p class="catalog-sample-note">HLC can provide fabric samples of up to half a yard free of charge. Courier costs are payable by the recipient via freight collect.</p>
 
-        <a class="catalog-primary-action" href="mailto:sam@hlctex.com?subject=Fabric%20quotation%20request" data-template-field="quote-link">
-          Request a quotation
-        </a>
-        <a class="catalog-secondary-action" href="mailto:sam@hlctex.com?subject=Fabric%20sample%20request" data-template-field="sample-link">
-          Order a sample
-        </a>
-        <p class="catalog-sample-note">Standard samples are supplied for hand-feel, colour and construction review. Sample dimensions depend on the fabric.</p>
+        <section class="catalog-panel-characteristics" aria-labelledby="characteristicsTitle">
+          <h2 id="characteristicsTitle">Characteristics</h2>
+          <dl class="catalog-panel-specs">
+            <div><dt>Composition</dt><dd data-template-field="composition">95% fibre / 5% spandex</dd></div>
+            <div><dt>Weight</dt><dd data-template-field="weight">200 g/m²</dd></div>
+            <div><dt>Cuttable width</dt><dd data-template-field="width">150 cm</dd></div>
+            <div><dt>Construction</dt><dd data-template-field="construction">Single jersey</dd></div>
+            <div><dt>Yarn count</dt><dd data-template-field="yarn-count">32S + 30D</dd></div>
+            <div><dt>Finishing</dt><dd data-template-field="finishing">Custom finishing available</dd></div>
+            <div><dt>MOQ / MCQ</dt><dd data-template-field="moq">To be confirmed</dd></div>
+            <div><dt>Applications</dt><dd data-template-field="applications">Babywear, sleepwear and loungewear</dd></div>
+          </dl>
+        </section>
 
         <ul class="catalog-service-list" aria-label="Buyer services">
           <li>
@@ -129,38 +131,25 @@
       </article>
     </section>
 
-    <section class="catalog-characteristics" aria-labelledby="characteristicsTitle">
-      <div class="catalog-section-heading">
-        <p>PRODUCT DATA</p>
-        <h2 id="characteristicsTitle">Characteristics</h2>
-      </div>
-      <dl class="catalog-spec-grid">
-        <div><dt>Composition</dt><dd data-template-field="composition">95% fibre / 5% spandex</dd></div>
-        <div><dt>Weight</dt><dd data-template-field="weight">200 g/m²</dd></div>
-        <div><dt>Cuttable width</dt><dd data-template-field="width">150 cm</dd></div>
-        <div><dt>Construction</dt><dd data-template-field="construction">Single jersey</dd></div>
-        <div><dt>Yarn count</dt><dd data-template-field="yarn-count">32S + 30D</dd></div>
-        <div><dt>Finishing</dt><dd data-template-field="finishing">Custom finishing available</dd></div>
-        <div><dt>MOQ / MCQ</dt><dd data-template-field="moq">To be confirmed</dd></div>
-        <div><dt>Applications</dt><dd data-template-field="applications">Babywear, sleepwear and loungewear</dd></div>
-      </dl>
-    </section>
-
     <section class="catalog-information" aria-labelledby="productInformationTitle" data-product-tabs>
       <h2 class="seo-page-title" id="productInformationTitle">Product information</h2>
       <div class="catalog-tab-list" role="tablist">
-        <button class="is-active" type="button" role="tab" aria-selected="true" data-product-tab="description">Description</button>
-        <button type="button" role="tab" aria-selected="false" data-product-tab="details">Technical details</button>
-        <button type="button" role="tab" aria-selected="false" data-product-tab="delivery">Sampling &amp; delivery</button>
+        <button class="is-active" type="button" role="tab" aria-selected="true" data-product-tab="description">Product description</button>
+        <button type="button" role="tab" aria-selected="false" data-product-tab="details">Details</button>
+        <button type="button" role="tab" aria-selected="false" data-product-tab="testing">Test results</button>
+        <button type="button" role="tab" aria-selected="false" data-product-tab="other">Other</button>
       </div>
       <div class="catalog-tab-panel is-active" role="tabpanel" data-product-panel="description">
         <p data-template-field="short-description">Use this area for a concise, buyer-focused product description covering fibre source, hand feel, performance and intended garment applications.</p>
       </div>
       <div class="catalog-tab-panel" role="tabpanel" hidden data-product-panel="details">
-        <p data-template-field="technical-details">Add test standards, colourfastness, shrinkage, pilling, stretch recovery, certification and finishing information here.</p>
+        <p data-template-field="technical-details">Add yarn specification, knitting construction, finishing, MOQ, lead time, packing method and colour development information here.</p>
       </div>
-      <div class="catalog-tab-panel" role="tabpanel" hidden data-product-panel="delivery">
-        <p data-template-field="delivery-details">Add sample policy, lab-dip timing, bulk lead time, packing method, trade term and delivery conditions here.</p>
+      <div class="catalog-tab-panel" role="tabpanel" hidden data-product-panel="testing">
+        <p data-template-field="test-results">Add shrinkage, colourfastness, pilling, stretch recovery and applicable ASTM, AATCC, ISO or customer test results here.</p>
+      </div>
+      <div class="catalog-tab-panel" role="tabpanel" hidden data-product-panel="other">
+        <p data-template-field="other-details">Add certification, sample, lab-dip, delivery, trade term and any other buyer information here.</p>
       </div>
     </section>
 
@@ -185,13 +174,13 @@
         <a class="catalog-related-card" href="/textile/bamboo-fabric/bvf/">
           <span class="catalog-related-image"><img src="/assets/bamboo-knit-hero.jpg" alt="BVF bamboo viscose stretch jersey"></span>
           <span class="catalog-related-name">BVF Bamboo Viscose Stretch Jersey</span>
-          <span class="catalog-related-meta">SKU: BVF-001</span>
+          <span class="catalog-related-meta">Style#: BVF-001</span>
           <span class="catalog-related-price">View product</span>
         </a>
         <a class="catalog-related-card" href="/textile/bamboo-fabric/bvcf/">
           <span class="catalog-related-image"><img src="/assets/bvcf-knit-hero.png" alt="BVCF bamboo viscose Better Cotton jersey"></span>
           <span class="catalog-related-name">BVCF Bamboo &amp; Better Cotton Jersey</span>
-          <span class="catalog-related-meta">SKU: BVCF-001</span>
+          <span class="catalog-related-meta">Style#: BVCF-001</span>
           <span class="catalog-related-price">View product</span>
         </a>
         <a class="catalog-related-card" href="/pickup/mercerization-liquid-ammonia/">
@@ -207,6 +196,22 @@
   <dialog class="catalog-lightbox" data-gallery-dialog aria-label="Product image preview">
     <button type="button" data-gallery-close aria-label="Close image preview">×</button>
     <img src="/assets/bamboo-knit-hero.jpg" alt="HLC fabric product high-resolution view" data-gallery-dialog-image>
+  </dialog>
+
+  <dialog class="catalog-sample-dialog" data-sample-dialog aria-labelledby="sampleDialogTitle">
+    <button class="catalog-dialog-close" type="button" data-sample-close aria-label="Close sample request">×</button>
+    <div class="catalog-sample-dialog-inner">
+      <p class="catalog-collection-label">SAMPLE REQUEST</p>
+      <h2 id="sampleDialogTitle">Request this fabric sample</h2>
+      <p>Enter your business email. We will prepare a sample request addressed to HLC with the current product Style#.</p>
+      <form data-sample-form>
+        <label for="sampleEmail">Business email</label>
+        <input id="sampleEmail" type="email" name="email" autocomplete="email" placeholder="name@company.com" required data-sample-email>
+        <p class="catalog-form-error" data-sample-error aria-live="polite"></p>
+        <button type="submit">Generate sample email</button>
+      </form>
+      <small>Your email address is used only to prepare this sample request.</small>
+    </div>
   </dialog>
 
   <footer class="site-footer catalog-footer">
