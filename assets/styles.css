@@ -2850,7 +2850,8 @@ body.lazy-is-open {
   letter-spacing: 0.24em;
 }
 
-.material-title-card h1 {
+.material-title-card h1,
+.material-title-card h2 {
   margin: 0;
   color: rgba(255, 255, 255, 0.94);
   font-family: var(--font-sans);
@@ -2940,6 +2941,50 @@ body.lazy-is-open {
 .product-detail-section {
   padding: 142px 0 92px;
   background: #fff;
+}
+
+.seo-page-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.material-title-card h1 a,
+.material-title-card h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-page-single .product-page-track {
+  transform: none !important;
+}
+
+.product-sibling-nav {
+  width: min(1180px, calc(100% - 48px));
+  margin: 22px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  font-size: 13px;
+  letter-spacing: .04em;
+}
+
+.product-sibling-nav a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(15, 35, 55, .32);
+  padding-bottom: 5px;
+}
+
+.product-sibling-nav a:hover {
+  border-bottom-color: var(--ink);
 }
 
 .product-detail-wrap {
