@@ -412,6 +412,14 @@ def generate_page(
     for field, header in CONTENT_FIELDS.items():
         set_text(soup, field, content_row.get(header))
 
+    details = clean(content_row.get("详细信息（英文）"))
+    finishing = clean(basic.get("后整理"))
+    if finishing and finishing.casefold() not in details.casefold():
+        finishing_note = f"Finishing: {finishing.rstrip('.')}."
+        details = f"{details.rstrip()} {finishing_note}".strip()
+    if details:
+        set_text(soup, "technical-details", details)
+
     set_text(soup, "currency", "US$")
     set_text(soup, "currency-kg", "US$")
     yards_per_kg = clean(basic.get("每KG等于多少码"))
