@@ -74,6 +74,13 @@ def clean(value: Any) -> str:
     return str(value).strip()
 
 
+def first_nonempty(*values: Any) -> Any:
+    for value in values:
+        if clean(value):
+            return value
+    return ""
+
+
 def slug_is_valid(slug: str) -> bool:
     return bool(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug))
 
@@ -98,6 +105,25 @@ def read_rows(sheet) -> tuple[dict[str, dict[str, Any]], dict[int, str], dict[in
         rows[slug] = row
         row_slug[row_index] = slug
     return rows, row_slug, col_header
+
+
+def align_companion_rows(
+    primary_row_slug: dict[int, str],
+    rows: dict[str, dict[str, Any]],
+    row_slug: dict[int, str],
+) -> tuple[dict[str, dict[str, Any]], dict[int, str]]:
+    """Match companion sheets to the basic-information row when their slug is stale."""
+    aligned_rows = dict(rows)
+    aligned_row_slug = dict(row_slug)
+    for row_number, primary_slug in primary_row_slug.items():
+        if primary_slug in aligned_rows:
+            aligned_row_slug[row_number] = primary_slug
+            continue
+        companion_slug = aligned_row_slug.get(row_number)
+        if companion_slug and companion_slug in aligned_rows:
+            aligned_rows[primary_slug] = aligned_rows[companion_slug]
+            aligned_row_slug[row_number] = primary_slug
+    return aligned_rows, aligned_row_slug
 
 
 def image_extension(image) -> str:
@@ -130,6 +156,8 @@ def copy_or_reference_image(
     raw = clean(value)
     if not raw:
         return ""
+    if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in {'"', "'"}:
+        raw = raw[1:-1].strip()
     if raw.startswith(("https://", "http://", "/")):
         return raw
 
@@ -431,7 +459,12 @@ def generate_page(
     for field, header in CONTENT_FIELDS.items():
         set_text(soup, field, content_row.get(header))
 
-    detail_intro = clean(detail_row.get("细节说明（英文，选填）"))
+    detail_intro = clean(
+        first_nonempty(
+            detail_row.get("细节说明（英文，选填）"),
+            content_row.get("详细信息（英文）"),
+        )
+    )
     if detail_intro:
         set_text(soup, "technical-details", detail_intro)
     else:
@@ -439,15 +472,38 @@ def generate_page(
         if details_intro is not None:
             details_intro.decompose()
 
-    yards_per_kg = clean(detail_row.get("每KG等于多少码"))
+    yards_per_kg = clean(
+        first_nonempty(
+            detail_row.get("每KG等于多少码"),
+            basic.get("每KG等于多少码"),
+        )
+    )
     detail_values = {
-        "detail-yarn-count": detail_row.get("纱支"),
-        "detail-moq": detail_row.get("MOQ / MCQ（英文）"),
+        "detail-yarn-count": first_nonempty(
+            detail_row.get("纱支"),
+            basic.get("纱支"),
+        ),
+        "detail-moq": first_nonempty(
+            detail_row.get("MOQ / MCQ（英文）"),
+            basic.get("起订量 / 单色起订量"),
+        ),
         "detail-weight-conversion": f"1 KG = {yards_per_kg} YDS" if yards_per_kg else "",
-        "detail-sample-lead": detail_row.get("Sample lead time（英文）"),
-        "detail-bulk-lead": detail_row.get("Bulk lead time（英文）"),
-        "detail-applications": detail_row.get("Applications（英文）"),
-        "detail-finishing": detail_row.get("后整理（英文）"),
+        "detail-sample-lead": first_nonempty(
+            detail_row.get("Sample lead time（英文）"),
+            basic.get("样品交期（英文）"),
+        ),
+        "detail-bulk-lead": first_nonempty(
+            detail_row.get("Bulk lead time（英文）"),
+            basic.get("大货交期（英文）"),
+        ),
+        "detail-applications": first_nonempty(
+            detail_row.get("Applications（英文）"),
+            basic.get("适用产品"),
+        ),
+        "detail-finishing": first_nonempty(
+            detail_row.get("后整理（英文）"),
+            basic.get("后整理"),
+        ),
     }
     for field, value in detail_values.items():
         set_or_remove_detail(soup, field, value)
@@ -584,7 +640,6 @@ def main() -> int:
     workbook = load_workbook(workbook_path, data_only=False)
     for required_sheet in [
         BASIC_SHEET,
-        DETAIL_SHEET,
         CONTENT_SHEET,
         IMAGE_SHEET,
         RELATED_SHEET,
@@ -592,11 +647,34 @@ def main() -> int:
         if required_sheet not in workbook.sheetnames:
             raise ValueError(f"Missing worksheet: {required_sheet}")
 
-    basics, _, _ = read_rows(workbook[BASIC_SHEET])
-    details, _, _ = read_rows(workbook[DETAIL_SHEET])
-    contents, _, _ = read_rows(workbook[CONTENT_SHEET])
+    basics, basic_row_slug, _ = read_rows(workbook[BASIC_SHEET])
+    if DETAIL_SHEET in workbook.sheetnames:
+        details, detail_row_slug, _ = read_rows(workbook[DETAIL_SHEET])
+        details, _ = align_companion_rows(
+            basic_row_slug,
+            details,
+            detail_row_slug,
+        )
+    else:
+        details = {}
+    contents, content_row_slug, _ = read_rows(workbook[CONTENT_SHEET])
     image_rows, image_row_slug, image_headers = read_rows(workbook[IMAGE_SHEET])
-    related_rows, _, _ = read_rows(workbook[RELATED_SHEET])
+    related_rows, related_row_slug, _ = read_rows(workbook[RELATED_SHEET])
+    contents, _ = align_companion_rows(
+        basic_row_slug,
+        contents,
+        content_row_slug,
+    )
+    image_rows, image_row_slug = align_companion_rows(
+        basic_row_slug,
+        image_rows,
+        image_row_slug,
+    )
+    related_rows, _ = align_companion_rows(
+        basic_row_slug,
+        related_rows,
+        related_row_slug,
+    )
     publish_slugs = {
         slug
         for slug, row in basics.items()
@@ -651,13 +729,14 @@ def main() -> int:
 
         related_row = related_rows.get(slug, {})
         related_slugs = [
-            clean(related_row.get(header))
+            candidate
             for header in [
                 "相关产品1 URL标识",
                 "相关产品2 URL标识",
                 "相关产品3 URL标识",
             ]
-            if clean(related_row.get(header))
+            if (candidate := clean(related_row.get(header)))
+            and (candidate in basics or candidate in {"bvf", "bvcf"})
         ]
         output = generate_page(
             repo=repo,
