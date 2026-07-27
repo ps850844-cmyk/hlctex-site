@@ -567,7 +567,16 @@ def generate_page(
         soup,
         image_source=test_result_image,
         text=test_result_text,
-        image_alt=clean(content_row.get(TEST_RESULT_ALT_HEADER)),
+        image_alt=clean(content_row.get(TEST_RESULT_ALT_HEADER))
+        or " ".join(
+            part
+            for part in [
+                clean(basic.get("成分")),
+                clean(basic.get("织物组织")),
+                "fabric laboratory test report",
+            ]
+            if part
+        ),
         product_name=product_name,
     )
 
