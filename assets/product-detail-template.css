@@ -415,6 +415,30 @@
   margin: 0;
 }
 
+.catalog-test-result-media {
+  width: min(100%, 980px);
+  margin: 0 0 24px;
+}
+
+.catalog-test-result-media a {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  cursor: zoom-in;
+}
+
+.catalog-test-result-media img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--catalog-line);
+  background: #fff;
+}
+
+.catalog-test-result-media + p {
+  max-width: 860px;
+}
+
 .catalog-tab-panel .catalog-detail-specs {
   max-width: 860px;
   margin-top: 22px;

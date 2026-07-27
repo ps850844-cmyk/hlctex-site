@@ -42,13 +42,17 @@ FIELDS = {
 
 CONTENT_FIELDS = {
     "short-description": "产品描述（英文）",
-    "test-results": "测试结果（英文）",
     "other-details": "其他信息（英文）",
     "seo-kicker": "SEO分类标签（英文）",
     "seo-heading": "SEO主标题（英文）",
     "seo-paragraph-1": "SEO段落1（英文）",
     "seo-paragraph-2": "SEO段落2（英文）",
 }
+
+TEST_RESULT_TEXT_HEADER = "测试结果（英文）"
+TEST_RESULT_IMAGE_HEADER = "测试结果图片路径（可选）"
+TEST_RESULT_ALT_HEADER = "测试结果图片ALT（英文）"
+TEST_RESULT_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
 ALT_FIELDS = [
     "主图ALT（英文）",
@@ -146,6 +150,21 @@ def normalize_asset_name(slot: str) -> str:
     return names[slot]
 
 
+def strip_wrapping_quotes(value: Any) -> str:
+    raw = clean(value)
+    if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in {'"', "'"}:
+        return raw[1:-1].strip()
+    return raw
+
+
+def is_test_result_image_reference(value: Any) -> bool:
+    raw = strip_wrapping_quotes(value)
+    if not raw:
+        return False
+    path = urlparse(raw).path if raw.startswith(("https://", "http://")) else raw
+    return Path(path).suffix.lower() in TEST_RESULT_IMAGE_EXTENSIONS
+
+
 def copy_or_reference_image(
     value: Any,
     workbook_dir: Path,
@@ -153,11 +172,9 @@ def copy_or_reference_image(
     slug: str,
     slot: str,
 ) -> str:
-    raw = clean(value)
+    raw = strip_wrapping_quotes(value)
     if not raw:
         return ""
-    if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in {'"', "'"}:
-        raw = raw[1:-1].strip()
     if raw.startswith(("https://", "http://", "/")):
         return raw
 
@@ -171,6 +188,43 @@ def copy_or_reference_image(
     extension = source.suffix.lower() or ".jpg"
     destination = asset_dir / f"{normalize_asset_name(slot)}{extension}"
     shutil.copy2(source, destination)
+    return f"/assets/products/{slug}/{destination.name}"
+
+
+def copy_or_reference_test_result(
+    value: Any,
+    workbook_dir: Path,
+    repo: Path,
+    slug: str,
+    dry_run: bool,
+) -> str:
+    raw = strip_wrapping_quotes(value)
+    if not raw:
+        return ""
+    if not is_test_result_image_reference(raw):
+        raise ValueError(
+            f"{slug}: test result image must be JPG, JPEG, PNG, WEBP or GIF"
+        )
+    if raw.startswith(("https://", "http://", "/")):
+        return raw
+
+    source = Path(raw)
+    if not source.is_absolute():
+        source = (workbook_dir / source).resolve()
+    if not source.exists():
+        raise FileNotFoundError(f"{slug}: test result image not found: {source}")
+
+    extension = source.suffix.lower()
+    destination = (
+        repo
+        / "assets"
+        / "products"
+        / slug
+        / f"test-result{extension}"
+    )
+    if not dry_run:
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
     return f"/assets/products/{slug}/{destination.name}"
 
 
@@ -255,6 +309,49 @@ def remove_product_tab(soup: BeautifulSoup, name: str) -> None:
         button.decompose()
     if panel is not None:
         panel.decompose()
+
+
+def render_test_results(
+    soup: BeautifulSoup,
+    *,
+    image_source: str,
+    text: str,
+    image_alt: str,
+    product_name: str,
+) -> None:
+    panel = soup.find(attrs={"data-product-panel": "testing"})
+    if panel is None:
+        return
+    if not image_source and not text:
+        remove_product_tab(soup, "testing")
+        return
+
+    panel.clear()
+    if image_source:
+        figure = soup.new_tag("figure", attrs={"class": "catalog-test-result-media"})
+        link = soup.new_tag(
+            "a",
+            href=image_source,
+            target="_blank",
+            rel="noopener",
+            attrs={"aria-label": "Open high-resolution test result image"},
+        )
+        link.append(
+            soup.new_tag(
+                "img",
+                src=image_source,
+                alt=image_alt or f"{product_name} fabric test result",
+                loading="lazy",
+                decoding="async",
+            )
+        )
+        figure.append(link)
+        panel.append(figure)
+    if text:
+        paragraph = soup.new_tag("p")
+        paragraph["data-template-field"] = "test-results"
+        paragraph.string = text
+        panel.append(paragraph)
 
 
 def ensure_meta(soup: BeautifulSoup, *, name: str | None = None, prop: str | None = None):
@@ -436,6 +533,7 @@ def generate_page(
     detail_row: dict[str, Any],
     content_row: dict[str, Any],
     image_map: dict[str, str],
+    test_result_image: str,
     related_slugs: list[str],
     basics: dict[str, dict[str, Any]],
     contents: dict[str, dict[str, Any]],
@@ -458,6 +556,20 @@ def generate_page(
         set_text(soup, field, value)
     for field, header in CONTENT_FIELDS.items():
         set_text(soup, field, content_row.get(header))
+
+    raw_test_result = clean(content_row.get(TEST_RESULT_TEXT_HEADER))
+    test_result_text = (
+        ""
+        if is_test_result_image_reference(raw_test_result)
+        else raw_test_result
+    )
+    render_test_results(
+        soup,
+        image_source=test_result_image,
+        text=test_result_text,
+        image_alt=clean(content_row.get(TEST_RESULT_ALT_HEADER)),
+        product_name=product_name,
+    )
 
     detail_intro = clean(
         first_nonempty(
@@ -745,6 +857,20 @@ def main() -> int:
             detail_row=details.get(slug, {}),
             content_row=content_row,
             image_map=image_maps.get(slug, {}),
+            test_result_image=copy_or_reference_test_result(
+                first_nonempty(
+                    content_row.get(TEST_RESULT_IMAGE_HEADER),
+                    content_row.get(TEST_RESULT_TEXT_HEADER)
+                    if is_test_result_image_reference(
+                        content_row.get(TEST_RESULT_TEXT_HEADER)
+                    )
+                    else "",
+                ),
+                workbook_path.parent,
+                repo,
+                slug,
+                args.dry_run,
+            ),
             related_slugs=related_slugs,
             basics=basics,
             contents=contents,

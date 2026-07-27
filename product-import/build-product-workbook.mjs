@@ -97,7 +97,7 @@ guide.getRange("A4:H4").format = sectionFormat;
 guide.getRange("A5:H11").values = [
   ["1", "在“产品基础信息”填写一行产品资料；每个产品必须有唯一的“产品URL标识”。", null, null, null, null, null, null],
   ["2", "在“产品细节”使用同一个URL标识填写纱支、MOQ/MCQ、重量换算、交期、Applications与后整理。", null, null, null, null, null, null],
-  ["3", "在“产品内容与SEO”使用同一个URL标识填写描述、测试结果、其他信息与SEO内容。", null, null, null, null, null, null],
+  ["3", "在“产品内容与SEO”使用同一个URL标识填写描述、测试结果、其他信息与SEO内容。测试结果图片可填写本地文件绝对路径。", null, null, null, null, null, null],
   ["4", "在“产品图片”同一行的图片格中直接插入图片，或填写图片文件路径。", null, null, null, null, null, null],
   ["5", "确认“发布”选择 YES，且“资料检查”显示“可生成”。", null, null, null, null, null, null],
   ["6", "关闭Excel，右键运行 product-import/更新产品.ps1；系统会生成产品页并更新 sitemap.xml。", null, null, null, null, null, null],
@@ -271,14 +271,16 @@ console.error("builder: details complete");
 
 setupTitle(
   content,
-  "A1:O1",
+  "A1:Q1",
   "产品内容与 SEO",
-  "使用与基础信息完全相同的产品URL标识。此处填写产品描述、测试结果、其他信息与SEO内容；文本支持换行。"
+  "使用与基础信息完全相同的产品URL标识。测试结果可填写文字，也可填写本地图片路径；文本支持换行。"
 );
 const contentHeaders = [
   "产品URL标识",
   "产品描述（英文）",
   "测试结果（英文）",
+  "测试结果图片路径（可选）",
+  "测试结果图片ALT（英文）",
   "其他信息（英文）",
   "SEO分类标签（英文）",
   "SEO主标题（英文）",
@@ -292,12 +294,14 @@ const contentHeaders = [
   "图4 ALT（英文）",
   "SEO内容图ALT（英文）",
 ];
-content.getRange("A4:O4").values = [contentHeaders];
-content.getRange("A4:O4").format = headerFormat;
-content.getRange("A5:O5").values = [[
+content.getRange("A4:Q4").values = [contentHeaders];
+content.getRange("A4:Q4").format = headerFormat;
+content.getRange("A5:Q5").values = [[
   "example-bamboo-knit",
   "A soft bamboo viscose stretch single jersey developed for babywear, sleepwear and loungewear.",
   "Test results may include shrinkage, colourfastness, pilling and stretch recovery to agreed standards.",
+  "",
+  "Bamboo knit fabric laboratory test result",
   "OEKO-TEX certification and sample support are available according to the selected fabric programme.",
   "BAMBOO KNIT FABRIC",
   "Soft bamboo viscose jersey for babywear and sleepwear development.",
@@ -311,17 +315,17 @@ content.getRange("A5:O5").values = [[
   "Close-up texture of bamboo knit fabric",
   "Bamboo viscose knit fabric for babywear development",
 ]];
-content.getRange("A5:O104").format = inputFormat;
-content.getRange("B5:J104").format.rowHeight = 72;
-content.getRange("A4:O104").format.rowHeight = 42;
+content.getRange("A5:Q104").format = inputFormat;
+content.getRange("B5:L104").format.rowHeight = 72;
+content.getRange("A4:Q104").format.rowHeight = 42;
 content.getRange("A5:A104").format.columnWidth = 28;
-content.getRange("B5:D104").format.columnWidth = 46;
-content.getRange("E5:F104").format.columnWidth = 34;
-content.getRange("G5:J104").format.columnWidth = 52;
-content.getRange("K5:O104").format.columnWidth = 36;
+content.getRange("B5:F104").format.columnWidth = 46;
+content.getRange("G5:H104").format.columnWidth = 34;
+content.getRange("I5:L104").format.columnWidth = 52;
+content.getRange("M5:Q104").format.columnWidth = 36;
 content.freezePanes.freezeRows(4);
 content.freezePanes.freezeColumns(1);
-content.tables.add("A4:O104", true, "ProductContentTable").style = "TableStyleMedium2";
+content.tables.add("A4:Q104", true, "ProductContentTable").style = "TableStyleMedium2";
 console.error("builder: content complete");
 
 setupTitle(
@@ -411,6 +415,15 @@ const detailInspection = await verifiedWorkbook.inspect({
 });
 console.log(detailInspection.ndjson);
 
+const contentInspection = await verifiedWorkbook.inspect({
+  kind: "table",
+  range: "产品内容与SEO!A1:Q8",
+  include: "values,formulas",
+  tableMaxRows: 8,
+  tableMaxCols: 17,
+});
+console.log(contentInspection.ndjson);
+
 console.error("builder: scanning errors");
 const errors = await verifiedWorkbook.inspect({
   kind: "match",
@@ -425,7 +438,7 @@ if (process.env.HLC_RENDER_WITH_ARTIFACT === "1") {
     ["使用说明", "A1:H19", "guide.png"],
     ["产品基础信息", "A1:Q8", "basics.png"],
     ["产品细节", "A1:I8", "details.png"],
-    ["产品内容与SEO", "A1:O7", "content.png"],
+    ["产品内容与SEO", "A1:Q7", "content.png"],
     ["产品图片", "A1:F8", "images.png"],
     ["相关产品", "A1:D8", "related.png"],
   ]) {
