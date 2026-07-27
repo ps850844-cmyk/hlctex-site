@@ -8,10 +8,8 @@
   var filters = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
   var count = document.querySelector("[data-result-count]");
   var empty = document.querySelector("[data-empty-message]");
-  var sort = document.querySelector("[data-catalog-sort]");
   var panel = document.querySelector("[data-filter-panel]");
   var toggle = document.querySelector("[data-filter-toggle]");
-  var clear = document.querySelector("[data-filter-clear]");
 
   function activeValues(group) {
     return filters
@@ -51,39 +49,9 @@
     if (empty) empty.hidden = visible !== 0;
   }
 
-  function applySort() {
-    var mode = sort ? sort.value : "featured";
-    var sorted = cards.slice().sort(function (a, b) {
-      if (mode === "name") {
-        return a.getAttribute("data-name").localeCompare(b.getAttribute("data-name"));
-      }
-      if (mode === "price-low" || mode === "price-high") {
-        var difference = Number(a.getAttribute("data-price")) - Number(b.getAttribute("data-price"));
-        return mode === "price-high" ? -difference : difference;
-      }
-      return Number(a.getAttribute("data-featured")) - Number(b.getAttribute("data-featured"));
-    });
-    sorted.forEach(function (card) {
-      grid.appendChild(card);
-    });
-  }
-
   filters.forEach(function (input) {
     input.addEventListener("change", applyFilters);
   });
-
-  if (sort) {
-    sort.addEventListener("change", applySort);
-  }
-
-  if (clear) {
-    clear.addEventListener("click", function () {
-      filters.forEach(function (input) {
-        input.checked = false;
-      });
-      applyFilters();
-    });
-  }
 
   if (toggle && panel) {
     toggle.addEventListener("click", function () {
@@ -93,6 +61,5 @@
     });
   }
 
-  applySort();
   applyFilters();
 })();

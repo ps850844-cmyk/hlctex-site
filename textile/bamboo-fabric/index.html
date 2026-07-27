@@ -128,59 +128,53 @@
       </nav>
 
       <header class="bamboo-catalog-intro">
-        <p class="bamboo-catalog-eyebrow">HLC BAMBOO KNIT COLLECTION</p>
         <div class="bamboo-catalog-title-row">
           <h1>Bamboo Fabric</h1>
           <span><strong data-result-count>3</strong> fabrics</span>
         </div>
-        <p>Browse bamboo viscose knit fabrics developed for babywear, pajamas, sleepwear and loungewear. Compare composition, weight, finishing and current indicative prices, then open each fabric for full specifications and test results.</p>
       </header>
 
-      <div class="bamboo-catalog-toolbar">
+      <div class="bamboo-catalog-layout">
         <button class="bamboo-filter-toggle" type="button" data-filter-toggle aria-expanded="false" aria-controls="bambooFilters">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"></path></svg>
           Show filters
         </button>
-        <label class="bamboo-sort">
-          <span>Sort by</span>
-          <select data-catalog-sort>
-            <option value="featured">Featured</option>
-            <option value="name">Product name</option>
-            <option value="price-low">Price: low to high</option>
-            <option value="price-high">Price: high to low</option>
-          </select>
-        </label>
-      </div>
 
-      <div class="bamboo-catalog-layout">
         <aside class="bamboo-catalog-filters" id="bambooFilters" aria-label="Filter bamboo fabrics" data-filter-panel>
-          <div class="bamboo-filter-heading">
-            <h2>Filters</h2>
-            <button type="button" data-filter-clear>Clear all</button>
-          </div>
+          <details>
+            <summary>Composition</summary>
+            <fieldset>
+              <legend>Composition options</legend>
+              <label><input type="checkbox" value="bamboo-spandex" data-filter="composition"> Bamboo viscose + spandex <span>2</span></label>
+              <label><input type="checkbox" value="bamboo-cotton-spandex" data-filter="composition"> Bamboo + Better Cotton + spandex <span>1</span></label>
+            </fieldset>
+          </details>
 
-          <fieldset>
-            <legend>Composition</legend>
-            <label><input type="checkbox" value="bamboo-spandex" data-filter="composition"> Bamboo viscose + spandex <span>2</span></label>
-            <label><input type="checkbox" value="bamboo-cotton-spandex" data-filter="composition"> Bamboo + Better Cotton + spandex <span>1</span></label>
-          </fieldset>
+          <details>
+            <summary>Weight</summary>
+            <fieldset>
+              <legend>Weight options</legend>
+              <label><input type="checkbox" value="200" data-filter="weight"> 200 g/m² <span>2</span></label>
+              <label><input type="checkbox" value="210" data-filter="weight"> 210 g/m² <span>1</span></label>
+            </fieldset>
+          </details>
 
-          <fieldset>
-            <legend>Weight</legend>
-            <label><input type="checkbox" value="200" data-filter="weight"> 200 g/m² <span>2</span></label>
-            <label><input type="checkbox" value="210" data-filter="weight"> 210 g/m² <span>1</span></label>
-          </fieldset>
+          <details>
+            <summary>Construction</summary>
+            <fieldset>
+              <legend>Construction options</legend>
+              <label><input type="checkbox" value="single-jersey" data-filter="construction"> Single jersey <span>3</span></label>
+            </fieldset>
+          </details>
 
-          <fieldset>
-            <legend>Construction</legend>
-            <label><input type="checkbox" value="single-jersey" data-filter="construction"> Single jersey <span>3</span></label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Applications</legend>
-            <label><input type="checkbox" value="babywear" data-filter="application"> Babywear <span>3</span></label>
-            <label><input type="checkbox" value="sleepwear" data-filter="application"> Sleepwear &amp; loungewear <span>3</span></label>
-          </fieldset>
+          <details>
+            <summary>Applications</summary>
+            <fieldset>
+              <legend>Application options</legend>
+              <label><input type="checkbox" value="babywear" data-filter="application"> Babywear <span>3</span></label>
+              <label><input type="checkbox" value="sleepwear" data-filter="application"> Sleepwear &amp; loungewear <span>3</span></label>
+            </fieldset>
+          </details>
         </aside>
 
         <section class="bamboo-catalog-results" aria-label="Bamboo fabric products">
