@@ -8,9 +8,17 @@
     gallery.querySelectorAll("[data-gallery-thumb]").forEach(function (button) {
       button.addEventListener("click", function () {
         var nextImage = button.getAttribute("data-image");
+        var nextSrcset = button.getAttribute("data-srcset");
+        var nextSizes = button.getAttribute("data-sizes");
+        var fullImage = button.getAttribute("data-full-image") || nextImage;
         var nextAlt = button.getAttribute("data-alt") || "";
         if (!nextImage) return;
         mainImage.src = nextImage;
+        if (nextSrcset) mainImage.setAttribute("srcset", nextSrcset);
+        else mainImage.removeAttribute("srcset");
+        if (nextSizes) mainImage.setAttribute("sizes", nextSizes);
+        else mainImage.removeAttribute("sizes");
+        mainImage.setAttribute("data-full-image", fullImage);
         mainImage.alt = nextAlt;
         gallery.querySelectorAll("[data-gallery-thumb]").forEach(function (thumb) {
           var active = thumb === button;
@@ -36,7 +44,8 @@
 
   function openGallery() {
     if (!dialog || !dialogImage || !mainImage) return;
-    dialogImage.src = mainImage.currentSrc || mainImage.src;
+    dialogImage.src = mainImage.getAttribute("data-full-image") ||
+      mainImage.currentSrc || mainImage.src;
     dialogImage.alt = mainImage.alt;
     if (typeof dialog.showModal === "function") dialog.showModal();
   }
