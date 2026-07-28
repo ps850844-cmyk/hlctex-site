@@ -309,11 +309,11 @@ ${blocks[code]}
     .replace(/[ \t]*<h1 class="seo-page-title">[\s\S]*?<\/h1>\r?\n?/, "")
     .replace(
       /<h[12](?:\s[^>]*)?>(?:<a[^>]*>)?BVF(?:<\/a>)?<\/h[12]>/,
-      `<h2><a href="${languagePrefix}/textile/bamboo-fabric/bvf/">BVF</a></h2>`
+      `<h2>BVF</h2>`
     )
     .replace(
       /<h[12](?:\s[^>]*)?>(?:<a[^>]*>)?BVCF(?:<\/a>)?<\/h[12]>/,
-      `<h2><a href="${languagePrefix}/textile/bamboo-fabric/bvcf/">BVCF</a></h2>`
+      `<h2>BVCF</h2>`
     )
     .replace("<main>", `<main>\n    <h1 class="seo-page-title">${config.collectionName}</h1>`)
     .replace(
