@@ -90,15 +90,25 @@ def slug_is_valid(slug: str) -> bool:
 
 
 def read_rows(sheet) -> tuple[dict[str, dict[str, Any]], dict[int, str], dict[int, str]]:
+    header_row = HEADER_ROW
+    for candidate in range(1, min(sheet.max_row, 12) + 1):
+        candidate_values = {
+            clean(cell.value)
+            for cell in sheet[candidate]
+            if clean(cell.value)
+        }
+        if "产品URL标识" in candidate_values:
+            header_row = candidate
+            break
     headers = {
         cell.column: clean(cell.value)
-        for cell in sheet[HEADER_ROW]
+        for cell in sheet[header_row]
         if clean(cell.value)
     }
     rows: dict[str, dict[str, Any]] = {}
     row_slug: dict[int, str] = {}
     col_header = dict(headers)
-    for row_index in range(DATA_START_ROW, sheet.max_row + 1):
+    for row_index in range(header_row + 1, sheet.max_row + 1):
         row = {
             header: sheet.cell(row=row_index, column=column).value
             for column, header in headers.items()
@@ -409,6 +419,7 @@ def build_gallery(
     ]
     main = soup.find(attrs={"data-gallery-main": True})
     main["src"] = sources[0]
+    main["data-full-image"] = sources[0]
     main["alt"] = alts[0]
 
     thumbnails = soup.select_one(".catalog-thumbnails")
@@ -423,6 +434,7 @@ def build_gallery(
                 "aria-selected": "true" if index == 0 else "false",
                 "data-gallery-thumb": "",
                 "data-image": source,
+                "data-full-image": source,
                 "data-alt": alts[index],
             },
         )
@@ -568,15 +580,7 @@ def generate_page(
         image_source=test_result_image,
         text=test_result_text,
         image_alt=clean(content_row.get(TEST_RESULT_ALT_HEADER))
-        or " ".join(
-            part
-            for part in [
-                clean(basic.get("成分")),
-                clean(basic.get("织物组织")),
-                "fabric laboratory test report",
-            ]
-            if part
-        ),
+        or f"{product_name} laboratory test report",
         product_name=product_name,
     )
 
