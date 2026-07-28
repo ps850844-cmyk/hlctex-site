@@ -26,6 +26,8 @@ RELATED_SHEET = "相关产品"
 HEADER_ROW = 4
 DATA_START_ROW = 5
 SITE_ORIGIN = "https://hlctex.com"
+DIRECTORY_HEADER = "所属目录"
+BAMBOO_DIRECTORY = "竹纤维面料"
 
 FIELDS = {
     "breadcrumb": "产品名称（英文）",
@@ -511,6 +513,204 @@ def build_related_cards(
         grid.append(card)
 
 
+def bamboo_catalog_filter_value(composition: str) -> str:
+    return (
+        "bamboo-cotton-spandex"
+        if "cotton" in composition.lower()
+        else "bamboo-spandex"
+    )
+
+
+def bamboo_catalog_applications(value: Any) -> str:
+    normalized = clean(value).lower()
+    applications: list[str] = []
+    if any(term in normalized for term in ["baby", "infant", "footie", "zippy"]):
+        applications.append("babywear")
+    if any(term in normalized for term in ["sleep", "pajama", "lounge"]):
+        applications.append("sleepwear")
+    return " ".join(applications)
+
+
+def update_bamboo_catalog(
+    *,
+    repo: Path,
+    basics: dict[str, dict[str, Any]],
+    contents: dict[str, dict[str, Any]],
+    image_maps: dict[str, dict[str, str]],
+    dry_run: bool,
+) -> None:
+    """Synchronize workbook products assigned to the bamboo fabric directory."""
+    catalog_path = repo / "textile" / "bamboo-fabric" / "index.html"
+    soup = BeautifulSoup(catalog_path.read_text(encoding="utf-8"), "html.parser")
+    grid = soup.select_one("[data-product-grid]")
+    if grid is None:
+        raise ValueError("Bamboo fabric catalog product grid not found")
+    if not any(DIRECTORY_HEADER in row for row in basics.values()):
+        return
+
+    workbook_slugs = set(basics)
+    existing_cards: dict[str, Any] = {}
+    for card in list(grid.select("[data-product-card]")):
+        link = card.select_one('a[href^="/textile/products/"]')
+        if link is None:
+            continue
+        match = re.fullmatch(r"/textile/products/([^/]+)/", clean(link.get("href")))
+        if not match:
+            continue
+        slug = match.group(1)
+        if slug in workbook_slugs:
+            existing_cards[slug] = card
+
+    featured = len(grid.select("[data-product-card]"))
+    for slug, basic in basics.items():
+        existing_card = existing_cards.get(slug)
+        should_list = (
+            clean(basic.get("发布")).upper() == "YES"
+            and clean(basic.get(DIRECTORY_HEADER)) == BAMBOO_DIRECTORY
+        )
+        if not should_list:
+            if existing_card is not None:
+                existing_card.decompose()
+            continue
+
+        product_name = clean(basic.get("产品名称（英文）")) or slug.replace("-", " ").title()
+        composition = clean(basic.get("成分"))
+        weight = clean(basic.get("克重（g/m²）"))
+        construction = clean(basic.get("织物组织"))
+        applications = bamboo_catalog_applications(basic.get("适用产品"))
+        image = image_maps.get(slug, {}).get("主图（必填）")
+        if not image:
+            continue
+        content = contents.get(slug, {})
+        alt = clean(content.get("主图ALT（英文）")) or f"{product_name} fabric"
+        card_featured = (
+            clean(existing_card.get("data-featured"))
+            if existing_card is not None
+            else ""
+        )
+        if not card_featured:
+            featured += 1
+            card_featured = str(featured)
+
+        card = soup.new_tag(
+            "article",
+            attrs={
+                "class": "bamboo-product-card",
+                "data-product-card": "",
+                "data-featured": card_featured,
+                "data-name": product_name,
+                "data-price": clean(basic.get("实时价格 USD/码")),
+                "data-composition": bamboo_catalog_filter_value(composition),
+                "data-weight": weight,
+                "data-construction": re.sub(
+                    r"[^a-z0-9]+",
+                    "-",
+                    construction.lower(),
+                ).strip("-"),
+                "data-application": applications,
+            },
+        )
+        href = f"/textile/products/{slug}/"
+        image_link = soup.new_tag("a", href=href, attrs={"class": "bamboo-product-image"})
+        image_tag = soup.new_tag(
+            "img",
+            src=image,
+            alt=alt,
+            width="1280",
+            height="1280",
+            loading="lazy",
+            decoding="async",
+        )
+        image_link.append(image_tag)
+        overlay = soup.new_tag("span")
+        overlay.string = "View fabric"
+        image_link.append(overlay)
+        card.append(image_link)
+
+        info = soup.new_tag("div", attrs={"class": "bamboo-product-info"})
+        family = soup.new_tag("p", attrs={"class": "bamboo-product-family"})
+        family.string = clean(basic.get("系列名称（英文）")) or "HLC BAMBOO KNIT COLLECTION"
+        info.append(family)
+        heading = soup.new_tag("h2")
+        heading_link = soup.new_tag("a", href=href)
+        heading_link.string = product_name
+        heading.append(heading_link)
+        info.append(heading)
+        style = soup.new_tag("p", attrs={"class": "bamboo-product-style"})
+        style.string = f"Style#: {clean(basic.get('款号（Style#）'))}"
+        info.append(style)
+        spec = soup.new_tag("p", attrs={"class": "bamboo-product-spec"})
+        spec.string = f"{composition} · {weight} g/m²"
+        info.append(spec)
+        price = soup.new_tag("p", attrs={"class": "bamboo-product-price"})
+        price_yard = soup.new_tag("strong")
+        price_yard.string = f"US${clean(basic.get('实时价格 USD/码'))}"
+        price.append(price_yard)
+        price.append("/yd ")
+        price_kg = soup.new_tag("span")
+        price_kg.string = f"US${clean(basic.get('实时价格 USD/KG'))}/kg"
+        price.append(price_kg)
+        info.append(price)
+        card.append(info)
+        if existing_card is not None:
+            existing_card.replace_with(card)
+        else:
+            grid.append(card)
+
+    cards = grid.select("[data-product-card]")
+    result_count = soup.select_one("[data-result-count]")
+    if result_count is not None:
+        result_count.string = str(len(cards))
+
+    for input_element in soup.select("[data-filter]"):
+        filter_name = clean(input_element.get("data-filter"))
+        filter_value = clean(input_element.get("value"))
+        count = sum(
+            filter_value
+            in clean(card.get(f"data-{filter_name}")).split()
+            for card in cards
+        )
+        label = input_element.find_parent("label")
+        count_element = label.find("span") if label is not None else None
+        if count_element is not None:
+            count_element.string = str(count)
+
+    for schema_tag in soup.find_all("script", type="application/ld+json"):
+        try:
+            structured_data = json.loads(schema_tag.string or "")
+        except json.JSONDecodeError:
+            continue
+        graph = structured_data.get("@graph")
+        if not isinstance(graph, list):
+            continue
+        item_list = next(
+            (
+                node
+                for node in graph
+                if isinstance(node, dict) and node.get("@type") == "ItemList"
+            ),
+            None,
+        )
+        if item_list is None:
+            continue
+        item_list["numberOfItems"] = len(cards)
+        item_list["itemListElement"] = [
+            {
+                "@type": "ListItem",
+                "position": position,
+                "url": SITE_ORIGIN + clean(card.select_one("h2 a").get("href")),
+                "name": card.select_one("h2 a").get_text(" ", strip=True),
+            }
+            for position, card in enumerate(cards, start=1)
+            if card.select_one("h2 a") is not None
+        ]
+        schema_tag.string = json.dumps(structured_data, ensure_ascii=False, indent=2)
+        break
+
+    if not dry_run:
+        catalog_path.write_text("<!doctype html>\n" + str(soup.html), encoding="utf-8")
+
+
 def update_sitemap(sitemap_path: Path, url: str, last_modified: str, dry_run: bool) -> None:
     text = sitemap_path.read_text(encoding="utf-8")
     escaped_url = re.escape(url)
@@ -904,6 +1104,13 @@ def main() -> int:
         for message in errors:
             print(f"- {message}", file=sys.stderr)
         return 2
+    update_bamboo_catalog(
+        repo=repo,
+        basics=basics,
+        contents=contents,
+        image_maps=image_maps,
+        dry_run=args.dry_run,
+    )
     if not selected:
         print("No products marked YES. Nothing was generated.")
         return 0
