@@ -2521,15 +2521,6 @@ body.lazy-is-open {
 
 .footer-contact-row:first-child span {
   max-width: 320px;
-  font-size: 0;
-}
-
-.footer-contact-row:first-child span::before {
-  content: "中国浙江省嘉兴市\A桐乡市濮院镇恒乐路51号\A邮编 314502";
-  display: block;
-  white-space: pre-line;
-  font-size: 15px;
-  line-height: 1.72;
 }
 
 .footer-contact-row:first-child svg {
