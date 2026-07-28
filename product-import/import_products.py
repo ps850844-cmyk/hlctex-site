@@ -8,6 +8,7 @@ import html
 import json
 import re
 import shutil
+import subprocess
 import sys
 from datetime import date, datetime
 from pathlib import Path
@@ -55,6 +56,7 @@ TEST_RESULT_TEXT_HEADER = "测试结果（英文）"
 TEST_RESULT_IMAGE_HEADER = "测试结果图片路径（可选）"
 TEST_RESULT_ALT_HEADER = "测试结果图片ALT（英文）"
 TEST_RESULT_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+TEST_RESULT_SOURCE_EXTENSIONS = TEST_RESULT_IMAGE_EXTENSIONS | {".pdf"}
 
 ALT_FIELDS = [
     "主图ALT（英文）",
@@ -174,7 +176,48 @@ def is_test_result_image_reference(value: Any) -> bool:
     if not raw:
         return False
     path = urlparse(raw).path if raw.startswith(("https://", "http://")) else raw
-    return Path(path).suffix.lower() in TEST_RESULT_IMAGE_EXTENSIONS
+    return Path(path).suffix.lower() in TEST_RESULT_SOURCE_EXTENSIONS
+
+
+def find_pdftoppm() -> Path:
+    executable_name = "pdftoppm.exe" if sys.platform == "win32" else "pdftoppm"
+    bundled = (
+        Path(sys.executable).resolve().parent.parent
+        / "native"
+        / "poppler"
+        / "Library"
+        / "bin"
+        / executable_name
+    )
+    if bundled.exists():
+        return bundled
+    discovered = shutil.which("pdftoppm")
+    if discovered:
+        return Path(discovered)
+    raise FileNotFoundError(
+        "PDF test result requires Poppler pdftoppm to create a web-viewable image"
+    )
+
+
+def render_pdf_test_result(source: Path, destination: Path) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    output_prefix = destination.with_suffix("")
+    subprocess.run(
+        [
+            str(find_pdftoppm()),
+            "-png",
+            "-r",
+            "300",
+            "-singlefile",
+            str(source),
+            str(output_prefix),
+        ],
+        check=True,
+    )
+    if not destination.exists():
+        raise FileNotFoundError(
+            f"PDF conversion did not create the expected image: {destination}"
+        )
 
 
 def copy_or_reference_image(
@@ -215,9 +258,13 @@ def copy_or_reference_test_result(
         return ""
     if not is_test_result_image_reference(raw):
         raise ValueError(
-            f"{slug}: test result image must be JPG, JPEG, PNG, WEBP or GIF"
+            f"{slug}: test result must be PDF, JPG, JPEG, PNG, WEBP or GIF"
         )
     if raw.startswith(("https://", "http://", "/")):
+        if Path(urlparse(raw).path).suffix.lower() == ".pdf":
+            raise ValueError(
+                f"{slug}: remote PDF test result cannot be converted; use a local file"
+            )
         return raw
 
     source = Path(raw)
@@ -226,7 +273,8 @@ def copy_or_reference_test_result(
     if not source.exists():
         raise FileNotFoundError(f"{slug}: test result image not found: {source}")
 
-    extension = source.suffix.lower()
+    source_extension = source.suffix.lower()
+    extension = ".png" if source_extension == ".pdf" else source_extension
     destination = (
         repo
         / "assets"
@@ -235,8 +283,11 @@ def copy_or_reference_test_result(
         / f"test-result{extension}"
     )
     if not dry_run:
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
+        if source_extension == ".pdf":
+            render_pdf_test_result(source, destination)
+        else:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
     return f"/assets/products/{slug}/{destination.name}"
 
 
