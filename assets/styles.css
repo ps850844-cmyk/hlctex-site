@@ -2452,7 +2452,7 @@ body.lazy-is-open {
 }
 
 .site-footer {
-  --footer-brand-height: 420px;
+  --footer-brand-height: 336px;
   position: relative;
   border-top: 1px solid var(--line);
   background: linear-gradient(
@@ -2489,7 +2489,7 @@ body.lazy-is-open {
   display: inline-block;
   color: var(--blue);
   font-family: "Segoe Script", "Brush Script MT", "Comic Sans MS", cursive;
-  font-size: 78px;
+  font-size: 62px;
   font-weight: 700;
   line-height: .92;
   letter-spacing: -.12em;
@@ -2500,14 +2500,14 @@ body.lazy-is-open {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  margin-top: 28px;
+  gap: 6px;
+  margin-top: 22px;
   color: #253344;
   font-size: 15px;
   line-height: 1.72;
 }
 
-.footer-contact-row:nth-child(2) { margin-top: 12px; }
+.footer-contact-row:nth-child(2) { margin-top: 10px; }
 
 .footer-contact-row {
   display: flex;
@@ -3454,7 +3454,7 @@ body.report-is-open {
   position: absolute;
   left: auto;
   right: max(48px, calc((100vw - 1200px) / 2 + 36px));
-  top: calc(var(--footer-brand-height) - 34px);
+  top: calc(var(--footer-brand-height) - 27px);
   bottom: auto;
   padding: 0;
   border: 0;
@@ -3511,7 +3511,7 @@ body.report-is-open {
 
 @media (max-width: 900px) {
   .site-footer {
-    --footer-brand-height: 430px;
+    --footer-brand-height: 344px;
   }
 
   .site-header {
@@ -3813,12 +3813,12 @@ body.report-is-open {
   .footer-company {
     width: 100%;
     margin: 0;
-    padding: 40px 20px 62px;
+    padding: 24px 20px 50px;
     transform: none;
   }
 
   .footer-contact {
-    margin-top: 26px;
+    margin-top: 21px;
   }
 
   .footer-certifications {
@@ -3844,7 +3844,7 @@ body.report-is-open {
   .copyright {
     position: absolute;
     left: 37px;
-    top: calc(var(--footer-brand-height) - 38px);
+    top: calc(var(--footer-brand-height) - 30px);
     padding: 0;
     text-align: left;
   }
