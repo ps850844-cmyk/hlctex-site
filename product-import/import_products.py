@@ -1026,6 +1026,13 @@ def update_liquid_ammonia_product_catalog(
         price_kg.string = f"US${clean(basic.get(FIELDS['kg-price']))}/kg"
         price.append(price_kg)
         info.append(price)
+        price_date_display, _ = format_date(basic.get("价格有效期"))
+        if price_date_display:
+            validity = soup.new_tag(
+                "small", attrs={"class": "bamboo-product-price-validity"}
+            )
+            validity.string = f"Valid through {price_date_display}"
+            info.append(validity)
         card.append(info)
         if existing_card is not None:
             existing_card.replace_with(card)
