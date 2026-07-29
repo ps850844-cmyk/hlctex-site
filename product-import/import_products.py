@@ -29,7 +29,7 @@ DATA_START_ROW = 5
 SITE_ORIGIN = "https://hlctex.com"
 DIRECTORY_HEADER = "所属目录"
 BAMBOO_DIRECTORY = "竹纤维面料"
-LIQUID_AMMONIA_DIRECTORY = "液氨整理"
+LIQUID_AMMONIA_DIRECTORY = "丝光&液氨"
 
 FIELDS = {
     "breadcrumb": "产品名称（英文）",
@@ -441,14 +441,14 @@ def format_date(value: Any) -> tuple[str, str]:
     if isinstance(value, datetime):
         value = value.date()
     if isinstance(value, date):
-        display = value.strftime("%b %d").replace(" 0", " ")
+        display = value.strftime("%b %d, %Y").replace(" 0", " ")
         return display, value.isoformat()
     raw = clean(value)
     if not raw:
         return "", ""
     try:
         parsed = datetime.fromisoformat(raw).date()
-        return parsed.strftime("%b %d").replace(" 0", " "), parsed.isoformat()
+        return parsed.strftime("%b %d, %Y").replace(" 0", " "), parsed.isoformat()
     except ValueError:
         return raw, raw
 
