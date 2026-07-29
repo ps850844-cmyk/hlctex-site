@@ -30,6 +30,43 @@ SITE_ORIGIN = "https://hlctex.com"
 DIRECTORY_HEADER = "所属目录"
 BAMBOO_DIRECTORY = "竹纤维面料"
 LIQUID_AMMONIA_DIRECTORY = "丝光&液氨"
+FUNCTIONAL_DIRECTORY = "功能性面料"
+WOOL_DIRECTORY = "羊毛面料"
+WOMENSWEAR_DIRECTORY = "女装面料"
+EMBROIDERED_DIRECTORY = "绣花面料"
+
+PRODUCT_CATALOGS = {
+    BAMBOO_DIRECTORY: {
+        "path": Path("textile/bamboo-fabric/index.html"),
+        "label": "Bamboo Fabrics",
+        "collection": "HLC BAMBOO KNIT COLLECTION",
+    },
+    LIQUID_AMMONIA_DIRECTORY: {
+        "path": Path("textile/mercerized-liquid-ammonia-fabric/index.html"),
+        "label": "Mercerized & Liquid Ammonia Fabrics",
+        "collection": "HLC MERCERIZED & LIQUID AMMONIA COLLECTION",
+    },
+    FUNCTIONAL_DIRECTORY: {
+        "path": Path("textile/functional/index.html"),
+        "label": "Functional Fabrics",
+        "collection": "HLC FUNCTIONAL KNIT COLLECTION",
+    },
+    WOOL_DIRECTORY: {
+        "path": Path("textile/wool-fabric/index.html"),
+        "label": "Wool Fabrics",
+        "collection": "HLC WOOL FABRIC COLLECTION",
+    },
+    WOMENSWEAR_DIRECTORY: {
+        "path": Path("textile/womenswear-fabric/index.html"),
+        "label": "Womenswear Fabrics",
+        "collection": "HLC WOMENSWEAR FABRIC COLLECTION",
+    },
+    EMBROIDERED_DIRECTORY: {
+        "path": Path("textile/embroidered-fabric/index.html"),
+        "label": "Embroidered Fabrics",
+        "collection": "HLC EMBROIDERED FABRIC COLLECTION",
+    },
+}
 
 FIELDS = {
     "breadcrumb": "产品名称（英文）",
@@ -583,6 +620,104 @@ def bamboo_catalog_applications(value: Any) -> str:
     return " ".join(applications)
 
 
+def catalog_composition_filter_value(composition: Any, directory_name: str) -> str:
+    """Return one stable catalogue-filter token for the leading fibre story."""
+    normalized = clean(composition).lower()
+    if directory_name == BAMBOO_DIRECTORY:
+        return bamboo_catalog_filter_value(composition)
+    if directory_name == WOOL_DIRECTORY:
+        return "wool-blend" if any(
+            term in normalized
+            for term in ["cotton", "viscose", "polyester", "nylon", "spandex", "elastane"]
+        ) else "wool"
+    if directory_name == EMBROIDERED_DIRECTORY:
+        if "cotton" in normalized and not any(
+            term in normalized for term in ["polyester", "nylon", "viscose"]
+        ):
+            return "cotton"
+        if any(term in normalized for term in ["polyester", "nylon"]) and "cotton" not in normalized:
+            return "synthetic"
+        return "blended"
+    for token, terms in [
+        ("bamboo-viscose", ["bamboo"]),
+        ("wool", ["wool", "merino"]),
+        ("cotton", ["cotton", "supima", "giza"]),
+        ("tencel-lyocell", ["tencel", "lyocell"]),
+        ("viscose-modal", ["viscose", "modal"]),
+        ("linen-ramie", ["linen", "flax", "ramie"]),
+        ("recycled", ["recycled"]),
+        ("polyester", ["polyester"]),
+        ("nylon", ["nylon", "polyamide"]),
+    ]:
+        if any(term in normalized for term in terms):
+            return token
+    return "blended"
+
+
+def catalog_applications(value: Any) -> str:
+    normalized = clean(value).lower()
+    groups = [
+        ("babywear", ["baby", "infant", "zippy", "footie", "swaddle"]),
+        ("sleepwear", ["sleep", "pajama", "lounge", "homewear"]),
+        ("activewear", ["active", "sport", "legging", "running", "gym"]),
+        ("womenswear", ["women", "dress", "skirt", "blouse", "fashion"]),
+        ("menswear", ["men", "polo", "shirt"]),
+        ("kidswear", ["kid", "child"]),
+        ("underwear", ["underwear", "lingerie", "base layer"]),
+        ("outerwear", ["outerwear", "jacket", "coat"]),
+    ]
+    return " ".join(
+        token
+        for token, terms in groups
+        if any(term in normalized for term in terms)
+    )
+
+
+def refresh_catalog_filters(soup: BeautifulSoup, cards: list[Any]) -> None:
+    """Rebuild filter choices from the products currently published in a catalogue."""
+    for details in soup.select(".bamboo-catalog-filters details"):
+        input_element = details.select_one("[data-filter]")
+        fieldset = details.find("fieldset")
+        if input_element is None or fieldset is None:
+            continue
+        filter_name = clean(input_element.get("data-filter"))
+        values: dict[str, int] = {}
+        for card in cards:
+            for value in clean(card.get(f"data-{filter_name}")).split():
+                if value:
+                    values[value] = values.get(value, 0) + 1
+        legend = fieldset.find("legend")
+        legend_text = legend.get_text(" ", strip=True) if legend is not None else f"{filter_name.title()} options"
+        fieldset.clear()
+        new_legend = soup.new_tag("legend")
+        new_legend.string = legend_text
+        fieldset.append(new_legend)
+        for value, count in sorted(values.items()):
+            label = soup.new_tag("label")
+            checkbox = soup.new_tag(
+                "input",
+                attrs={
+                    "type": "checkbox",
+                    "value": value,
+                    "data-filter": filter_name,
+                },
+            )
+            label.append(checkbox)
+            label.append(
+                " "
+                + (
+                    f"{value} g/m²"
+                    if filter_name == "weight"
+                    else value.replace("-", " ").title()
+                )
+                + " "
+            )
+            count_element = soup.new_tag("span")
+            count_element.string = str(count)
+            label.append(count_element)
+            fieldset.append(label)
+
+
 def update_bamboo_catalog(
     *,
     repo: Path,
@@ -838,22 +973,23 @@ def update_liquid_ammonia_catalog(
         catalog_path.write_text(updated, encoding="utf-8")
 
 
-def update_liquid_ammonia_product_catalog(
+def update_product_catalog(
     *,
     repo: Path,
     basics: dict[str, dict[str, Any]],
     contents: dict[str, dict[str, Any]],
     image_maps: dict[str, dict[str, str]],
+    directory_name: str,
+    catalog_relative_path: Path,
+    default_collection: str,
     dry_run: bool,
 ) -> None:
-    """Synchronize liquid-ammonia workbook products with the product catalog."""
-    catalog_path = (
-        repo / "textile" / "mercerized-liquid-ammonia-fabric" / "index.html"
-    )
+    """Synchronize one workbook directory with its independent product catalog."""
+    catalog_path = repo / catalog_relative_path
     soup = BeautifulSoup(catalog_path.read_text(encoding="utf-8"), "html.parser")
     grid = soup.select_one("[data-product-grid]")
     if grid is None:
-        raise ValueError("Liquid-ammonia fabric catalog product grid not found")
+        raise ValueError(f"{directory_name} product catalog grid not found")
     if not any(DIRECTORY_HEADER in row for row in basics.values()):
         return
 
@@ -881,7 +1017,7 @@ def update_liquid_ammonia_product_catalog(
     if not any(
         clean(row.get(publish_header)).upper() == "YES"
         and (
-            clean(row.get(DIRECTORY_HEADER)) == LIQUID_AMMONIA_DIRECTORY
+            clean(row.get(DIRECTORY_HEADER)) == directory_name
             or slug in existing_cards
         )
         for slug, row in basics.items()
@@ -905,7 +1041,7 @@ def update_liquid_ammonia_product_catalog(
         existing_card = existing_cards.get(slug)
         if clean(basic.get(publish_header)).upper() != "YES":
             continue
-        should_list = clean(basic.get(DIRECTORY_HEADER)) == LIQUID_AMMONIA_DIRECTORY
+        should_list = clean(basic.get(DIRECTORY_HEADER)) == directory_name
         if not should_list:
             if existing_card is not None:
                 existing_card.decompose()
@@ -917,20 +1053,8 @@ def update_liquid_ammonia_product_catalog(
         composition = clean(basic.get(FIELDS["composition"]))
         weight = clean(basic.get(FIELDS["weight"]))
         construction = clean(basic.get(FIELDS["construction"]))
-        application_text = clean(basic.get(application_header)).lower()
-        applications: list[str] = []
-        if any(term in application_text for term in ["t-shirt", "tee", "polo"]):
-            applications.append("t-shirts")
-        if any(
-            term in application_text
-            for term in ["baby", "infant", "child", "kid"]
-        ):
-            applications.append("kidswear")
-        if any(
-            term in application_text
-            for term in ["sleep", "lounge", "home", "underwear"]
-        ):
-            applications.append("loungewear")
+        application_text = clean(basic.get(application_header))
+        applications = catalog_applications(application_text)
 
         image = image_maps.get(slug, {}).get(IMAGE_HEADERS[0])
         if not image:
@@ -954,19 +1078,15 @@ def update_liquid_ammonia_product_catalog(
                 "data-featured": card_featured,
                 "data-name": product_name,
                 "data-price": clean(basic.get(FIELDS["yard-price"])),
-                "data-composition": (
-                    "cotton-spandex"
-                    if any(
-                        term in composition.lower()
-                        for term in ["spandex", "elastane"]
-                    )
-                    else "cotton"
+                "data-composition": catalog_composition_filter_value(
+                    composition,
+                    directory_name,
                 ),
                 "data-weight": weight,
                 "data-construction": re.sub(
                     r"[^a-z0-9]+", "-", construction.lower()
                 ).strip("-"),
-                "data-application": " ".join(applications),
+                "data-application": applications,
             },
         )
         href = f"/textile/products/{slug}/"
@@ -1003,7 +1123,7 @@ def update_liquid_ammonia_product_catalog(
         family = soup.new_tag("p", attrs={"class": "bamboo-product-family"})
         family.string = (
             clean(basic.get(FIELDS["collection"]))
-            or "HLC LIQUID AMMONIA KNIT COLLECTION"
+            or default_collection
         )
         info.append(family)
         heading = soup.new_tag("h2")
@@ -1043,6 +1163,7 @@ def update_liquid_ammonia_product_catalog(
     result_count = soup.select_one("[data-result-count]")
     if result_count is not None:
         result_count.string = str(len(cards))
+    refresh_catalog_filters(soup, cards)
     for input_element in soup.select("[data-filter]"):
         filter_name = clean(input_element.get("data-filter"))
         filter_value = clean(input_element.get("value"))
@@ -1143,11 +1264,12 @@ def generate_page(
     canonical = f"{SITE_ORIGIN}/textile/products/{slug}/"
 
     soup = BeautifulSoup(template_path.read_text(encoding="utf-8"), "html.parser")
-    if clean(basic.get(DIRECTORY_HEADER)) == LIQUID_AMMONIA_DIRECTORY:
+    catalog = PRODUCT_CATALOGS.get(clean(basic.get(DIRECTORY_HEADER)))
+    if catalog:
         directory_link = soup.select_one(".catalog-breadcrumbs li:nth-of-type(3) a")
         if directory_link is not None:
-            directory_link["href"] = "/textile/mercerized-liquid-ammonia-fabric/"
-            directory_link.string = "Mercerized & Liquid Ammonia Fabrics"
+            directory_link["href"] = "/" + str(catalog["path"].parent).replace("\\", "/") + "/"
+            directory_link.string = str(catalog["label"])
     for field, header in FIELDS.items():
         value = basic.get(header)
         if field == "weight" and clean(value):
@@ -1493,20 +1615,17 @@ def main() -> int:
         for message in errors:
             print(f"- {message}", file=sys.stderr)
         return 2
-    update_bamboo_catalog(
-        repo=repo,
-        basics=basics,
-        contents=contents,
-        image_maps=image_maps,
-        dry_run=args.dry_run,
-    )
-    update_liquid_ammonia_product_catalog(
-        repo=repo,
-        basics=basics,
-        contents=contents,
-        image_maps=image_maps,
-        dry_run=args.dry_run,
-    )
+    for directory_name, catalog in PRODUCT_CATALOGS.items():
+        update_product_catalog(
+            repo=repo,
+            basics=basics,
+            contents=contents,
+            image_maps=image_maps,
+            directory_name=directory_name,
+            catalog_relative_path=catalog["path"],
+            default_collection=str(catalog["collection"]),
+            dry_run=args.dry_run,
+        )
     if not selected:
         print("No products marked YES. Nothing was generated.")
         return 0
