@@ -75,6 +75,57 @@
     </div>
   </header>
 
+  <section class="mega-menu" id="siteMegaMenu" aria-hidden="true">
+    <div class="mega-menu-shade" data-menu-close></div>
+    <div class="mega-menu-panel">
+      <button class="mega-menu-close" type="button" data-menu-close aria-label="Close menu"><span></span><span></span></button>
+      <div class="mega-menu-inner">
+        <article class="mega-pane" data-pane="products">
+          <h2>Products <i></i></h2>
+          <ul>
+            <li><a href="/textile/bamboo-fabric/">Bamboo Viscose Knit Fabrics</a></li>
+            <li><a href="/textile/mercerized-liquid-ammonia-fabric/">Mercerization &amp; Liquid Ammonia</a></li>
+            <li><a href="/textile/functional/">Functional Knit Fabrics</a></li>
+            <li><a href="/textile/">Wool, Womenswear &amp; Printed Fabrics</a></li>
+            <li><a href="/company/certificates/">Certifications &amp; Material Support</a></li>
+          </ul>
+        </article>
+        <article class="mega-pane" data-pane="solutions">
+          <h2>Solutions <i></i></h2>
+          <ul>
+            <li><a href="/pickup/wl-dye/">WL Dye® Waterless Dyeing</a></li>
+            <li><a href="/pickup/mercerization-liquid-ammonia/">Mercerization &amp; Liquid Ammonia</a></li>
+            <li><a href="/company/quality/">Fabric Inspection &amp; Testing</a></li>
+            <li><a href="/contact/">Request Specifications &amp; Quotation</a></li>
+          </ul>
+        </article>
+        <article class="mega-pane" data-pane="about">
+          <h2>About HLC <i></i></h2>
+          <ul>
+            <li><a href="/company/overview/">About HLC</a></li>
+            <li><a href="/company/profile/">Company Profile</a></li>
+            <li><a href="/company/quality/">Quality Management</a></li>
+            <li><a href="/company/certificates/">Certificates &amp; Certifications</a></li>
+          </ul>
+        </article>
+        <article class="mega-pane" data-pane="sustainability">
+          <h2>Sustainability <i></i></h2>
+          <ul>
+            <li><a href="/company/esg/">ESG &amp; Sustainability</a></li>
+            <li><a href="/pickup/wl-dye/">Water-Saving, Lower-Carbon Dyeing</a></li>
+            <li><a href="/company/certificates/">OEKO-TEX / GOTS / GRS / RWS</a></li>
+          </ul>
+        </article>
+        <article class="mega-pane" data-pane="careers">
+          <h2>Careers <i></i></h2>
+          <ul>
+            <li><a href="/company/recruitment/">Our People</a></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
   <main>
     <div class="bamboo-catalog-container">
       <nav class="bamboo-catalog-breadcrumbs" aria-label="Breadcrumb">
@@ -184,12 +235,50 @@
   </footer>
   <script>
   (function () {
-    var menu = document.querySelector("[data-mega-menu]");
+    var menu = document.getElementById("siteMegaMenu");
     if (!menu) return;
-    document.querySelectorAll("[data-menu]").forEach(function (link) {
-      link.addEventListener("mouseenter", function () { menu.classList.add("is-open"); });
+    var links = document.querySelectorAll(".site-nav [data-menu]");
+
+    function closeMenu() {
+      menu.classList.remove("is-open");
+      menu.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("mega-open");
+      links.forEach(function (link) {
+        link.classList.remove("is-open");
+        link.setAttribute("aria-expanded", "false");
+      });
+    }
+
+    links.forEach(function (link) {
+      link.setAttribute("aria-haspopup", "true");
+      link.setAttribute("aria-expanded", "false");
+      link.addEventListener("click", function (event) {
+        event.preventDefault();
+        var key = link.getAttribute("data-menu");
+        var alreadyOpen = menu.classList.contains("is-open") && link.classList.contains("is-open");
+        if (alreadyOpen) {
+          closeMenu();
+          return;
+        }
+        menu.querySelectorAll(".mega-pane").forEach(function (pane) {
+          pane.classList.toggle("is-active", pane.getAttribute("data-pane") === key);
+        });
+        links.forEach(function (item) {
+          var active = item === link;
+          item.classList.toggle("is-open", active);
+          item.setAttribute("aria-expanded", active ? "true" : "false");
+        });
+        menu.classList.add("is-open");
+        menu.setAttribute("aria-hidden", "false");
+        document.body.classList.add("mega-open");
+      });
     });
-    menu.addEventListener("mouseleave", function () { menu.classList.remove("is-open"); });
+    menu.querySelectorAll("[data-menu-close]").forEach(function (button) {
+      button.addEventListener("click", closeMenu);
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeMenu();
+    });
   })();
   </script>
 </body>
