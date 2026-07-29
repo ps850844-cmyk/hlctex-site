@@ -613,13 +613,23 @@ def update_bamboo_catalog(
         if slug in workbook_slugs:
             existing_cards[slug] = card
 
+    if not any(
+        clean(row.get("发布")).upper() == "YES"
+        and (
+            clean(row.get(DIRECTORY_HEADER)) == BAMBOO_DIRECTORY
+            or slug in existing_cards
+        )
+        for slug, row in basics.items()
+    ):
+        return
+
     featured = len(grid.select("[data-product-card]"))
     for slug, basic in basics.items():
         existing_card = existing_cards.get(slug)
-        should_list = (
-            clean(basic.get("发布")).upper() == "YES"
-            and clean(basic.get(DIRECTORY_HEADER)) == BAMBOO_DIRECTORY
-        )
+        is_publishing = clean(basic.get("发布")).upper() == "YES"
+        if not is_publishing:
+            continue
+        should_list = clean(basic.get(DIRECTORY_HEADER)) == BAMBOO_DIRECTORY
         if not should_list:
             if existing_card is not None:
                 existing_card.decompose()
@@ -771,7 +781,7 @@ def update_liquid_ammonia_catalog(
     image_maps: dict[str, dict[str, str]],
     dry_run: bool,
 ) -> None:
-    """Replace the liquid-ammonia placeholder card with the published product."""
+    """Add or update YES products without removing existing or NO product cards."""
     assigned = [
         (slug, row)
         for slug, row in basics.items()
@@ -781,39 +791,49 @@ def update_liquid_ammonia_catalog(
     if not assigned:
         return
 
-    slug, basic = assigned[0]
-    image = image_maps.get(slug, {}).get("主图（必填）")
-    if not image:
-        return
-    content = contents.get(slug, {})
-    product_name = clean(basic.get("产品名称（英文）")) or slug.replace("-", " ").title()
-    alt = clean(content.get("主图ALT（英文）")) or f"{product_name} fabric"
-    style = clean(basic.get("款号（Style#）"))
-    price = clean(basic.get("实时价格 USD/码"))
-    replacement = (
-        f'<a class="related-product-card" href="/textile/products/{slug}/" '
-        f'aria-label="View {html.escape(product_name)} details">'
-        f'<img src="{html.escape(image)}" width="1000" height="750" loading="lazy" '
-        f'decoding="async" alt="{html.escape(alt)}">'
-        '<span class="related-product-overlay"><small>LIQUID AMMONIA</small>'
-        f'<h3>{html.escape(product_name)}</h3>'
-        '<span class="related-product-link">View details '
-        '<span aria-hidden="true">→</span></span></span>'
-        '<span class="related-product-meta">'
-        f'<span>Style No.<strong>{html.escape(style)}</strong></span>'
-        f'<span>Price<strong>US${html.escape(price)}/yd</strong></span>'
-        '</span></a>'
-    )
     catalog_path = repo / "pickup" / "mercerization-liquid-ammonia" / "index.html"
-    text = catalog_path.read_text(encoding="utf-8")
-    pattern = re.compile(
-        r'<a class="related-product-card"[^>]*>(?:(?!</a>).)*?'
-        r'<small>LIQUID AMMONIA</small>.*?</a>',
-        flags=re.DOTALL,
-    )
-    if not pattern.search(text):
-        raise ValueError("Liquid-ammonia directory placeholder card not found")
-    updated = pattern.sub(lambda _: replacement, text, count=1)
+    updated = catalog_path.read_text(encoding="utf-8")
+    grid_marker = '<div class="business-grid related-product-grid">'
+    grid_start = updated.find(grid_marker)
+    if grid_start < 0:
+        raise ValueError("Liquid-ammonia directory product grid not found")
+
+    for slug, basic in assigned:
+        image = image_maps.get(slug, {}).get("主图（必填）")
+        if not image:
+            continue
+        content = contents.get(slug, {})
+        product_name = clean(basic.get("产品名称（英文）")) or slug.replace("-", " ").title()
+        alt = clean(content.get("主图ALT（英文）")) or f"{product_name} fabric"
+        style = clean(basic.get("款号（Style#）"))
+        price = clean(basic.get("实时价格 USD/码"))
+        card = (
+            f'<a class="related-product-card" href="/textile/products/{slug}/" '
+            f'aria-label="View {html.escape(product_name)} details">'
+            f'<img src="{html.escape(image)}" width="1000" height="750" loading="lazy" '
+            f'decoding="async" alt="{html.escape(alt)}">'
+            '<span class="related-product-overlay"><small>LIQUID AMMONIA</small>'
+            f'<h3>{html.escape(product_name)}</h3>'
+            '<span class="related-product-link">View details '
+            '<span aria-hidden="true">→</span></span></span>'
+            '<span class="related-product-meta">'
+            f'<span>Style No.<strong>{html.escape(style)}</strong></span>'
+            f'<span>Price<strong>US${html.escape(price)}/yd</strong></span>'
+            '</span></a>'
+        )
+        existing_pattern = re.compile(
+            rf'<a class="related-product-card" '
+            rf'href="/textile/products/{re.escape(slug)}/"[^>]*>.*?</a>',
+            flags=re.DOTALL,
+        )
+        if existing_pattern.search(updated, grid_start):
+            updated = existing_pattern.sub(lambda _: card, updated, count=1)
+            continue
+        grid_end = updated.find("\n        </div>", grid_start)
+        if grid_end < 0:
+            raise ValueError("Liquid-ammonia directory product grid closing tag not found")
+        updated = updated[:grid_end] + f"\n          {card}" + updated[grid_end:]
+
     if not dry_run:
         catalog_path.write_text(updated, encoding="utf-8")
 
