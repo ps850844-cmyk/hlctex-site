@@ -838,6 +838,256 @@ def update_liquid_ammonia_catalog(
         catalog_path.write_text(updated, encoding="utf-8")
 
 
+def update_liquid_ammonia_product_catalog(
+    *,
+    repo: Path,
+    basics: dict[str, dict[str, Any]],
+    contents: dict[str, dict[str, Any]],
+    image_maps: dict[str, dict[str, str]],
+    dry_run: bool,
+) -> None:
+    """Synchronize liquid-ammonia workbook products with the product catalog."""
+    catalog_path = (
+        repo / "textile" / "mercerized-liquid-ammonia-fabric" / "index.html"
+    )
+    soup = BeautifulSoup(catalog_path.read_text(encoding="utf-8"), "html.parser")
+    grid = soup.select_one("[data-product-grid]")
+    if grid is None:
+        raise ValueError("Liquid-ammonia fabric catalog product grid not found")
+    if not any(DIRECTORY_HEADER in row for row in basics.values()):
+        return
+
+    workbook_slugs = set(basics)
+    existing_cards: dict[str, Any] = {}
+    for card in list(grid.select("[data-product-card]")):
+        link = card.select_one('a[href^="/textile/products/"]')
+        if link is None:
+            continue
+        match = re.fullmatch(r"/textile/products/([^/]+)/", clean(link.get("href")))
+        if match and match.group(1) in workbook_slugs:
+            existing_cards[match.group(1)] = card
+
+    publish_header = next(
+        (
+            header
+            for row in basics.values()
+            for header in row
+            if clean(row.get(header)).upper() in {"YES", "NO"}
+        ),
+        "",
+    )
+    if not publish_header:
+        return
+    if not any(
+        clean(row.get(publish_header)).upper() == "YES"
+        and (
+            clean(row.get(DIRECTORY_HEADER)) == LIQUID_AMMONIA_DIRECTORY
+            or slug in existing_cards
+        )
+        for slug, row in basics.items()
+    ):
+        return
+
+    application_header = next(
+        (
+            header
+            for row in basics.values()
+            for header in row
+            if any(
+                token in clean(header).lower()
+                for token in ["application", "适用", "閫傜敤"]
+            )
+        ),
+        "",
+    )
+    featured = len(grid.select("[data-product-card]"))
+    for slug, basic in basics.items():
+        existing_card = existing_cards.get(slug)
+        if clean(basic.get(publish_header)).upper() != "YES":
+            continue
+        should_list = clean(basic.get(DIRECTORY_HEADER)) == LIQUID_AMMONIA_DIRECTORY
+        if not should_list:
+            if existing_card is not None:
+                existing_card.decompose()
+            continue
+
+        product_name = clean(basic.get(FIELDS["product-name"])) or slug.replace(
+            "-", " "
+        ).title()
+        composition = clean(basic.get(FIELDS["composition"]))
+        weight = clean(basic.get(FIELDS["weight"]))
+        construction = clean(basic.get(FIELDS["construction"]))
+        application_text = clean(basic.get(application_header)).lower()
+        applications: list[str] = []
+        if any(term in application_text for term in ["t-shirt", "tee", "polo"]):
+            applications.append("t-shirts")
+        if any(
+            term in application_text
+            for term in ["baby", "infant", "child", "kid"]
+        ):
+            applications.append("kidswear")
+        if any(
+            term in application_text
+            for term in ["sleep", "lounge", "home", "underwear"]
+        ):
+            applications.append("loungewear")
+
+        image = image_maps.get(slug, {}).get(IMAGE_HEADERS[0])
+        if not image:
+            continue
+        content = contents.get(slug, {})
+        alt = clean(content.get(ALT_FIELDS[0])) or f"{product_name} fabric"
+        card_featured = (
+            clean(existing_card.get("data-featured"))
+            if existing_card is not None
+            else ""
+        )
+        if not card_featured:
+            featured += 1
+            card_featured = str(featured)
+
+        card = soup.new_tag(
+            "article",
+            attrs={
+                "class": "bamboo-product-card",
+                "data-product-card": "",
+                "data-featured": card_featured,
+                "data-name": product_name,
+                "data-price": clean(basic.get(FIELDS["yard-price"])),
+                "data-composition": (
+                    "cotton-spandex"
+                    if any(
+                        term in composition.lower()
+                        for term in ["spandex", "elastane"]
+                    )
+                    else "cotton"
+                ),
+                "data-weight": weight,
+                "data-construction": re.sub(
+                    r"[^a-z0-9]+", "-", construction.lower()
+                ).strip("-"),
+                "data-application": " ".join(applications),
+            },
+        )
+        href = f"/textile/products/{slug}/"
+        image_link = soup.new_tag(
+            "a", href=href, attrs={"class": "bamboo-product-image"}
+        )
+        image_parent = str(Path(image).parent).replace("\\", "/")
+        display_700 = f"{image_parent}/display-700.jpg"
+        display_1000 = f"{image_parent}/display-1000.jpg"
+        has_display_700 = (repo / display_700.lstrip("/")).exists()
+        has_display_1000 = (repo / display_1000.lstrip("/")).exists()
+        image_tag = soup.new_tag(
+            "img",
+            src=display_700 if has_display_700 else image,
+            alt=alt,
+            width="1000",
+            height="750",
+            loading="lazy",
+            decoding="async",
+        )
+        if has_display_700 and has_display_1000:
+            image_tag["srcset"] = f"{display_700} 700w, {display_1000} 1000w"
+            image_tag["sizes"] = (
+                "(max-width: 760px) calc(100vw - 45px), "
+                "(max-width: 980px) calc((100vw - 292px) / 2), 30vw"
+            )
+        image_link.append(image_tag)
+        overlay = soup.new_tag("span")
+        overlay.string = "View fabric"
+        image_link.append(overlay)
+        card.append(image_link)
+
+        info = soup.new_tag("div", attrs={"class": "bamboo-product-info"})
+        family = soup.new_tag("p", attrs={"class": "bamboo-product-family"})
+        family.string = (
+            clean(basic.get(FIELDS["collection"]))
+            or "HLC LIQUID AMMONIA KNIT COLLECTION"
+        )
+        info.append(family)
+        heading = soup.new_tag("h2")
+        heading_link = soup.new_tag("a", href=href)
+        heading_link.string = product_name
+        heading.append(heading_link)
+        info.append(heading)
+        style = soup.new_tag("p", attrs={"class": "bamboo-product-style"})
+        style.string = f"Style#: {clean(basic.get(FIELDS['style-number']))}"
+        info.append(style)
+        spec = soup.new_tag("p", attrs={"class": "bamboo-product-spec"})
+        spec.string = f"{composition} · {weight} g/m²"
+        info.append(spec)
+        price = soup.new_tag("p", attrs={"class": "bamboo-product-price"})
+        price_yard = soup.new_tag("strong")
+        price_yard.string = f"US${clean(basic.get(FIELDS['yard-price']))}"
+        price.append(price_yard)
+        price.append("/yd ")
+        price_kg = soup.new_tag("span")
+        price_kg.string = f"US${clean(basic.get(FIELDS['kg-price']))}/kg"
+        price.append(price_kg)
+        info.append(price)
+        card.append(info)
+        if existing_card is not None:
+            existing_card.replace_with(card)
+        else:
+            grid.append(card)
+
+    cards = grid.select("[data-product-card]")
+    result_count = soup.select_one("[data-result-count]")
+    if result_count is not None:
+        result_count.string = str(len(cards))
+    for input_element in soup.select("[data-filter]"):
+        filter_name = clean(input_element.get("data-filter"))
+        filter_value = clean(input_element.get("value"))
+        count = sum(
+            filter_value in clean(card.get(f"data-{filter_name}")).split()
+            for card in cards
+        )
+        label = input_element.find_parent("label")
+        count_element = label.find("span") if label is not None else None
+        if count_element is not None:
+            count_element.string = str(count)
+
+    for schema_tag in soup.find_all("script", type="application/ld+json"):
+        try:
+            structured_data = json.loads(schema_tag.string or "")
+        except json.JSONDecodeError:
+            continue
+        graph = structured_data.get("@graph")
+        if not isinstance(graph, list):
+            continue
+        item_list = next(
+            (
+                node
+                for node in graph
+                if isinstance(node, dict) and node.get("@type") == "ItemList"
+            ),
+            None,
+        )
+        if item_list is None:
+            continue
+        item_list["numberOfItems"] = len(cards)
+        item_list["itemListElement"] = [
+            {
+                "@type": "ListItem",
+                "position": position,
+                "url": SITE_ORIGIN + clean(card.select_one("h2 a").get("href")),
+                "name": card.select_one("h2 a").get_text(" ", strip=True),
+            }
+            for position, card in enumerate(cards, start=1)
+            if card.select_one("h2 a") is not None
+        ]
+        schema_tag.string = json.dumps(
+            structured_data, ensure_ascii=False, indent=2
+        )
+        break
+
+    if not dry_run:
+        catalog_path.write_text(
+            "<!doctype html>\n" + str(soup.html), encoding="utf-8"
+        )
+
+
 def update_sitemap(sitemap_path: Path, url: str, last_modified: str, dry_run: bool) -> None:
     text = sitemap_path.read_text(encoding="utf-8")
     escaped_url = re.escape(url)
@@ -889,8 +1139,8 @@ def generate_page(
     if clean(basic.get(DIRECTORY_HEADER)) == LIQUID_AMMONIA_DIRECTORY:
         directory_link = soup.select_one(".catalog-breadcrumbs li:nth-of-type(3) a")
         if directory_link is not None:
-            directory_link["href"] = "/pickup/mercerization-liquid-ammonia/"
-            directory_link.string = "Liquid Ammonia Finishing"
+            directory_link["href"] = "/textile/mercerized-liquid-ammonia-fabric/"
+            directory_link.string = "Mercerized & Liquid Ammonia Fabrics"
     for field, header in FIELDS.items():
         value = basic.get(header)
         if field == "weight" and clean(value):
@@ -1243,7 +1493,7 @@ def main() -> int:
         image_maps=image_maps,
         dry_run=args.dry_run,
     )
-    update_liquid_ammonia_catalog(
+    update_liquid_ammonia_product_catalog(
         repo=repo,
         basics=basics,
         contents=contents,
