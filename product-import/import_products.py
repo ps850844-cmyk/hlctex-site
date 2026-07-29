@@ -29,6 +29,7 @@ DATA_START_ROW = 5
 SITE_ORIGIN = "https://hlctex.com"
 DIRECTORY_HEADER = "所属目录"
 BAMBOO_DIRECTORY = "竹纤维面料"
+LIQUID_AMMONIA_DIRECTORY = "液氨整理"
 
 FIELDS = {
     "breadcrumb": "产品名称（英文）",
@@ -762,6 +763,61 @@ def update_bamboo_catalog(
         catalog_path.write_text("<!doctype html>\n" + str(soup.html), encoding="utf-8")
 
 
+def update_liquid_ammonia_catalog(
+    *,
+    repo: Path,
+    basics: dict[str, dict[str, Any]],
+    contents: dict[str, dict[str, Any]],
+    image_maps: dict[str, dict[str, str]],
+    dry_run: bool,
+) -> None:
+    """Replace the liquid-ammonia placeholder card with the published product."""
+    assigned = [
+        (slug, row)
+        for slug, row in basics.items()
+        if clean(row.get("发布")).upper() == "YES"
+        and clean(row.get(DIRECTORY_HEADER)) == LIQUID_AMMONIA_DIRECTORY
+    ]
+    if not assigned:
+        return
+
+    slug, basic = assigned[0]
+    image = image_maps.get(slug, {}).get("主图（必填）")
+    if not image:
+        return
+    content = contents.get(slug, {})
+    product_name = clean(basic.get("产品名称（英文）")) or slug.replace("-", " ").title()
+    alt = clean(content.get("主图ALT（英文）")) or f"{product_name} fabric"
+    style = clean(basic.get("款号（Style#）"))
+    price = clean(basic.get("实时价格 USD/码"))
+    replacement = (
+        f'<a class="related-product-card" href="/textile/products/{slug}/" '
+        f'aria-label="View {html.escape(product_name)} details">'
+        f'<img src="{html.escape(image)}" width="1000" height="750" loading="lazy" '
+        f'decoding="async" alt="{html.escape(alt)}">'
+        '<span class="related-product-overlay"><small>LIQUID AMMONIA</small>'
+        f'<h3>{html.escape(product_name)}</h3>'
+        '<span class="related-product-link">View details '
+        '<span aria-hidden="true">→</span></span></span>'
+        '<span class="related-product-meta">'
+        f'<span>Style No.<strong>{html.escape(style)}</strong></span>'
+        f'<span>Price<strong>US${html.escape(price)}/yd</strong></span>'
+        '</span></a>'
+    )
+    catalog_path = repo / "pickup" / "mercerization-liquid-ammonia" / "index.html"
+    text = catalog_path.read_text(encoding="utf-8")
+    pattern = re.compile(
+        r'<a class="related-product-card"[^>]*>(?:(?!</a>).)*?'
+        r'<small>LIQUID AMMONIA</small>.*?</a>',
+        flags=re.DOTALL,
+    )
+    if not pattern.search(text):
+        raise ValueError("Liquid-ammonia directory placeholder card not found")
+    updated = pattern.sub(lambda _: replacement, text, count=1)
+    if not dry_run:
+        catalog_path.write_text(updated, encoding="utf-8")
+
+
 def update_sitemap(sitemap_path: Path, url: str, last_modified: str, dry_run: bool) -> None:
     text = sitemap_path.read_text(encoding="utf-8")
     escaped_url = re.escape(url)
@@ -810,6 +866,11 @@ def generate_page(
     canonical = f"{SITE_ORIGIN}/textile/products/{slug}/"
 
     soup = BeautifulSoup(template_path.read_text(encoding="utf-8"), "html.parser")
+    if clean(basic.get(DIRECTORY_HEADER)) == LIQUID_AMMONIA_DIRECTORY:
+        directory_link = soup.select_one(".catalog-breadcrumbs li:nth-of-type(3) a")
+        if directory_link is not None:
+            directory_link["href"] = "/pickup/mercerization-liquid-ammonia/"
+            directory_link.string = "Liquid Ammonia Finishing"
     for field, header in FIELDS.items():
         value = basic.get(header)
         if field == "weight" and clean(value):
@@ -1156,6 +1217,13 @@ def main() -> int:
             print(f"- {message}", file=sys.stderr)
         return 2
     update_bamboo_catalog(
+        repo=repo,
+        basics=basics,
+        contents=contents,
+        image_maps=image_maps,
+        dry_run=args.dry_run,
+    )
+    update_liquid_ammonia_catalog(
         repo=repo,
         basics=basics,
         contents=contents,
