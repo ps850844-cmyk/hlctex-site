@@ -603,11 +603,20 @@ def build_related_cards(
 
 
 def bamboo_catalog_filter_value(composition: str) -> str:
-    return (
-        "bamboo-cotton-spandex"
-        if "cotton" in composition.lower()
-        else "bamboo-spandex"
-    )
+    normalized = composition.lower()
+    if "organic cotton" in normalized:
+        return "bamboo-organic-cotton"
+    if "cotton" in normalized and any(
+        term in normalized for term in ["spandex", "elastane"]
+    ):
+        return "bamboo-cotton-spandex"
+    if "cotton" in normalized:
+        return "bamboo-cotton"
+    if "polyester" in normalized:
+        return "bamboo-polyester"
+    if any(term in normalized for term in ["spandex", "elastane"]):
+        return "bamboo-spandex"
+    return "bamboo-viscose"
 
 
 def bamboo_catalog_applications(value: Any) -> str:
