@@ -40,21 +40,16 @@
     }
 
     var labels = language === 'zh' ? {
-      subject: '网站面料咨询', name: '姓名', email: '邮箱', country: '国家或地区', buyerType: '客户类型', company: '公司名称', industry: '行业', website: '公司网址', relationship: '业务关系', representative: 'HLC 对接人员', message: '咨询内容'
+      subject: '网站面料咨询', name: '姓名', email: '邮箱', country: '国家或地区', company: '公司名称', message: '咨询内容'
     } : {
-      subject: 'Website fabric inquiry', name: 'Name', email: 'Email', country: 'Country / Region', buyerType: 'Buyer type', company: 'Company', industry: 'Industry', website: 'Website', relationship: 'Relationship', representative: 'HLC representative', message: 'Inquiry details'
+      subject: 'Website fabric inquiry', name: 'Name', email: 'Email', country: 'Country / Region', company: 'Company', message: 'Inquiry'
     };
 
     var body = [
       labels.name + ': ' + value('name'),
       labels.email + ': ' + value('email'),
       labels.country + ': ' + value('country'),
-      labels.buyerType + ': ' + value('buyerType'),
       labels.company + ': ' + value('company'),
-      labels.industry + ': ' + value('industry'),
-      labels.website + ': ' + value('website'),
-      labels.relationship + ': ' + value('relationship'),
-      labels.representative + ': ' + value('representative'),
       '',
       labels.message + ':',
       value('message')
