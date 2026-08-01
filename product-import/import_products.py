@@ -135,6 +135,13 @@ def product_name_from_slug(slug: str) -> str:
     name = slug.replace("-", " ").title()
     if name.startswith("Bamboo Spandex "):
         name = name.replace("Bamboo Spandex ", "Bamboo Viscose Spandex ", 1)
+    if name.startswith("Pcm "):
+        name = "PCM " + name[4:]
+    if name.startswith("37 5 "):
+        name = "37.5® " + name[5:]
+    if name.startswith("Drirelease "):
+        name = "drirelease® " + name[11:]
+    name = name.replace("Temperature Regulating", "Temperature-Regulating")
     return name
 
 
@@ -1163,13 +1170,20 @@ def update_product_catalog(
         spec.string = f"{composition} · {weight} g/m²"
         info.append(spec)
         price = soup.new_tag("p", attrs={"class": "bamboo-product-price"})
-        price_yard = soup.new_tag("strong")
-        price_yard.string = f"US${clean(basic.get(FIELDS['yard-price']))}"
-        price.append(price_yard)
-        price.append("/yd ")
-        price_kg = soup.new_tag("span")
-        price_kg.string = f"US${clean(basic.get(FIELDS['kg-price']))}/kg"
-        price.append(price_kg)
+        yard_price = clean(basic.get(FIELDS["yard-price"]))
+        kg_price = clean(basic.get(FIELDS["kg-price"]))
+        if yard_price or kg_price:
+            if yard_price:
+                price_yard = soup.new_tag("strong")
+                price_yard.string = f"US${yard_price}"
+                price.append(price_yard)
+                price.append("/yd ")
+            if kg_price:
+                price_kg = soup.new_tag("span")
+                price_kg.string = f"US${kg_price}/kg"
+                price.append(price_kg)
+        else:
+            price.string = "Price on request"
         info.append(price)
         price_date_display, _ = format_date(basic.get("价格有效期"))
         if price_date_display:
@@ -1371,6 +1385,13 @@ def generate_page(
 
     if not clean(content_row.get("其他信息（英文）")):
         remove_product_tab(soup, "other")
+
+    if not clean(basic.get("实时价格 USD/码")) and not clean(
+        basic.get("实时价格 USD/KG")
+    ):
+        price_row = soup.select_one(".catalog-price-row")
+        if price_row is not None:
+            price_row.decompose()
 
     set_text(soup, "currency", "US$")
     set_text(soup, "currency-kg", "US$")
