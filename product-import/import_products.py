@@ -131,6 +131,13 @@ def slug_is_valid(slug: str) -> bool:
     return bool(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug))
 
 
+def product_name_from_slug(slug: str) -> str:
+    name = slug.replace("-", " ").title()
+    if name.startswith("Bamboo Spandex "):
+        name = name.replace("Bamboo Spandex ", "Bamboo Viscose Spandex ", 1)
+    return name
+
+
 def read_rows(sheet) -> tuple[dict[str, dict[str, Any]], dict[int, str], dict[int, str]]:
     header_row = HEADER_ROW
     for candidate in range(1, min(sheet.max_row, 12) + 1):
@@ -151,10 +158,19 @@ def read_rows(sheet) -> tuple[dict[str, dict[str, Any]], dict[int, str], dict[in
     row_slug: dict[int, str] = {}
     col_header = dict(headers)
     for row_index in range(header_row + 1, sheet.max_row + 1):
-        row = {
-            header: sheet.cell(row=row_index, column=column).value
-            for column, header in headers.items()
-        }
+        row: dict[str, Any] = {}
+        for column, header in headers.items():
+            cell = sheet.cell(row=row_index, column=column)
+            value = cell.value
+            if cell.data_type == "f" and isinstance(value, str):
+                product_slug = clean(sheet[f"B{row_index}"].value)
+                if header == "产品名称（英文）" and slug_is_valid(product_slug):
+                    value = product_name_from_slug(product_slug)
+                elif reference := re.fullmatch(
+                    r"=\$?([A-Z]{1,3})\$?(\d+)", value.strip()
+                ):
+                    value = sheet[f"{reference.group(1)}{reference.group(2)}"].value
+            row[header] = value
         slug = clean(row.get("产品URL标识"))
         if not slug:
             continue
