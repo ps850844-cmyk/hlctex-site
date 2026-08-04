@@ -2789,6 +2789,22 @@ body.lazy-is-open {
   color: inherit;
 }
 
+.site-footer .footer-contact-row a[href^="mailto:sam@hlctex.com"]::after {
+  margin-left: .45em;
+  color: #657386;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+html[lang="en"] .site-footer .footer-contact-row a[href^="mailto:sam@hlctex.com"]::after {
+  content: "(reply within 12 hours)";
+}
+
+html[lang="zh-CN"] .site-footer .footer-contact-row a[href^="mailto:sam@hlctex.com"]::after {
+  content: "（12小时内回复）";
+}
+
 .footer-certifications {
   display: grid;
   grid-template-columns: repeat(8, minmax(58px, 82px));
