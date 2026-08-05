@@ -132,6 +132,14 @@ def slug_is_valid(slug: str) -> bool:
 
 
 def product_name_from_slug(slug: str) -> str:
+    exact_names = {
+        "high-uv-protection-fabric": "High UV protection fabric",
+        "sorona-bi-component-pique": "Sorona® Bi-Component Pique",
+        "50s-sorona-thermal-shielding-fabric": "50S Sorona thermal-shielding fabric",
+        "cotton-cool-jade-fresh-fabric": "Cotton Cool Jade-Fresh fabric",
+    }
+    if slug in exact_names:
+        return exact_names[slug]
     name = slug.replace("-", " ").title()
     if name.startswith("Bamboo Spandex "):
         name = name.replace("Bamboo Spandex ", "Bamboo Viscose Spandex ", 1)
