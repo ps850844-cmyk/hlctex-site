@@ -32,7 +32,8 @@ BAMBOO_DIRECTORY = "竹纤维面料"
 LIQUID_AMMONIA_DIRECTORY = "丝光&液氨"
 FUNCTIONAL_DIRECTORY = "功能性面料"
 WOOL_DIRECTORY = "羊毛面料"
-WOMENSWEAR_DIRECTORY = "女装面料"
+SAND_WASHED_DIRECTORY = "砂洗针织面料"
+LEGACY_WOMENSWEAR_DIRECTORY = "女装面料"
 EMBROIDERED_DIRECTORY = "绣花面料"
 
 PRODUCT_CATALOGS = {
@@ -56,10 +57,10 @@ PRODUCT_CATALOGS = {
         "label": "Wool Fabrics",
         "collection": "HLC WOOL FABRIC COLLECTION",
     },
-    WOMENSWEAR_DIRECTORY: {
+    SAND_WASHED_DIRECTORY: {
         "path": Path("textile/womenswear-fabric/index.html"),
-        "label": "Womenswear Fabrics",
-        "collection": "HLC WOMENSWEAR FABRIC COLLECTION",
+        "label": "Sand-Washed Knit Fabrics",
+        "collection": "HLC SAND-WASHED KNIT COLLECTION",
     },
     EMBROIDERED_DIRECTORY: {
         "path": Path("textile/embroidered-fabric/index.html"),
@@ -118,6 +119,13 @@ def clean(value: Any) -> str:
     if isinstance(value, float) and value.is_integer():
         return str(int(value))
     return str(value).strip()
+
+
+def normalize_directory_name(value: Any) -> str:
+    directory_name = clean(value)
+    if directory_name == LEGACY_WOMENSWEAR_DIRECTORY:
+        return SAND_WASHED_DIRECTORY
+    return directory_name
 
 
 def first_nonempty(*values: Any) -> Any:
@@ -1057,7 +1065,7 @@ def update_product_catalog(
     if not any(
         clean(row.get(publish_header)).upper() == "YES"
         and (
-            clean(row.get(DIRECTORY_HEADER)) == directory_name
+            normalize_directory_name(row.get(DIRECTORY_HEADER)) == directory_name
             or slug in existing_cards
         )
         for slug, row in basics.items()
@@ -1081,7 +1089,7 @@ def update_product_catalog(
         existing_card = existing_cards.get(slug)
         if clean(basic.get(publish_header)).upper() != "YES":
             continue
-        should_list = clean(basic.get(DIRECTORY_HEADER)) == directory_name
+        should_list = normalize_directory_name(basic.get(DIRECTORY_HEADER)) == directory_name
         if not should_list:
             if existing_card is not None:
                 existing_card.decompose()
@@ -1311,7 +1319,7 @@ def generate_page(
     canonical = f"{SITE_ORIGIN}/textile/products/{slug}/"
 
     soup = BeautifulSoup(template_path.read_text(encoding="utf-8"), "html.parser")
-    catalog = PRODUCT_CATALOGS.get(clean(basic.get(DIRECTORY_HEADER)))
+    catalog = PRODUCT_CATALOGS.get(normalize_directory_name(basic.get(DIRECTORY_HEADER)))
     if catalog:
         directory_link = soup.select_one(".catalog-breadcrumbs li:nth-of-type(3) a")
         if directory_link is not None:
