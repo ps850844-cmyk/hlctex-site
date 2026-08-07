@@ -1508,9 +1508,52 @@ def generate_page(
             offer["priceValidUntil"] = price_date_iso
         structured_data["offers"] = offer
 
-    schema = soup.new_tag("script", type="application/ld+json")
-    schema.string = json.dumps(structured_data, ensure_ascii=False, indent=2)
-    soup.head.append(schema)
+    directory_url = canonical
+    directory_name = "Fabrics"
+    if catalog:
+        directory_url = (
+            SITE_ORIGIN
+            + "/"
+            + str(catalog["path"].parent).replace("\\", "/")
+            + "/"
+        )
+        directory_name = str(catalog["label"])
+
+    breadcrumb_data = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": f"{SITE_ORIGIN}/",
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Fabrics",
+                "item": f"{SITE_ORIGIN}/textile/",
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": directory_name,
+                "item": directory_url,
+            },
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "name": product_name,
+                "item": canonical,
+            },
+        ],
+    }
+
+    for schema_payload in (structured_data, breadcrumb_data):
+        schema = soup.new_tag("script", type="application/ld+json")
+        schema.string = json.dumps(schema_payload, ensure_ascii=False, indent=2)
+        soup.head.append(schema)
 
     if not dry_run:
         output_path.parent.mkdir(parents=True, exist_ok=True)
