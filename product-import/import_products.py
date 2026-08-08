@@ -121,6 +121,18 @@ def clean(value: Any) -> str:
     return str(value).strip()
 
 
+def standard_lead_time_paragraph(value: Any, style_number: str) -> str:
+    """Preserve the product-specific opening while stating HLC's real lead times."""
+    existing = clean(value)
+    opening = re.split(r"(?<=\.)\s+", existing, maxsplit=1)[0] if existing else ""
+    if not opening:
+        opening = f"Style {style_number} is available for sampling and bulk production."
+    return (
+        f"{opening} Standard sample lead time is 15–20 days, and bulk production "
+        "takes 30–40 days."
+    )
+
+
 def normalize_directory_name(value: Any) -> str:
     directory_name = clean(value)
     if directory_name == LEGACY_WOMENSWEAR_DIRECTORY:
@@ -1339,7 +1351,10 @@ def generate_page(
             value = f"{clean(value)} cm"
         set_text(soup, field, value)
     for field, header in CONTENT_FIELDS.items():
-        set_text(soup, field, content_row.get(header))
+        value = content_row.get(header)
+        if field == "seo-paragraph-2":
+            value = standard_lead_time_paragraph(value, style_number)
+        set_text(soup, field, value)
 
     raw_test_result = clean(content_row.get(TEST_RESULT_TEXT_HEADER))
     test_result_text = (
@@ -1385,14 +1400,10 @@ def generate_page(
             basic.get("起订量 / 单色起订量"),
         ),
         "detail-weight-conversion": f"1 KG = {yards_per_kg} YDS" if yards_per_kg else "",
-        "detail-sample-lead": first_nonempty(
-            detail_row.get("Sample lead time（英文）"),
-            basic.get("样品交期（英文）"),
-        ),
-        "detail-bulk-lead": first_nonempty(
-            detail_row.get("Bulk lead time（英文）"),
-            basic.get("大货交期（英文）"),
-        ),
+        # Standard HLC commercial lead times. Keeping these values here stops
+        # older spreadsheet rows from restoring outdated conditional wording.
+        "detail-sample-lead": "15–20 days",
+        "detail-bulk-lead": "30–40 days",
         "detail-applications": first_nonempty(
             detail_row.get("Applications（英文）"),
             basic.get("适用产品"),
