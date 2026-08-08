@@ -99,6 +99,12 @@ const ui = [
   ['Bamboo Viscose Knit Fabrics','竹レーヨンニット生地'], ['Bamboo Viscose Knits','竹レーヨンニット生地'],
   ['Functional Knit Fabrics','機能性ニット生地'], ['Functional Knits','機能性ニット生地'], ['Wool Fabrics','メリノウールニット生地'],
   ['Sand-Washed Knit Fabrics','サンドウォッシュニット生地'], ['Embroidered Fabrics','オーダー刺繍生地'],
+  ['Soft knit fabrics for babywear, sleepwear and next-to-skin apparel.','ベビー服、パジャマ、肌着向けの柔らかなニット生地。'],
+  ['Thermoregulation, moisture management, cooling and performance development.','温度調節、吸汗速乾、接触冷感などの機能性開発。'],
+  ['Refined cotton knits with smoother surfaces and improved dimensional stability.','滑らかな表面と寸法安定性を備えた高品質コットンニット。'],
+  ['Merino wool and RWS-certified wool blend fabrics.','メリノウールとRWS認証ウール混ニット生地。'],
+  ['Soft-touch modal, EcoCosy® viscose and polyester blend knits with a relaxed drape.','柔らかなモダール、EcoCosy®レーヨン、ポリエステル混のドレープニット。'],
+  ['Custom decorative fabrics for womenswear, occasionwear and branded apparel.','婦人服、オケージョンウェア、ブランド衣料向けのオーダー刺繍生地。'],
   ['Certifications &amp; Material Support','認証・素材サポート'], ['Certifications & Material Support','認証・素材サポート'],
   ['No. 51 Hengle Road, Puyuan Town, Tongxiang, Jiaxing, Zhejiang 314502, China','中国浙江省嘉興市桐郷市濮院鎮恒楽路51号 314502'],
   ['All rights reserved.','無断転載を禁じます。'], ['Email','メール'], ['Tel','電話'], ['Fax','ファクス']
@@ -124,7 +130,24 @@ function inject(html,route,hasZh=false){html=html.replace(/\s*<link[^>]+hreflang
 function updateSource(file,route,hasZh=false){if(!fs.existsSync(file))return; const html=inject(fs.readFileSync(file,'utf8'),route,hasZh); fs.writeFileSync(file,html,'utf8');}
 function localizeLinks(html){return html.replace(/https:\/\/hlctex\.com\/textile\//g,`${base}/ja/textile/`).replace(/href="\/textile\//g,'href="/ja/textile/').replace(/https:\/\/hlctex\.com\/company\//g,`${base}/ja/company/`).replace(/href="\/company\//g,'href="/ja/company/').replace(/https:\/\/hlctex\.com\/pickup\//g,`${base}/ja/pickup/`).replace(/href="\/pickup\//g,'href="/ja/pickup/').replace(/href="\/contact\//g,'href="/ja/contact/').replace(/href="\/"/g,'href="/ja/"').replace(/href="\/#/g,'href="/ja/#');}
 function setMeta(html,route,title,desc){html=html.replace(/<html[^>]*lang="[^"]*"/i,'<html lang="ja"').replace(/<title>[\s\S]*?<\/title>/i,`<title>${title}</title>`).replace(/<meta\b[^>]*name="description"[^>]*>/i,`<meta name="description" content="${desc}">`).replace(/<link\b[^>]*rel="canonical"[^>]*>/i,`<link rel="canonical" href="${url(route,'ja')}">`).replace(/<meta\b[^>]*property="og:title"[^>]*>/i,`<meta property="og:title" content="${title}">`).replace(/<meta\b[^>]*property="og:description"[^>]*>/i,`<meta property="og:description" content="${desc}">`).replace(/<meta\b[^>]*property="og:url"[^>]*>/i,`<meta property="og:url" content="${url(route,'ja')}">`).replace(/<meta\b[^>]*name="twitter:title"[^>]*>/i,`<meta name="twitter:title" content="${title}">`).replace(/<meta\b[^>]*name="twitter:description"[^>]*>/i,`<meta name="twitter:description" content="${desc}">`); if(!/property="og:locale"/i.test(html))html=html.replace('</title>','</title>\n<meta property="og:locale" content="ja_JP">'); return html;}
-function replaceVisible(html){const blocks=[]; html=html.replace(/<(script|style)\b[\s\S]*?<\/\1>/gi,b=>{blocks.push(b);return `__BLOCK_${blocks.length-1}__`;}); for(const [a,b] of ui)html=html.replace(new RegExp(esc(a),'g'),b); html=html.replace(/(\d+)\s+fabrics\b/gi,'$1種類').replace(/(\d+)生地s\b/gi,'$1種類'); html=html.replace(/>([^<]+)</g,(m,t)=>`>${replaceTerms(t).replace(/\band\b/gi,'・')}<`); return html.replace(/__BLOCK_(\d+)__/g,(_,i)=>blocks[+i]);}
+function translateVisibleText(text){
+  let output=text;
+  // Translate complete phrases before shorter shared terms.  Otherwise entries
+  // such as "cotton", "knits" or "and" partially rewrite a sentence and stop
+  // its full Japanese translation from matching.
+  for(const [a,b] of [...ui].sort((x,y)=>y[0].length-x[0].length))output=output.replace(new RegExp(esc(a),'g'),b);
+  return replaceTerms(output)
+    .replace(/(\d+)\s+fabrics\b/gi,'$1種類')
+    .replace(/(\d+)生地s\b/gi,'$1種類')
+    .replace(/\band\b/gi,'・');
+}
+function replaceVisible(html){
+  const blocks=[];
+  html=html.replace(/<(script|style)\b[\s\S]*?<\/\1>/gi,b=>{blocks.push(b);return `__BLOCK_${blocks.length-1}__`;});
+  html=html.replace(/>([^<]+)</g,(m,t)=>`>${translateVisibleText(t)}<`);
+  html=html.replace(/\b(alt|aria-label|placeholder|title)="([^"]*)"/gi,(m,a,v)=>`${a}="${translateVisibleText(v)}"`);
+  return html.replace(/__BLOCK_(\d+)__/g,(_,i)=>blocks[+i]);
+}
 function fixJson(html,route,product={}){return html.replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi,(whole,raw)=>{try{const d=JSON.parse(raw); const visit=x=>{if(!x||typeof x!=='object')return; if(['Product','CollectionPage','WebPage','Organization'].includes(x['@type']))x.inLanguage='ja-JP'; if(x['@type']==='Product'){
       if(product.name)x.name=product.name;
       if(product.description)x.description=product.description;
