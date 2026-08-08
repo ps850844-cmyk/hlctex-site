@@ -486,6 +486,12 @@ def render_test_results(
             )
         )
         figure.append(link)
+        caption = soup.new_tag("figcaption")
+        caption.string = (
+            f"Laboratory report for {product_name}. Open the high-resolution "
+            "image to review the reported methods and results."
+        )
+        figure.append(caption)
         panel.append(figure)
     if text:
         paragraph = soup.new_tag("p")
@@ -1468,6 +1474,37 @@ def generate_page(
         "countryOfOrigin": clean(basic.get("原产国")) or "China",
         "material": clean(basic.get("成分")),
     }
+    additional_properties = []
+    product_properties = [
+        ("Yarn count", detail_values.get("detail-yarn-count")),
+        (
+            "Fabric weight",
+            f"{clean(basic.get('克重（g/m²）'))} g/m²"
+            if clean(basic.get("克重（g/m²）")) else "",
+        ),
+        (
+            "Cuttable width",
+            f"{clean(basic.get('有效幅宽（cm）'))} cm"
+            if clean(basic.get("有效幅宽（cm）")) else "",
+        ),
+        ("Construction", clean(basic.get("织物组织"))),
+        ("Finishing", detail_values.get("detail-finishing")),
+        ("MOQ / MCQ", detail_values.get("detail-moq")),
+        ("Sample lead time", detail_values.get("detail-sample-lead")),
+        ("Bulk lead time", detail_values.get("detail-bulk-lead")),
+        ("Applications", detail_values.get("detail-applications")),
+    ]
+    if test_result_image or test_result_text:
+        product_properties.append(("Test report", "Available on this product page"))
+    for property_name, property_value in product_properties:
+        if clean(property_value):
+            additional_properties.append({
+                "@type": "PropertyValue",
+                "name": property_name,
+                "value": clean(property_value),
+            })
+    if additional_properties:
+        structured_data["additionalProperty"] = additional_properties
     if sources:
         structured_data["image"] = [
             source if source.startswith("http") else SITE_ORIGIN + source
@@ -1569,6 +1606,11 @@ def main() -> int:
     parser.add_argument("--repo", required=True, type=Path)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--only", help="Generate only one product URL slug")
+    parser.add_argument(
+        "--refresh-existing",
+        action="store_true",
+        help="Regenerate every workbook product that already has a page, even when Publish is NO.",
+    )
     args = parser.parse_args()
 
     workbook_path = args.workbook.resolve()
@@ -1616,11 +1658,19 @@ def main() -> int:
         related_rows,
         related_row_slug,
     )
+    def should_generate(slug: str, row: dict[str, Any]) -> bool:
+        marked_for_publish = clean(row.get("发布")).upper() == "YES"
+        existing_page = (
+            repo / "textile" / "products" / slug / "index.html"
+        ).exists()
+        return (
+            marked_for_publish or (args.refresh_existing and existing_page)
+        ) and (not args.only or slug == args.only)
+
     publish_slugs = {
         slug
         for slug, row in basics.items()
-        if clean(row.get("发布")).upper() == "YES"
-        and (not args.only or slug == args.only)
+        if should_generate(slug, row)
     }
     image_rows = {
         slug: row
@@ -1645,9 +1695,7 @@ def main() -> int:
     selected: list[str] = []
     errors: list[str] = []
     for slug, basic in basics.items():
-        if clean(basic.get("发布")).upper() != "YES":
-            continue
-        if args.only and slug != args.only:
+        if not should_generate(slug, basic):
             continue
         if not slug_is_valid(slug):
             errors.append(f"{slug}: URL identifier must use lowercase letters, numbers and hyphens")

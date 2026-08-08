@@ -418,6 +418,14 @@
   background: #fff;
 }
 
+.catalog-test-result-media figcaption {
+  max-width: 820px;
+  margin-top: 12px;
+  color: #627183;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .catalog-test-result-media + p {
   max-width: 860px;
 }
@@ -426,6 +434,29 @@
   max-width: 860px;
   margin-top: 22px;
   font-family: "HLC Source Sans", Arial, sans-serif;
+}
+
+.catalog-product-seo-copy {
+  max-width: 920px;
+  margin-top: clamp(28px, 4vw, 48px);
+  padding-top: clamp(22px, 3vw, 34px);
+  border-top: 1px solid rgba(17, 43, 66, 0.14);
+}
+
+.catalog-product-seo-copy h2 {
+  margin: 0 0 16px;
+  color: #102a43;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(24px, 2.3vw, 34px);
+  font-weight: 400;
+  line-height: 1.16;
+}
+
+.catalog-product-seo-copy p {
+  margin: 0 0 14px;
+  color: #526273;
+  font-size: 15px;
+  line-height: 1.75;
 }
 
 .catalog-related {
