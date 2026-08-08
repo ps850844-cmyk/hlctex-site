@@ -1939,6 +1939,8 @@ body:not(.home-page).header-compact .mega-menu {
   line-height: 1.08;
   letter-spacing: -.025em;
   text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: normal;
   text-shadow: 0 2px 22px rgba(0, 0, 0, .36);
 }
 
@@ -1949,6 +1951,7 @@ body:not(.home-page).header-compact .mega-menu {
   font-size: 12px;
   line-height: 1.55;
   letter-spacing: .01em;
+  word-break: keep-all;
   opacity: 0;
   transform: translateY(12px);
   transition: opacity .35s ease .06s, transform .4s ease .06s;

@@ -372,6 +372,31 @@ function buildCatalog(route, title, description) {
   html = injectAlternates(html, route, hasZh);
   if (route === '') html = translateHomepage(html);
   html = replaceUi(html);
+  if (route === 'textile') {
+    const textileLandingPairs = [
+      ['HLC 니트 원단 컬렉션s 및 Textile 후가공', 'HLC 니트 원단 컬렉션 및 후가공'],
+      ['HLC textile collections', 'HLC 니트 원단 컬렉션'],
+      ['Bamboo viscose knit fabric for babywear and sleepwear', '유아동복과 잠옷용 대나무 비스코스 니트 원단'],
+      ['Functional knit fabric with thermoregulation performance', '체온 조절 기능성 니트 원단'],
+      ['Mercerized and liquid ammonia finished cotton knit fabric', '머서라이즈 및 액체 암모니아 가공 코튼 니트 원단'],
+      ['Merino wool jersey fabric and RWS wool blend development', '메리노 울 저지 및 RWS 울 혼방 원단'],
+      ['Soft sand-washed modal polyester spandex knit fabric', '부드러운 샌드 워싱 모달 폴리에스터 스판덱스 니트 원단'],
+      ['Custom decorative and embroidered fabric development', '맞춤 장식 및 자수 원단 개발'],
+      ['01 / BAMBOO', '01 / 대나무'],
+      ['02 / PERFORMANCE', '02 / 기능성'],
+      ['03 / FINISHING', '03 / 후가공'],
+      ['06 / EMBROIDERY', '06 / 자수'],
+      ['Soft 니트 원단 for 유아복, 잠옷 및 next-to-skin apparel.', '유아동복, 잠옷과 피부에 닿는 의류를 위한 부드러운 대나무 비스코스 니트 원단입니다.'],
+      ['Thermoregulation, moisture management, cooling 및 performance development.', '체온 조절, 흡한속건, 냉감과 신축 성능을 용도에 맞춰 개발합니다.'],
+      ['머서라이즈 가공 &amp;<br>액체 암모니아 가공', '머서라이즈 &amp; 액체 암모니아 가공'],
+      ['Refined 코튼 니트s with smoother surfaces 및 improved dimensional stability.', '코튼 니트의 표면을 매끄럽게 하고 촉감과 치수 안정성을 개선하는 프리미엄 후가공입니다.'],
+      ['메리노 울 및 RWS-certified 울 blend 원단.', '메리노 울, RWS 인증 울과 기능성 울 혼방으로 저지, 인터록과 피케 원단을 개발합니다.'],
+      ['샌드 워싱 니트s', '샌드 워싱 니트'],
+      ['Soft-touch 모달, EcoCosy® viscose 및 폴리에스터 blend 니트s with a relaxed drape.', '모달, EcoCosy® 비스코스와 폴리에스터 혼방 니트에 부드러운 촉감과 자연스러운 드레이프를 더합니다.'],
+      ['Custom decorative 원단 for wo남성복, occasionwear 및 branded apparel.', '여성복, 예복과 브랜드 컬렉션을 위한 맞춤 자수 원단을 개발합니다.'],
+    ];
+    for (const [from, to] of textileLandingPairs) html = html.replace(new RegExp(esc(from), 'g'), to);
+  }
   html = html.replace(/<a aria-label="[^\"]*" href="\/zh\/textile\/">/i, '<a aria-label="English" href="/">');
   html = html.replace(/<h1>Bamboo Viscose Knit 원단s<\/h1>/i, '<h1>대나무 비스코스 니트 원단</h1>');
   html = html.replace(/<h1>Mercerized and 액체 암모니아 가공 원단s<\/h1>/i, '<h1>머서라이즈·액체 암모니아 가공 니트 원단</h1>');
