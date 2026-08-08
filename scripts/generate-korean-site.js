@@ -177,6 +177,8 @@ function replaceUi(html) {
 function internalToKo(html) {
   html = html.replace(/https:\/\/hlctex\.com\/textile\//g, `${base}/ko/textile/`);
   html = html.replace(/href="\/textile\//g, 'href="/ko/textile/');
+  html = html.replace(/https:\/\/hlctex\.com\/company\//g, `${base}/ko/company/`);
+  html = html.replace(/href="\/company\//g, 'href="/ko/company/');
   html = html.replace(/href="\/"/g, 'href="/ko/"');
   html = html.replace(/href="\/#/g, 'href="/ko/#');
   return html;
