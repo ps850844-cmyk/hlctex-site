@@ -105,7 +105,8 @@ function routeUrl(route, lang='en') { return `${base}${lang === 'ko' ? '/ko' : '
 function alternates(route, hasZh=false) {
   const en = routeUrl(route, 'en');
   const ko = routeUrl(route, 'ko');
-  let s = `<link href="${en}" hreflang="en" rel="alternate"/>\n<link href="${ko}" hreflang="ko" rel="alternate"/>\n`;
+  const ja = `${base}/ja/${route ? route + '/' : ''}`;
+  let s = `<link href="${en}" hreflang="en" rel="alternate"/>\n<link href="${ko}" hreflang="ko" rel="alternate"/>\n<link href="${ja}" hreflang="ja" rel="alternate"/>\n`;
   if (hasZh) s += `<link href="${base}/zh/${route ? route + '/' : ''}" hreflang="zh-Hans" rel="alternate"/>\n`;
   return s + `<link href="${en}" hreflang="x-default" rel="alternate"/>`;
 }
@@ -217,10 +218,51 @@ const editorialByRoute = {
 </section>`,
   'textile/mercerized-liquid-ammonia-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>고급 코튼 니트에 필요한 후가공</h2><p>HLC는 Lafer 액체 암모니아 생산라인 1대와 Pukwang 머서라이즈 생산라인 2대를 운영합니다. BCI 코튼, 수피마와 기자 코튼 니트의 촉감, 광택, 치수 안정성과 세탁 후 외관을 개선합니다.</p><h3>브랜드 개발에 맞춘 사양</h3><p>폴로, 티셔츠, 내의, 유아복, 잠옷과 라운지웨어용 원단을 원사 번수, 중량, 조직과 목표 촉감에 맞춰 개발합니다.</p><h3>시험 결과와 생산 정보</h3><p>제품 페이지에서 소재, 중량, MOQ, 샘플 및 벌크 납기와 시험 결과를 확인할 수 있습니다.</p></section>`,
   'textile/functional': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>용도에 맞는 기능성 니트 원단</h2><p>흡한속건, 온도 조절, 자외선 차단, 냉감과 신축 기능은 실제 착용 환경과 원단 조직에 맞춰 선택해야 합니다. HLC는 목표 중량과 성능 기준에 따라 원사, 편직, 염색과 후가공을 함께 설계합니다.</p><h3>수치로 확인하는 성능</h3><p>가능한 제품에는 치수 안정성, 견뢰도, 필링, 흡수·건조와 관련 시험 결과를 제공해 개발팀과 구매팀의 비교를 돕습니다.</p></section>`,
-  'textile/wool-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>왜 HLC 메리노 울 원단을 선택해야 하나요?</h2><p>HLC는 세계적인 울 원사 공급업체 Xinao와 같은 저장성 자싱·퉁샹 지역에 있습니다. 10년 이상 이어온 협업을 통해 메리노 울 편직과 염색 특성을 잘 이해하며, 안정적인 원사 조달과 경쟁력 있는 가격을 제공합니다.</p><h3>책임 있는 메리노 울</h3><p>프로젝트 요구에 따라 뮬징 프리 울, RWS와 ZQ Merino 원사를 검토할 수 있습니다.</p><h3>울 니트 염색 역량</h3><p>HLC는 중국에서 울 니트 원단 염색을 수행할 수 있는 소수의 전문 염색 공장 중 하나로, 저지·인터록·피케와 기능성 혼방 원단을 개발합니다.</p></section>`,
+  'textile/wool-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>왜 HLC 메리노 울 원단을 선택해야 할까요?</h2><h3>10년 이상 축적한 지역 기반의 울 소재 경험</h3><p>HLC와 세계적인 울 원사 공급업체 신아오(Xinao)는 모두 저장성 자싱시 퉁샹에 있습니다. 10년이 넘는 협업을 통해 메리노 울 원사 선정부터 니트 조직 개발, 염색과 후가공까지 폭넓은 경험을 축적했습니다.</p><h3>경쟁력 있는 가격과 안정적인 납기</h3><p>지역 울 공급망과 가까워 원사 조달과 커뮤니케이션 시간을 줄일 수 있으며, 이를 바탕으로 경쟁력 있는 가격, 일관된 품질 관리와 안정적인 벌크 납기를 제공합니다.</p><h3>니트 울 염색 전문성</h3><p>HLC는 중국에서 니트 울 원단 염색이 가능한 소수의 전문 염색 공장 중 하나로, 균일한 색상과 관리된 후가공, 안정적인 대량 생산을 지원합니다.</p><h3>책임 있는 메리노 울 선택</h3><p>프로젝트 요구에 따라 RWS 인증 울, 뮬징 프리 울, ZQ 메리노 울과 기능성 울 혼방 원단을 프리미엄 의류용으로 개발할 수 있습니다.</p></section>`,
   'textile/womenswear-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>샌드 워싱 니트 원단</h2><p>샌드 워싱은 모달, 텐셀, 폴리에스터와 혼방 니트에 부드러운 촉감과 자연스러운 드레이프를 더합니다. 여성복, 라운지웨어와 캐주얼 컬렉션에 맞춰 중량, 조직과 표면 효과를 개발합니다.</p></section>`,
   'textile/embroidered-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>브랜드를 위한 맞춤 자수 원단</h2><p>여성복, 유아동복과 캡슐 컬렉션을 위한 자수 패턴, 바탕 원단, 색상과 반복 규격을 함께 개발합니다. 샘플 확인 후 생산 사양과 납기를 협의합니다.</p></section>`
 };
+
+function localizeWoolCatalog(html) {
+  const replacements = [
+    ['Composition options', '소재 구성 선택'], ['소재 구성 options', '소재 구성 선택'],
+    ['Weight options', '중량 선택'], ['중량 options', '중량 선택'],
+    ['Construction options', '조직 선택'], ['조직 options', '조직 선택'],
+    ['Application options', '용도 선택'], ['용도 options', '용도 선택'],
+    ['Filter wool fabrics', '울 원단 필터'], ['Wool Blend', '울 혼방'], ['울 Blend', '울 혼방'],
+    ['Activewear', '스포츠웨어'], ['No published fabrics match this category yet.', '현재 이 카테고리에 게시된 원단이 없습니다.'],
+    ['No published 원단 match this category yet.', '현재 이 카테고리에 게시된 원단이 없습니다.'],
+    ['Merino Wool Nylon Spandex Jersey', '메리노 울 나일론 스판덱스 저지'],
+    ['RWS Merino Wool Jersey', 'RWS 메리노 울 저지'], ['RWS Merino Wool Interlock', 'RWS 메리노 울 인터록'],
+    ['Ultra-Light Merino Wool Jersey', '초경량 메리노 울 저지'],
+    ['Ultra-Light TENCEL™ Merino Jersey', '초경량 TENCEL™ 메리노 저지'],
+    ['Ultra-Light TENCEL Merino Jersey', '초경량 TENCEL™ 메리노 저지'],
+    ['초경량 텐셀™ Merino 저지', '초경량 TENCEL™ 메리노 저지'],
+    ['COOLMAX® Merino Striped Jersey', 'COOLMAX® 메리노 스트라이프 저지'],
+    ['COOLMAX Merino Striped Jersey', 'COOLMAX® 메리노 스트라이프 저지'],
+    ['쿨맥스® Merino 스트라이프 저지', 'COOLMAX® 메리노 스트라이프 저지'],
+    ['TENCEL™ Merino Jersey', 'TENCEL™ 메리노 저지'], ['TENCEL Merino Jersey', 'TENCEL™ 메리노 저지'],
+    ['텐셀™ Merino 저지', 'TENCEL™ 메리노 저지'],
+    ['Merino Nylon Spandex Jacquard', '메리노 나일론 스판덱스 자카드'],
+    ['Merino 나일론 스판덱스 자카드', '메리노 나일론 스판덱스 자카드'],
+    ['37.5® Nylon Merino Wool Mesh', '37.5® 나일론 메리노 울 메시'],
+    ['37.5 Nylon Merino Wool Mesh', '37.5® 나일론 메리노 울 메시'],
+    ['COOLMAX® Merino Wool Pique', 'COOLMAX® 메리노 울 피케'],
+    ['COOLMAX Merino Wool Pique', 'COOLMAX® 메리노 울 피케'],
+    ['Merino Wool', '메리노 울'], ['Elastane', '엘라스테인'], ['Nylon', '나일론'],
+    ['HLC WOOL FABRIC COLLECTION', 'HLC 울 원단 컬렉션'],
+    ['fabric front view', '원단 정면 이미지'],
+    ['Wool fabric products', '울 원단 제품'], ['Wool 원단 products', '울 원단 제품'],
+    ['Breadcrumb', '이동 경로'], ['HLC home', 'HLC 홈'], ['HLC Certifications', 'HLC 인증'],
+    ['Style#：', '품번:'], ['Style#:', '품번:'],
+    ['No. 51 Hengle Road, Puyuan Town, Tongxiang, Jiaxing, Zhejiang 314502, China', '중국 저장성 자싱시 퉁샹시 푸위안진 헝러로 51, 314502'],
+    ['Tel +86 573 8887 0000', '전화 +86 573 8887 0000'], ['Fax +86 573 8870 800', '팩스 +86 573 8870 800'],
+    ['Email', '이메일'],
+    ['© Copyright HLC GROUP CO., LTD. All rights reserved.', '© HLC GROUP CO., LTD. 모든 권리 보유.']
+  ];
+  for (const [from, to] of replacements) html = html.replace(new RegExp(esc(from), 'g'), to);
+  return html;
+}
 
 function translateHomepage(html) {
   const exact = [
@@ -342,7 +384,8 @@ function buildCatalog(route, title, description) {
     return `${h1}<span class="bamboo-catalog-count">${count}종 원단</span>`;
   });
   html = html.replace(/HLC BAMBOO KNIT COLLECTION/g, 'HLC 대나무 니트 컬렉션');
-  if (editorialByRoute[route]) html = html.replace(/<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial">[\s\S]*?<\/section>/i, editorialByRoute[route]);
+  if (editorialByRoute[route]) html = html.replace(/<section aria-labelledby="[^"]+" class="bamboo-filter-editorial">[\s\S]*?<\/section>/i, editorialByRoute[route]);
+  if (route === 'textile/wool-fabric') html = localizeWoolCatalog(html);
   html = fixJsonUrls(html);
   const out = path.join(root, 'ko', route, 'index.html');
   fs.mkdirSync(path.dirname(out), {recursive:true});
