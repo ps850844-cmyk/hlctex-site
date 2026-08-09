@@ -391,10 +391,39 @@ function buildMisc(route) {
   html = replacePairs(html, miscPhrases);
   html = replacePairs(html, miscRoutePhrases[route] || []);
   html = translateVisible(html);
+  if (route === 'company/overview') {
+    html = html
+      .replace('aria-label="HLC facilities and production capacity"', 'aria-label="Производственные мощности HLC"')
+      .replace('src="/motion-preview/"', 'src="/ru/motion-preview/"')
+      .replace('title="Animated HLC facilities and production capacity"', 'title="Производственные мощности HLC в цифрах"');
+  }
   html = fixJson(html, route);
   const out = routeFile('ru', route);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   fs.writeFileSync(out, html, 'utf8');
+}
+
+function buildRussianMotionPreview() {
+  const srcDir = path.join(root, 'motion-preview');
+  const outDir = path.join(root, 'ru', 'motion-preview');
+  let html = fs.readFileSync(path.join(srcDir, 'index.html'), 'utf8');
+  html = html
+    .replace('<html lang="en">', '<html lang="ru">')
+    .replace('<title>HLC Facilities and Production Capacity</title>', '<title>Производственные мощности HLC</title>')
+    .replace('At our own manufacturing base, fabric R&amp;D, knitting, dyeing, waterless dyeing, mercerization, liquid ammonia finishing and inspection are managed within one production system. Buyers work with the same accountable factory team from material selection and sampling through bulk production and shipment.', 'На собственной производственной площадке HLC разработка тканей, вязание, крашение, маловодное крашение, мерсеризация, отделка жидким аммиаком и контроль качества объединены в единую производственную систему. От выбора сырья и изготовления образцов до серийного производства и отгрузки заказ сопровождает одна ответственная команда фабрики.')
+    .replace('FACTORY AREA', 'ПЛОЩАДЬ ФАБРИКИ')
+    .replace('Animated isometric view of the HLC factory', 'Анимированная изометрическая схема фабрики HLC')
+    .replace('MONTHLY CAPACITY', 'МЕСЯЧНАЯ МОЩНОСТЬ')
+    .replace('/ month', '/ месяц')
+    .replace('Animated integrated textile production line', 'Анимированная схема интегрированной текстильной линии')
+    .replace('PRODUCTION HOURS', 'РЕЖИМ ПРОИЗВОДСТВА')
+    .replace('CONTINUOUS PRODUCTION', 'НЕПРЕРЫВНОЕ ПРОИЗВОДСТВО')
+    .replace('/ day', '/ сутки')
+    .replace(/THREE-SHIFT OPERATION/g, 'РАБОТА В ТРИ СМЕНЫ')
+    .replace('Animated clock and production gears', 'Анимированные часы и производственные механизмы');
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'index.html'), html, 'utf8');
+  fs.copyFileSync(path.join(srcDir, 'preview.css'), path.join(outDir, 'preview.css'));
 }
 
 function addRuAlternate(file, route) {
@@ -409,6 +438,7 @@ const productsRoot = path.join(root, 'textile', 'products');
 const slugs = fs.readdirSync(productsRoot).filter(s => s !== 'product-template' && fs.existsSync(path.join(productsRoot, s, 'index.html')));
 for (const slug of slugs) buildProduct(slug);
 for (const route of Object.keys(miscMeta)) buildMisc(route);
+buildRussianMotionPreview();
 
 const allRoutes = [...Object.keys(catalogMeta), ...slugs.map(s => `textile/products/${s}`), ...Object.keys(miscMeta)];
 for (const route of allRoutes) {
