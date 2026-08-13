@@ -586,7 +586,7 @@ def build_gallery(
                 "data-alt": alts[index],
             },
         )
-        thumb = soup.new_tag("img", src=source, alt="")
+        thumb = soup.new_tag("img", src=source, alt=alts[index])
         button.append(thumb)
         thumbnails.append(button)
 
