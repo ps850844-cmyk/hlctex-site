@@ -201,7 +201,10 @@ function setMeta(html, route, title, description) {
 }
 function fixJsonUrls(html) {
   html = html.replace(/"(url|item|@id)": "https:\/\/hlctex\.com\/(?!assets\/)(?!ko\/)([^"#]*)"/g, (m,k,p) => `"${k}": "${base}/ko/${p}"`);
-  html = html.replace(/"@type": "(Product|CollectionPage|WebPage)"(?!,\s*"inLanguage")/g, '"@type": "$1",\n  "inLanguage": "ko-KR"');
+  // Product JSON-LD is localized by localizeProductJsonLd(). Keeping Product
+  // in this fallback caused a second top-level inLanguage property to be
+  // inserted after serialization, which Google rejects as a duplicate field.
+  html = html.replace(/"@type": "(CollectionPage|WebPage)"(?!,\s*"inLanguage")/g, '"@type": "$1",\n  "inLanguage": "ko-KR"');
   return html;
 }
 
