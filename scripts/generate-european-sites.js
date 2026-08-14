@@ -219,8 +219,8 @@ function injectSeo(html, route, lang) {
   html = html.replace(/<html\b[^>]*\blang="[^"]*"/i, match => match.replace(/lang="[^"]*"/i, `lang="${languages[lang].html}"`));
   if (!/<html\b[^>]*\blang=/i.test(html)) html = html.replace(/<html\b/i, `<html lang="${languages[lang].html}"`);
   html = html.replace(/\b(href|action)="([^"]+)"/gi, (whole, attr, value) => `${attr}="${localizedPath(value, lang)}"`);
-  html = html.replace(/<link\s+rel="canonical"[^>]*>/gi, '');
-  html = html.replace(/<link\s+rel="alternate"\s+hreflang="[^"]+"[^>]*>/gi, '');
+  html = html.replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>\s*/gi, '');
+  html = html.replace(/<link\b(?=[^>]*\brel=["']alternate["'])(?=[^>]*\bhreflang=["'][^"']+["'])[^>]*>\s*/gi, '');
   const alternates = [
     ['en', ''], ['zh-Hans', 'zh'], ['zh-Hant', 'zh-tw'], ['ja', 'ja'], ['ko', 'ko'], ['ru', 'ru'],
     ['de', 'de'], ['es', 'es'], ['fr', 'fr'], ['x-default', '']
@@ -307,7 +307,7 @@ for (const prefix of ['', 'zh', 'zh-tw', 'ja', 'ko', 'ru']) {
     const file = path.join(root, prefix, route, 'index.html');
     if (!fs.existsSync(file)) continue;
     let html = fs.readFileSync(file, 'utf8');
-    html = html.replace(/<link\s+rel="alternate"\s+hreflang="(?:de|es|fr)"[^>]*>\s*/gi, '');
+    html = html.replace(/<link\b(?=[^>]*\brel=["']alternate["'])(?=[^>]*\bhreflang=["'](?:de|es|fr)["'])[^>]*>\s*/gi, '');
     const tags = ['de', 'es', 'fr'].map(lang => `<link rel="alternate" hreflang="${lang}" href="${routeUrl(route, lang)}">`).join('\n');
     html = html.replace(/<\/head>/i, `${tags}\n</head>`);
     fs.writeFileSync(file, html, 'utf8');

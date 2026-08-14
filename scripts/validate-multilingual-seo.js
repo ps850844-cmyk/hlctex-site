@@ -85,7 +85,10 @@ for (const file of htmlFiles) {
   const noindex = /\bnoindex\b/i.test(attr(robotsTag, 'content'));
   const title = (html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1]?.trim() || '';
   const descriptionTag = firstTag(html, 'meta', (tag) => attr(tag, 'name').toLowerCase() === 'description');
-  const canonicalTag = firstTag(html, 'link', (tag) => attr(tag, 'rel').toLowerCase() === 'canonical');
+  const canonicalTags = [...html.matchAll(/<link\b[^>]*>/gi)]
+    .map((match) => match[0])
+    .filter((tag) => attr(tag, 'rel').toLowerCase() === 'canonical');
+  const canonicalTag = canonicalTags[0] || '';
   const alternates = [...html.matchAll(/<link\b[^>]*>/gi)]
     .map((match) => match[0])
     .filter((tag) => attr(tag, 'rel').toLowerCase() === 'alternate' && attr(tag, 'hreflang'))
@@ -97,6 +100,7 @@ for (const file of htmlFiles) {
     noindex,
     title,
     description: attr(descriptionTag, 'content').trim(),
+    canonicalCount: canonicalTags.length,
     canonical: attr(canonicalTag, 'href'),
     alternates,
     text: visibleText(html),
@@ -113,6 +117,7 @@ for (const record of indexable) {
   const expectedCanonical = `${origin}${record.route}`;
   if (!record.title) errors.push(`${record.route}: missing title`);
   if (!record.description) errors.push(`${record.route}: missing meta description`);
+  if (record.canonicalCount !== 1) errors.push(`${record.route}: expected exactly one canonical tag, found ${record.canonicalCount}`);
   if (record.canonical !== expectedCanonical) errors.push(`${record.route}: incorrect canonical ${record.canonical}`);
   if (!sitemapSet.has(expectedCanonical)) errors.push(`${record.route}: absent from sitemap.xml`);
 
