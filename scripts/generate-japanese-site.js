@@ -116,7 +116,7 @@ const editorial = {
   'textile/functional': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>用途から選ぶ機能性ニット生地</h2><p>吸汗速乾、温度調節、UVカット、接触冷感、ストレッチ機能を、実際の着用環境と編組織に合わせて設計します。HLCは目標目付と性能基準に沿って、糸、編立、染色、仕上げを一体で調整します。</p><h3>数値で確認できる性能</h3><p>対象製品には寸法安定性、染色堅牢度、ピリング、吸水・速乾などの試験結果を提供します。</p></section>`,
   'textile/wool-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>HLCのメリノウール生地が選ばれる理由</h2><p>HLCは世界的なウール糸メーカーXinaoと同じ浙江省嘉興市桐郷に拠点を置き、10年以上の協業を通じてメリノウールの編立・染色特性を熟知しています。安定した糸調達と競争力のある価格を提供します。</p><h3>責任あるメリノウール</h3><p>プロジェクトに応じて、ミュールジングフリー、RWS、ZQ Merino認証糸に対応します。</p><h3>ウールニット染色の専門性</h3><p>HLCは中国でも数少ないウールニット生地の染色に対応できる専門工場として、天竺、スムース、鹿の子、機能性混紡を開発します。</p></section>`,
   'textile/womenswear-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>サンドウォッシュニット生地</h2><p>モダール、テンセル、ポリエステル、混紡ニットに柔らかな風合いと自然なドレープを付与します。婦人服、ルームウェア、カジュアルコレクション向けに目付、組織、表面感を開発します。</p></section>`,
-  'textile/embroidered-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>ブランド向けオーダー刺繍生地</h2><p>婦人服、ベビー・キッズ、カプセルコレクション向けに、刺繍柄、ベース生地、色、リピート寸法を開発します。サンプル確認後に量産仕様と納期をご案内します。</p></section>`
+  'textile/embroidered-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>ブランド向けオーダー刺繍生地</h2><p>婦人服、ベビー・キッズ、ドレス、カプセルコレクション向けに、刺繍柄と立体感を用途に合わせて設計します。ニットまたは織物のベース生地、混率、目付、色、風合い、柄リピートを組み合わせ、サンプル確認後に有効幅、MOQ、試作・量産納期、試験項目などの生産仕様をご案内します。</p></section>`
 };
 
 function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
