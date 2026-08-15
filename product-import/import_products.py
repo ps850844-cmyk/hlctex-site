@@ -121,6 +121,11 @@ def clean(value: Any) -> str:
     return str(value).strip()
 
 
+def serialize_html(soup: BeautifulSoup) -> str:
+    """Serialize HTML without XML-style closing tags for void link elements."""
+    return "<!doctype html>\n" + str(soup.html).replace("</link>", "")
+
+
 def standard_lead_time_paragraph(value: Any, style_number: str) -> str:
     """Preserve the product-specific opening while stating HLC's real lead times."""
     existing = clean(value)
@@ -553,6 +558,17 @@ def build_gallery(
     content_row: dict[str, Any],
     product_name: str,
 ) -> list[str]:
+    existing_main = soup.find(attrs={"data-gallery-main": True})
+    existing_main_state = dict(existing_main.attrs) if existing_main is not None else {}
+    existing_thumbnails: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
+    for existing_button in soup.select("[data-gallery-thumb]"):
+        full_image = clean(existing_button.get("data-full-image"))
+        existing_thumb = existing_button.find("img")
+        if full_image and existing_thumb is not None:
+            existing_thumbnails[full_image] = (
+                dict(existing_button.attrs),
+                dict(existing_thumb.attrs),
+            )
     sources = [
         image_map.get(slot, "")
         for slot in IMAGE_HEADERS[:4]
@@ -566,7 +582,12 @@ def build_gallery(
         for index, field in enumerate(ALT_FIELDS)
     ]
     main = soup.find(attrs={"data-gallery-main": True})
-    main["src"] = sources[0]
+    if clean(existing_main_state.get("data-full-image")) == sources[0]:
+        for attribute in ["src", "srcset", "sizes", "decoding", "fetchpriority"]:
+            if existing_main_state.get(attribute):
+                main[attribute] = existing_main_state[attribute]
+    else:
+        main["src"] = sources[0]
     main["data-full-image"] = sources[0]
     main["alt"] = alts[0]
 
@@ -587,6 +608,15 @@ def build_gallery(
             },
         )
         thumb = soup.new_tag("img", src=source, alt=alts[index])
+        if source in existing_thumbnails:
+            old_button, old_thumb = existing_thumbnails[source]
+            for attribute in ["data-image", "data-srcset", "data-sizes"]:
+                if old_button.get(attribute):
+                    button[attribute] = old_button[attribute]
+            for attribute in ["src", "srcset", "sizes", "decoding"]:
+                if old_thumb.get(attribute):
+                    thumb[attribute] = old_thumb[attribute]
+            thumb["alt"] = alts[index]
         button.append(thumb)
         thumbnails.append(button)
 
@@ -641,12 +671,22 @@ def build_related_cards(
     grid = soup.select_one(".catalog-related-grid")
     if grid is None:
         return
+    existing_images = {
+        clean(card.get("href")): dict(image.attrs)
+        for card in grid.select(".catalog-related-card[href]")
+        if (image := card.select_one(".catalog-related-image img")) is not None
+    }
     grid.clear()
     for slug in related_slugs[:3]:
         data = related_product_data(slug, basics, content, image_maps)
         card = soup.new_tag("a", href=data["href"], attrs={"class": "catalog-related-card"})
         image_span = soup.new_tag("span", attrs={"class": "catalog-related-image"})
-        image_span.append(soup.new_tag("img", src=data["image"], alt=data["alt"]))
+        image_tag = soup.new_tag("img", src=data["image"], alt=data["alt"])
+        for attribute in ["src", "srcset", "sizes", "loading", "decoding"]:
+            if existing_images.get(data["href"], {}).get(attribute):
+                image_tag[attribute] = existing_images[data["href"]][attribute]
+        image_tag["alt"] = data["alt"]
+        image_span.append(image_tag)
         card.append(image_span)
         for class_name, text in [
             ("catalog-related-name", data["name"]),
@@ -971,7 +1011,7 @@ def update_bamboo_catalog(
         break
 
     if not dry_run:
-        catalog_path.write_text("<!doctype html>\n" + str(soup.html), encoding="utf-8")
+        catalog_path.write_text(serialize_html(soup), encoding="utf-8")
 
 
 def update_liquid_ammonia_catalog(
@@ -1173,6 +1213,21 @@ def update_product_catalog(
             loading="lazy",
             decoding="async",
         )
+        if existing_card is not None:
+            existing_image = existing_card.select_one(".bamboo-product-image img")
+            if existing_image is not None:
+                for attribute in [
+                    "src",
+                    "srcset",
+                    "sizes",
+                    "width",
+                    "height",
+                    "loading",
+                    "decoding",
+                ]:
+                    if existing_image.get(attribute):
+                        image_tag[attribute] = existing_image[attribute]
+                image_tag["alt"] = alt
         if has_display_700 and has_display_1000:
             image_tag["srcset"] = f"{display_700} 700w, {display_1000} 1000w"
             image_tag["sizes"] = (
@@ -1284,9 +1339,7 @@ def update_product_catalog(
         break
 
     if not dry_run:
-        catalog_path.write_text(
-            "<!doctype html>\n" + str(soup.html), encoding="utf-8"
-        )
+        catalog_path.write_text(serialize_html(soup), encoding="utf-8")
 
 
 def update_sitemap(sitemap_path: Path, url: str, last_modified: str, dry_run: bool) -> None:
@@ -1336,7 +1389,19 @@ def generate_page(
     style_number = clean(basic.get("款号（Style#）"))
     canonical = f"{SITE_ORIGIN}/textile/products/{slug}/"
 
-    soup = BeautifulSoup(template_path.read_text(encoding="utf-8"), "html.parser")
+    source_path = output_path if output_path.exists() else template_path
+    soup = BeautifulSoup(source_path.read_text(encoding="utf-8"), "html.parser")
+    existing_keywords = ""
+    for schema_tag in list(soup.find_all("script", type="application/ld+json")):
+        try:
+            schema_payload = json.loads(schema_tag.string or "")
+        except json.JSONDecodeError:
+            continue
+        if schema_payload.get("@type") == "Product":
+            existing_keywords = clean(schema_payload.get("keywords"))
+            schema_tag.decompose()
+        elif schema_payload.get("@type") == "BreadcrumbList":
+            schema_tag.decompose()
     catalog = PRODUCT_CATALOGS.get(normalize_directory_name(basic.get(DIRECTORY_HEADER)))
     if catalog:
         directory_link = soup.select_one(".catalog-breadcrumbs li:nth-of-type(3) a")
@@ -1485,6 +1550,8 @@ def generate_page(
         "countryOfOrigin": clean(basic.get("原产国")) or "China",
         "material": clean(basic.get("成分")),
     }
+    if existing_keywords:
+        structured_data["keywords"] = existing_keywords
     additional_properties = []
     product_properties = [
         ("Yarn count", detail_values.get("detail-yarn-count")),
@@ -1605,7 +1672,7 @@ def generate_page(
 
     if not dry_run:
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text("<!doctype html>\n" + str(soup.html), encoding="utf-8")
+        output_path.write_text(serialize_html(soup), encoding="utf-8")
     return output_path
 
 
