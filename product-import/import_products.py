@@ -471,11 +471,30 @@ def remove_product_tab(soup: BeautifulSoup, name: str) -> None:
         panel.decompose()
 
 
+def test_report_alt_text(
+    content_row: dict[str, Any],
+    product_name: str,
+    style_number: str,
+) -> str:
+    """Use workbook-backed report ALT text without inferring test claims."""
+    dedicated_alt = clean(content_row.get(TEST_RESULT_ALT_HEADER))
+    if dedicated_alt:
+        return dedicated_alt
+    for header in ALT_FIELDS:
+        candidate = clean(content_row.get(header))
+        if candidate and re.search(r"\b(?:test|report|result|laboratory)\b", candidate, re.I):
+            return candidate
+    if style_number:
+        return f"{product_name} test report for style {style_number}"
+    return f"{product_name} fabric test report"
+
+
 def render_test_results(
     soup: BeautifulSoup,
     *,
     image_source: str,
     text: str,
+    summary: str,
     image_alt: str,
     product_name: str,
 ) -> None:
@@ -487,6 +506,26 @@ def render_test_results(
         return
 
     panel.clear()
+    heading = soup.new_tag("h3", attrs={"class": "catalog-test-summary-title"})
+    heading.string = "Fabric Test Summary"
+    panel.append(heading)
+
+    capability = soup.new_tag("p", attrs={"class": "catalog-test-capability"})
+    capability.string = (
+        "HLC documents fabric testing against the applicable buyer requirements. "
+        "Test methods and results are reported only when confirmed for the relevant "
+        "colour and production lot."
+    )
+    panel.append(capability)
+
+    if summary:
+        summary_paragraph = soup.new_tag(
+            "p",
+            attrs={"class": "catalog-test-summary", "data-template-field": "test-summary"},
+        )
+        summary_paragraph.string = summary
+        panel.append(summary_paragraph)
+
     if image_source:
         figure = soup.new_tag("figure", attrs={"class": "catalog-test-result-media"})
         link = soup.new_tag(
@@ -507,13 +546,13 @@ def render_test_results(
         )
         figure.append(link)
         caption = soup.new_tag("figcaption")
-        caption.string = (
-            f"Laboratory report for {product_name}. Open the high-resolution "
-            "image to review the reported methods and results."
-        )
+        caption.string = f"Test report for {product_name}. Full report available upon request."
         figure.append(caption)
         panel.append(figure)
     if text:
+        results_heading = soup.new_tag("h4")
+        results_heading.string = "Reported Test Results"
+        panel.append(results_heading)
         paragraph = soup.new_tag("p")
         paragraph["data-template-field"] = "test-results"
         paragraph.string = text
@@ -1422,19 +1461,20 @@ def generate_page(
         if is_test_result_image_reference(raw_test_result)
         else raw_test_result
     )
+    test_summary = clean(content_row.get("详细信息（英文）"))
     render_test_results(
         soup,
         image_source=test_result_image,
         text=test_result_text,
-        image_alt=clean(content_row.get(TEST_RESULT_ALT_HEADER))
-        or f"{product_name} laboratory test report",
+        summary=test_summary,
+        image_alt=test_report_alt_text(content_row, product_name, style_number),
         product_name=product_name,
     )
 
     detail_intro = clean(
         first_nonempty(
             detail_row.get("细节说明（英文，选填）"),
-            content_row.get("详细信息（英文）"),
+            "" if test_result_image or test_result_text else test_summary,
         )
     )
     if detail_intro:

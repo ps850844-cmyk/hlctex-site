@@ -398,6 +398,42 @@
   margin: 0;
 }
 
+.catalog-test-summary-title {
+  margin: 0 0 12px;
+  color: var(--catalog-ink);
+  font-family: "HLC Source Serif", Georgia, serif;
+  font-size: 27px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.catalog-test-capability,
+.catalog-test-summary {
+  max-width: 860px;
+}
+
+.catalog-test-summary {
+  margin-top: 12px !important;
+}
+
+.catalog-test-capability + .catalog-test-result-media,
+.catalog-test-summary + .catalog-test-result-media {
+  margin-top: 22px;
+}
+
+[data-product-panel="testing"] h4 {
+  max-width: 860px;
+  margin: 0 0 8px;
+  color: var(--catalog-ink);
+  font-family: "HLC Montserrat", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+[data-product-panel="testing"] h4 + p {
+  max-width: 860px;
+}
+
 .catalog-test-result-media {
   width: min(100%, 980px);
   margin: 0 0 24px;
