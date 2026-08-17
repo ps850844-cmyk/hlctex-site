@@ -34,7 +34,8 @@ FUNCTIONAL_DIRECTORY = "功能性面料"
 WOOL_DIRECTORY = "羊毛面料"
 SAND_WASHED_DIRECTORY = "砂洗针织面料"
 LEGACY_WOMENSWEAR_DIRECTORY = "女装面料"
-EMBROIDERED_DIRECTORY = "绣花面料"
+KNITTED_DIRECTORY = "常规针织面料"
+LEGACY_EMBROIDERED_DIRECTORY = "绣花面料"
 
 PRODUCT_CATALOGS = {
     BAMBOO_DIRECTORY: {
@@ -62,10 +63,10 @@ PRODUCT_CATALOGS = {
         "label": "Sand-Washed Knit Fabrics",
         "collection": "HLC SAND-WASHED KNIT COLLECTION",
     },
-    EMBROIDERED_DIRECTORY: {
-        "path": Path("textile/embroidered-fabric/index.html"),
-        "label": "Embroidered Fabrics",
-        "collection": "HLC EMBROIDERED FABRIC COLLECTION",
+    KNITTED_DIRECTORY: {
+        "path": Path("textile/knitted-fabric/index.html"),
+        "label": "Knitted Fabrics",
+        "collection": "HLC KNITTED FABRIC COLLECTION",
     },
 }
 
@@ -142,6 +143,8 @@ def normalize_directory_name(value: Any) -> str:
     directory_name = clean(value)
     if directory_name == LEGACY_WOMENSWEAR_DIRECTORY:
         return SAND_WASHED_DIRECTORY
+    if directory_name == LEGACY_EMBROIDERED_DIRECTORY:
+        return KNITTED_DIRECTORY
     return directory_name
 
 
@@ -736,14 +739,6 @@ def catalog_composition_filter_value(composition: Any, directory_name: str) -> s
             term in normalized
             for term in ["cotton", "viscose", "polyester", "nylon", "spandex", "elastane"]
         ) else "wool"
-    if directory_name == EMBROIDERED_DIRECTORY:
-        if "cotton" in normalized and not any(
-            term in normalized for term in ["polyester", "nylon", "viscose"]
-        ):
-            return "cotton"
-        if any(term in normalized for term in ["polyester", "nylon"]) and "cotton" not in normalized:
-            return "synthetic"
-        return "blended"
     for token, terms in [
         ("bamboo-viscose", ["bamboo"]),
         ("wool", ["wool", "merino"]),

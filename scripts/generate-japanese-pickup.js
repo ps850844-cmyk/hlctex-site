@@ -18,7 +18,7 @@ const commonPairs = [
   ['Sand-Washed Knit Fabrics', 'サンドウォッシュニット'],
   ['WL Dye® Waterless Dyeing', 'WL Dye® 無水染色'],
   ['Bamboo Viscose Knits', '竹レーヨンニット'],
-  ['Embroidered Fabrics', '刺繍生地'],
+  ['Knitted Fabrics', '定番ニット生地'],
   ['Functional Knits', '機能性ニット'],
   ['Company Profile', '会社概要'],
   ['Quality Management', '品質管理'],

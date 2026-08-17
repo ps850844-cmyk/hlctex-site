@@ -69,7 +69,7 @@ replaceInFiles(localeFiles.ko, [
   ['href="/textile/functional/"', 'href="/ko/textile/functional/"'],
   ['href="/textile/wool-fabric/"', 'href="/ko/textile/wool-fabric/"'],
   ['href="/textile/womenswear-fabric/"', 'href="/ko/textile/womenswear-fabric/"'],
-  ['href="/textile/embroidered-fabric/"', 'href="/ko/textile/embroidered-fabric/"'],
+  ['href="/textile/knitted-fabric/"', 'href="/ko/textile/knitted-fabric/"'],
   ['CNY 113,873,906.12 (as of May 31, 2026)', 'CNY 113,873,906.12 (2026년 5월 31일 기준)'],
   ['Piece Dyed', '반응염 염색'],
   ['detail view', '상세 이미지'],

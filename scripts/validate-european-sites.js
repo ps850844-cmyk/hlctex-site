@@ -22,7 +22,10 @@ function walk(dir) {
 
 for (const lang of languages) {
   const langRoot = path.join(root, lang);
-  const files = walk(langRoot);
+  const files = walk(langRoot).filter((file) => {
+    const html = fs.readFileSync(file, 'utf8');
+    return !/<meta\b[^>]*name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+  });
   if (files.length !== 86) add('page-count', `${lang}: ${files.length}`);
 
   for (const file of files) {

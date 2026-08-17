@@ -9,7 +9,7 @@ const pairs=[
   ['WL Dye® Waterless Dyeing','WL Dye® 無水染色'],['Mercerization & Liquid Ammonia Finishing','シルケット・液体アンモニア加工'],['Request Specifications & Pricing','仕様・見積もりを依頼'],['Certificates & Certifications','認証・証明書'],
   ['Contact HLC | Bamboo & Functional Knit Fabric Supplier',title],
   ['Products','製品'],['Solutions','ソリューション'],['About HLC','HLCについて'],['Sustainability','サステナビリティ'],['Careers','採用情報'],['Contact Us','お問い合わせ'],
-  ['Bamboo Viscose Knits','竹レーヨンニット'],['Mercerization &amp; Liquid Ammonia Finishing','シルケット・液体アンモニア加工'],['Functional Knits','機能性ニット'],['Wool Fabrics','ウール生地'],['Sand-Washed Knit Fabrics','サンドウォッシュニット'],['Embroidered Fabrics','刺繍生地'],
+  ['Bamboo Viscose Knits','竹レーヨンニット'],['Mercerization &amp; Liquid Ammonia Finishing','シルケット・液体アンモニア加工'],['Functional Knits','機能性ニット'],['Wool Fabrics','ウール生地'],['Sand-Washed Knit Fabrics','サンドウォッシュニット'],['Knitted Fabrics','定番ニット生地'],
   ['Company Profile','会社概要'],['Quality Management','品質管理'],['Certificates &amp; Certifications','認証・証明書'],['Corporate Sustainability &amp; ESG','サステナビリティ・ESG'],['People &amp; Culture','人材・企業文化'],
   ['Close menu','メニューを閉じる'],['Home','ホーム'],['Contact','お問い合わせ'],
   ['Please use the form below for fabric enquiries. Our team will review the information and contact you directly.','生地の仕様、サンプル、MOQ、納期、見積りについて、下記フォームからお問い合わせください。担当者より直接ご連絡します。'],

@@ -101,7 +101,7 @@ const pages = {
 const common = [
   ['Products', '제품'], ['Solutions', '솔루션'], ['About HLC', 'HLC 소개'], ['Sustainability', '지속가능성'], ['Careers', '채용'], ['Contact Us', '문의하기'],
   ['Bamboo Viscose Knits', '대나무 비스코스 니트'], ['Mercerization &amp; Liquid Ammonia', '머서라이즈 및 액체 암모니아'], ['Mercerization & Liquid Ammonia', '머서라이즈 및 액체 암모니아'],
-  ['Functional Knits', '기능성 니트'], ['Wool Fabrics', '울 원단'], ['Sand-Washed Knit Fabrics', '샌드워시 니트 원단'], ['Embroidered Fabrics', '자수 원단'],
+  ['Functional Knits', '기능성 니트'], ['Wool Fabrics', '울 원단'], ['Sand-Washed Knit Fabrics', '샌드워시 니트 원단'], ['Knitted Fabrics', '일반 니트 원단'],
   ['Certifications &amp; Material Support', '인증 및 소재 지원'], ['Certifications & Material Support', '인증 및 소재 지원'],
   ['WL Dye® Waterless Dyeing', 'WL Dye® 저수 염색'], ['Mercerization &amp; Liquid Ammonia Finishing', '머서라이즈 및 액체 암모니아 가공'], ['Mercerization & Liquid Ammonia Finishing', '머서라이즈 및 액체 암모니아 가공'],
   ['Inspection &amp; Testing Centre', '원단 검사 및 시험센터'], ['Inspection & Testing Centre', '원단 검사 및 시험센터'], ['Request Specifications &amp; Pricing', '사양 및 견적 문의'], ['Request Specifications & Pricing', '사양 및 견적 문의'],

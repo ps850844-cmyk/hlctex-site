@@ -13,7 +13,7 @@ const catalogs = [
   ['textile/functional', '기능성 니트 원단 | HLC', '흡한속건, 온도 조절, 자외선 차단과 신축 성능을 갖춘 기능성 니트 원단을 용도와 시험 결과로 비교하세요.'],
   ['textile/wool-fabric', '메리노 울 니트 원단 | HLC', 'ZQ 메리노, RWS 및 뮬징 프리 울을 사용한 저지, 인터록, 피케와 기능성 혼방 니트 원단입니다.'],
   ['textile/womenswear-fabric', '샌드 워싱 니트 원단 | HLC', '부드러운 촉감과 자연스러운 드레이프를 위한 모달, 텐셀 및 혼방 샌드 워싱 니트 원단입니다.'],
-  ['textile/embroidered-fabric', '맞춤 자수 원단 | HLC', '여성복, 유아동복과 브랜드 컬렉션을 위한 맞춤 자수 니트 및 직물 원단 개발 서비스입니다.'],
+  ['textile/knitted-fabric', '일반 니트 원단 제조업체 및 공급업체 | HLC', 'HLC는 싱글 저지, 리브, 인터록과 피케 등 일반 니트 원단을 공급하며 혼용률, 중량, 색상, 촉감과 후가공을 맞춤 개발합니다.'],
 ];
 
 const termPairs = [
@@ -150,7 +150,7 @@ const uiPairs = [
   ['Bamboo Viscose Knit Fabrics','대나무 비스코스 니트 원단'], ['Bamboo Viscose Knits','대나무 비스코스 니트 원단'],
   ['Functional Knit Fabrics','기능성 니트 원단'], ['Functional Knits','기능성 니트 원단'],
   ['Wool Fabrics','메리노 울 니트 원단'], ['Sand-Washed Knit Fabrics','샌드 워싱 니트 원단'],
-  ['Embroidered Fabrics','맞춤 자수 원단'], ['Certifications &amp; Material Support','인증 및 소재 지원'],
+  ['Knitted Fabrics','일반 니트 원단'], ['Certifications &amp; Material Support','인증 및 소재 지원'],
   ['Certifications & Material Support','인증 및 소재 지원'], ['Certificates & Certifications','인증서 및 인증'],
   ['Water-Saving, Lower-Carbon Dyeing','절수·저탄소 염색'], ['Corporate Sustainability &amp; ESG','기업 지속가능성 및 ESG'],
   ['Corporate Sustainability & ESG','기업 지속가능성 및 ESG'], ['Close menu','메뉴 닫기'],
@@ -223,7 +223,7 @@ const editorialByRoute = {
   'textile/functional': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>용도에 맞는 기능성 니트 원단</h2><p>흡한속건, 온도 조절, 자외선 차단, 냉감과 신축 기능은 실제 착용 환경과 원단 조직에 맞춰 선택해야 합니다. HLC는 목표 중량과 성능 기준에 따라 원사, 편직, 염색과 후가공을 함께 설계합니다.</p><h3>수치로 확인하는 성능</h3><p>가능한 제품에는 치수 안정성, 견뢰도, 필링, 흡수·건조와 관련 시험 결과를 제공해 개발팀과 구매팀의 비교를 돕습니다.</p></section>`,
   'textile/wool-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>왜 HLC 메리노 울 원단을 선택해야 할까요?</h2><h3>10년 이상 축적한 지역 기반의 울 소재 경험</h3><p>HLC와 세계적인 울 원사 공급업체 신아오(Xinao)는 모두 저장성 자싱시 퉁샹에 있습니다. 10년이 넘는 협업을 통해 메리노 울 원사 선정부터 니트 조직 개발, 염색과 후가공까지 폭넓은 경험을 축적했습니다.</p><h3>경쟁력 있는 가격과 안정적인 납기</h3><p>지역 울 공급망과 가까워 원사 조달과 커뮤니케이션 시간을 줄일 수 있으며, 이를 바탕으로 경쟁력 있는 가격, 일관된 품질 관리와 안정적인 벌크 납기를 제공합니다.</p><h3>니트 울 염색 전문성</h3><p>HLC는 중국에서 니트 울 원단 염색이 가능한 소수의 전문 염색 공장 중 하나로, 균일한 색상과 관리된 후가공, 안정적인 대량 생산을 지원합니다.</p><h3>책임 있는 메리노 울 선택</h3><p>프로젝트 요구에 따라 RWS 인증 울, 뮬징 프리 울, ZQ 메리노 울과 기능성 울 혼방 원단을 프리미엄 의류용으로 개발할 수 있습니다.</p></section>`,
   'textile/womenswear-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>샌드 워싱 니트 원단</h2><p>샌드 워싱은 모달, 텐셀, 폴리에스터와 혼방 니트에 부드러운 촉감과 자연스러운 드레이프를 더합니다. 여성복, 라운지웨어와 캐주얼 컬렉션에 맞춰 중량, 조직과 표면 효과를 개발합니다.</p></section>`,
-  'textile/embroidered-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>브랜드를 위한 맞춤 자수 원단</h2><p>여성복, 유아동복과 캡슐 컬렉션을 위한 자수 패턴, 바탕 원단, 색상과 반복 규격을 함께 개발합니다. 샘플 확인 후 생산 사양과 납기를 협의합니다.</p></section>`
+  'textile/knitted-fabric': `<section aria-labelledby="bambooBenefitsTitle" class="bamboo-filter-editorial"><h2>데일리 의류용 일반 니트 원단</h2><p>HLC는 티셔츠, 속옷, 아동복, 잠옷, 폴로셔츠와 캐주얼웨어용 싱글 저지, 리브, 인터록과 피케를 개발합니다. 면, 비스코스, 모달, 대나무 유래 비스코스, 울, 리넨과 합성섬유 혼방을 용도에 맞게 구성할 수 있습니다.</p></section>`
 };
 
 function localizeWoolCatalog(html) {
@@ -384,7 +384,7 @@ function buildCatalog(route, title, description) {
       ['Mercerized and liquid ammonia finished cotton knit fabric', '머서라이즈 및 액체 암모니아 가공 코튼 니트 원단'],
       ['Merino wool jersey fabric and RWS wool blend development', '메리노 울 저지 및 RWS 울 혼방 원단'],
       ['Soft sand-washed modal polyester spandex knit fabric', '부드러운 샌드 워싱 모달 폴리에스터 스판덱스 니트 원단'],
-      ['Custom decorative and embroidered fabric development', '맞춤 장식 및 자수 원단 개발'],
+      ['Regular knitted fabric development', '일반 니트 원단 개발'],
       ['01 / BAMBOO', '01 / 대나무'],
       ['02 / PERFORMANCE', '02 / 기능성'],
       ['03 / FINISHING', '03 / 후가공'],
@@ -396,7 +396,7 @@ function buildCatalog(route, title, description) {
       ['메리노 울 및 RWS-certified 울 blend 원단.', '메리노 울, RWS 인증 울과 기능성 울 혼방으로 저지, 인터록과 피케 원단을 개발합니다.'],
       ['샌드 워싱 니트s', '샌드 워싱 니트'],
       ['Soft-touch 모달, EcoCosy® viscose 및 폴리에스터 blend 니트s with a relaxed drape.', '모달, EcoCosy® 비스코스와 폴리에스터 혼방 니트에 부드러운 촉감과 자연스러운 드레이프를 더합니다.'],
-      ['Custom decorative 원단 for wo남성복, occasionwear 및 branded apparel.', '여성복, 예복과 브랜드 컬렉션을 위한 맞춤 자수 원단을 개발합니다.'],
+      ['Core jersey, rib, interlock and pique fabrics for everyday apparel.', '일상복용 저지, 리브, 인터록과 피케 원단을 개발합니다.'],
     ];
     for (const [from, to] of textileLandingPairs) html = html.replace(new RegExp(esc(from), 'g'), to);
   }
@@ -406,7 +406,7 @@ function buildCatalog(route, title, description) {
   html = html.replace(/<h1>Functional Knit 원단s<\/h1>/i, '<h1>기능성 니트 원단</h1>');
   html = html.replace(/<h1>울 원단s<\/h1>/i, '<h1>메리노 울 니트 원단</h1>');
   html = html.replace(/<h1>Women[^<]*<\/h1>/i, '<h1>샌드 워싱 니트 원단</h1>');
-  html = html.replace(/<h1>Embroidered 원단s<\/h1>/i, '<h1>맞춤 자수 원단</h1>');
+  html = html.replace(/<h1>Embroidered 원단s<\/h1>/i, '<h1>일반 니트 원단</h1>');
   html = html.replace(/(<h1[^>]*>[\s\S]*?<\/h1>)\s*<span class="bamboo-catalog-count">[^<]*<\/span>/i, (m,h1) => {
     const count = (m.match(/(\d+)/) || [,''])[1];
     return `${h1}<span class="bamboo-catalog-count">${count}종 원단</span>`;

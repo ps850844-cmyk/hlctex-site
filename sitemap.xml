@@ -7,7 +7,7 @@
   <url><loc>https://hlctex.com/textile/functional/</loc><lastmod>2026-08-09</lastmod><changefreq>weekly</changefreq><priority>0.85</priority></url>
   <url><loc>https://hlctex.com/textile/wool-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.84</priority></url>
   <url><loc>https://hlctex.com/textile/womenswear-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.84</priority></url>
-  <url><loc>https://hlctex.com/textile/embroidered-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.84</priority></url>
+  <url><loc>https://hlctex.com/textile/knitted-fabric/</loc><lastmod>2026-08-17</lastmod><changefreq>weekly</changefreq><priority>0.84</priority></url>
   <url><loc>https://hlctex.com/pickup/wl-dye/</loc><lastmod>2026-08-14</lastmod><changefreq>monthly</changefreq><priority>0.82</priority></url>
   <url><loc>https://hlctex.com/pickup/mercerization-liquid-ammonia/</loc><lastmod>2026-08-14</lastmod><changefreq>monthly</changefreq><priority>0.82</priority></url>
   <url><loc>https://hlctex.com/company/overview/</loc><lastmod>2026-08-09</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>
@@ -142,8 +142,8 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://hlctex.com/ko/textile/embroidered-fabric/</loc>
-    <lastmod>2026-08-14</lastmod>
+    <loc>https://hlctex.com/ko/textile/knitted-fabric/</loc>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -568,7 +568,7 @@
   <url><loc>https://hlctex.com/ja/textile/functional/</loc><lastmod>2026-08-09</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/ja/textile/wool-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/ja/textile/womenswear-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hlctex.com/ja/textile/embroidered-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hlctex.com/ja/textile/knitted-fabric/</loc><lastmod>2026-08-17</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/ja/textile/products/100s-liquid-ammonia-supima-interlock/</loc><lastmod>2026-08-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://hlctex.com/ja/textile/products/100s-mercerized-supima-cotton-interlock/</loc><lastmod>2026-08-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://hlctex.com/ja/textile/products/120s-2-ply-mercerized-supima-cotton-interlock/</loc><lastmod>2026-08-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -672,7 +672,7 @@
 
 <url><loc>https://hlctex.com/ru/textile/womenswear-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 
-<url><loc>https://hlctex.com/ru/textile/embroidered-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://hlctex.com/ru/textile/knitted-fabric/</loc><lastmod>2026-08-17</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 
 <url><loc>https://hlctex.com/ru/textile/products/100s-liquid-ammonia-supima-interlock/</loc><lastmod>2026-08-14</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 
@@ -854,8 +854,8 @@
     <lastmod>2026-08-14</lastmod>
   </url>
   <url>
-    <loc>https://hlctex.com/zh-tw/textile/embroidered-fabric/</loc>
-    <lastmod>2026-08-14</lastmod>
+    <loc>https://hlctex.com/zh-tw/textile/knitted-fabric/</loc>
+    <lastmod>2026-08-17</lastmod>
   </url>
   <url>
     <loc>https://hlctex.com/zh-tw/company/overview/</loc>
@@ -1449,7 +1449,7 @@
   <url><loc>https://hlctex.com/de/pickup/mercerization-liquid-ammonia/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/de/pickup/wl-dye/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/de/textile/bamboo-fabric/</loc><lastmod>2026-08-15</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hlctex.com/de/textile/embroidered-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hlctex.com/de/textile/knitted-fabric/</loc><lastmod>2026-08-17</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/de/textile/functional/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/de/textile/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/de/textile/mercerized-liquid-ammonia-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -1535,7 +1535,7 @@
   <url><loc>https://hlctex.com/es/pickup/mercerization-liquid-ammonia/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/es/pickup/wl-dye/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/es/textile/bamboo-fabric/</loc><lastmod>2026-08-15</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hlctex.com/es/textile/embroidered-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hlctex.com/es/textile/knitted-fabric/</loc><lastmod>2026-08-17</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/es/textile/functional/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/es/textile/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/es/textile/mercerized-liquid-ammonia-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -1621,7 +1621,7 @@
   <url><loc>https://hlctex.com/fr/pickup/mercerization-liquid-ammonia/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/fr/pickup/wl-dye/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/fr/textile/bamboo-fabric/</loc><lastmod>2026-08-15</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://hlctex.com/fr/textile/embroidered-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://hlctex.com/fr/textile/knitted-fabric/</loc><lastmod>2026-08-17</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/fr/textile/functional/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/fr/textile/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://hlctex.com/fr/textile/mercerized-liquid-ammonia-fabric/</loc><lastmod>2026-08-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
