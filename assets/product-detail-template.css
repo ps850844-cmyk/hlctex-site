@@ -683,6 +683,15 @@
   font-size: 11px;
 }
 
+.catalog-form-error.is-success {
+  color: #137a4b;
+}
+
+.catalog-sample-dialog form button:disabled {
+  cursor: wait;
+  opacity: .68;
+}
+
 .catalog-sample-dialog small {
   display: block;
   margin-top: 18px;

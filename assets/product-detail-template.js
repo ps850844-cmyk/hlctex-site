@@ -88,9 +88,129 @@
   var sampleForm = document.querySelector("[data-sample-form]");
   var sampleEmail = document.querySelector("[data-sample-email]");
   var sampleError = document.querySelector("[data-sample-error]");
+  var sampleSubmit = sampleForm ? sampleForm.querySelector('button[type="submit"]') : null;
+  var sampleDescription = sampleDialog ? sampleDialog.querySelector(".catalog-sample-dialog-inner > p:not(.catalog-collection-label)") : null;
+  var sampleNote = sampleDialog ? sampleDialog.querySelector(".catalog-sample-dialog-inner > small") : null;
+  var sampleLanguage = (document.documentElement.lang || "en").toLowerCase();
+  var sampleTranslations = {
+    en: {
+      required: "Please enter a valid business email.",
+      sending: "Sending your sample request…",
+      success: "Your sample request has been sent. HLC will contact you by email.",
+      error: "The sample request could not be sent. Please try again shortly.",
+      button: "Send sample request",
+      description: "Enter your business email. HLC will receive your email address together with this product name, Style# and page link.",
+      note: "Your email address is used only to process this sample request.",
+      subject: "Sample Request"
+    },
+    "zh-hans": {
+      required: "请输入有效的商务邮箱。",
+      sending: "正在发送样品申请…",
+      success: "样品申请已发送，HLC 将通过邮件与您联系。",
+      error: "样品申请暂时无法发送，请稍后重试。",
+      button: "发送样品申请",
+      description: "请输入您的公司邮箱。HLC 将收到您的邮箱、当前产品名称、型号和产品页面链接。",
+      note: "您的邮箱仅用于处理本次样品申请。",
+      subject: "样品申请"
+    },
+    "zh-hant": {
+      required: "請輸入有效的商務電郵。",
+      sending: "正在發送樣品申請…",
+      success: "樣品申請已發送，HLC 將透過電郵與您聯繫。",
+      error: "樣品申請暫時無法發送，請稍後重試。",
+      button: "發送樣品申請",
+      description: "請輸入您的公司電郵。HLC 將收到您的電郵、目前產品名稱、型號和產品頁面連結。",
+      note: "您的電郵僅用於處理本次樣品申請。",
+      subject: "樣品申請"
+    },
+    ko: {
+      required: "유효한 업무용 이메일을 입력해 주세요.",
+      sending: "샘플 요청을 보내는 중입니다…",
+      success: "샘플 요청이 전송되었습니다. HLC가 이메일로 연락드리겠습니다.",
+      error: "샘플 요청을 전송할 수 없습니다. 잠시 후 다시 시도해 주세요.",
+      button: "샘플 요청 보내기",
+      description: "업무용 이메일을 입력해 주세요. HLC는 이메일 주소와 함께 현재 제품명, Style# 및 제품 페이지 링크를 받습니다.",
+      note: "이메일 주소는 이 샘플 요청을 처리하는 용도로만 사용됩니다.",
+      subject: "샘플 요청"
+    },
+    ja: {
+      required: "有効な業務用メールアドレスを入力してください。",
+      sending: "サンプル依頼を送信しています…",
+      success: "サンプル依頼を送信しました。HLCよりメールでご連絡いたします。",
+      error: "サンプル依頼を送信できませんでした。しばらくしてからもう一度お試しください。",
+      button: "サンプル依頼を送信",
+      description: "業務用メールアドレスを入力してください。現在の製品名、Style#、製品ページのリンクとともにHLCへ送信されます。",
+      note: "メールアドレスは、このサンプル依頼の対応にのみ使用されます。",
+      subject: "サンプル依頼"
+    },
+    ru: {
+      required: "Введите действующий рабочий адрес электронной почты.",
+      sending: "Отправляем запрос образца…",
+      success: "Запрос образца отправлен. HLC свяжется с вами по электронной почте.",
+      error: "Не удалось отправить запрос образца. Повторите попытку позже.",
+      button: "Отправить запрос образца",
+      description: "Введите рабочий e-mail. HLC получит ваш адрес вместе с названием продукта, Style# и ссылкой на страницу.",
+      note: "Ваш e-mail используется только для обработки этого запроса образца.",
+      subject: "Запрос образца"
+    },
+    de: {
+      required: "Bitte geben Sie eine gültige geschäftliche E-Mail-Adresse ein.",
+      sending: "Ihre Musteranfrage wird gesendet…",
+      success: "Ihre Musteranfrage wurde gesendet. HLC wird Sie per E-Mail kontaktieren.",
+      error: "Die Musteranfrage konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.",
+      button: "Musteranfrage senden",
+      description: "Geben Sie Ihre geschäftliche E-Mail-Adresse ein. HLC erhält sie zusammen mit Produktname, Style# und Seitenlink.",
+      note: "Ihre E-Mail-Adresse wird nur zur Bearbeitung dieser Musteranfrage verwendet.",
+      subject: "Musteranfrage"
+    },
+    es: {
+      required: "Introduzca un correo electrónico empresarial válido.",
+      sending: "Enviando su solicitud de muestra…",
+      success: "Su solicitud de muestra ha sido enviada. HLC se pondrá en contacto por correo electrónico.",
+      error: "No se pudo enviar la solicitud de muestra. Inténtelo de nuevo más tarde.",
+      button: "Enviar solicitud de muestra",
+      description: "Introduzca su correo empresarial. HLC lo recibirá junto con el nombre del producto, Style# y el enlace de la página.",
+      note: "Su correo electrónico se utiliza únicamente para tramitar esta solicitud de muestra.",
+      subject: "Solicitud de muestra"
+    },
+    fr: {
+      required: "Veuillez saisir une adresse e-mail professionnelle valide.",
+      sending: "Envoi de votre demande d’échantillon…",
+      success: "Votre demande d’échantillon a été envoyée. HLC vous contactera par e-mail.",
+      error: "La demande d’échantillon n’a pas pu être envoyée. Veuillez réessayer plus tard.",
+      button: "Envoyer la demande d’échantillon",
+      description: "Saisissez votre e-mail professionnel. HLC le recevra avec le nom du produit, le Style# et le lien de la page.",
+      note: "Votre e-mail est utilisé uniquement pour traiter cette demande d’échantillon.",
+      subject: "Demande d’échantillon"
+    }
+  };
+  var sampleMessages = sampleTranslations[sampleLanguage] || sampleTranslations.en;
+  var sampleHoneypot = document.createElement("input");
+  sampleHoneypot.type = "text";
+  sampleHoneypot.name = "_honey";
+  sampleHoneypot.tabIndex = -1;
+  sampleHoneypot.autocomplete = "off";
+  sampleHoneypot.setAttribute("aria-hidden", "true");
+  sampleHoneypot.style.cssText = "position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;";
+  if (sampleForm) sampleForm.appendChild(sampleHoneypot);
+  if (sampleSubmit) sampleSubmit.textContent = sampleMessages.button;
+  if (sampleDescription) sampleDescription.textContent = sampleMessages.description;
+  if (sampleNote) sampleNote.textContent = sampleMessages.note;
+
+  function setSampleStatus(message, isSuccess) {
+    if (!sampleError) return;
+    sampleError.textContent = message;
+    sampleError.classList.toggle("is-success", Boolean(isSuccess));
+  }
+
+  function setSampleSubmitting(isSubmitting) {
+    if (sampleSubmit) sampleSubmit.disabled = isSubmitting;
+    if (sampleForm) sampleForm.setAttribute("aria-busy", isSubmitting ? "true" : "false");
+  }
 
   function openSampleDialog() {
     if (!sampleDialog) return;
+    setSampleStatus("", false);
     if (typeof sampleDialog.showModal === "function") {
       sampleDialog.showModal();
       if (sampleEmail) sampleEmail.focus();
@@ -119,35 +239,59 @@
       event.preventDefault();
       var email = sampleEmail ? sampleEmail.value.trim() : "";
       if (!email || !sampleEmail.checkValidity()) {
-        if (sampleError) sampleError.textContent = "Please enter a valid business email.";
+        setSampleStatus(sampleMessages.required, false);
         if (sampleEmail) sampleEmail.focus();
         return;
       }
 
-      if (sampleError) sampleError.textContent = "";
+      setSampleStatus(sampleMessages.sending, false);
+      setSampleSubmitting(true);
       var styleElement = document.querySelector("[data-template-field='style-number']");
       var productElement = document.querySelector("[data-template-field='product-name']");
       var styleNumber = styleElement ? styleElement.textContent.trim() : "HLC product";
       var productName = productElement ? productElement.textContent.trim() : "Fabric sample";
-      var subject = "Sample Request - " + styleNumber;
-      var body = [
-        "Hello HLC,",
-        "",
-        "I would like to request a fabric sample.",
-        "",
-        "Product: " + productName,
-        "Style#: " + styleNumber,
-        "Requester email: " + email,
-        "Product page: " + window.location.href,
-        "",
-        "Please contact me regarding sample delivery and freight collect details.",
-        "",
-        "Thank you."
-      ].join("\n");
 
-      window.location.href = "mailto:sam@hlctex.com?subject=" +
-        encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-      closeSampleDialog();
+      fetch("https://formsubmit.co/ajax/sam@hlctex.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          _replyto: email,
+          request_type: "Fabric sample request",
+          product: productName,
+          style_number: styleNumber,
+          product_page: window.location.href,
+          message: "Please contact the requester regarding sample delivery and freight collect details.",
+          _subject: sampleMessages.subject + " - " + styleNumber + " - " + productName,
+          _template: "table",
+          _honey: sampleHoneypot.value,
+          _url: window.location.href
+        })
+      }).then(function (response) {
+        if (!response.ok) throw new Error("Sample request failed with status " + response.status);
+        return response.json();
+      }).then(function (result) {
+        if (result && result.success === false) throw new Error(result.message || "Sample request failed");
+        if (typeof window.gtag === "function") {
+          window.gtag("event", "generate_lead", {
+            method: "sample_form",
+            lead_source: "sample_request",
+            item_name: productName,
+            item_id: styleNumber,
+            page_language: sampleLanguage
+          });
+        }
+        sampleForm.reset();
+        setSampleStatus(sampleMessages.success, true);
+      }).catch(function (error) {
+        console.error(error);
+        setSampleStatus(sampleMessages.error, false);
+      }).finally(function () {
+        setSampleSubmitting(false);
+      });
     });
   }
 
