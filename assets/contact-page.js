@@ -14,7 +14,7 @@
     en: {
       required: 'Please complete all required fields.',
       sending: 'Sending your inquiry…',
-      success: 'Your inquiry has been sent. We will reply to your email.',
+      success: 'Inquiry sent successfully. We will reply to your email.',
       error: 'The inquiry could not be sent. Please try again shortly.',
       subject: 'Website fabric inquiry'
     },
@@ -101,6 +101,36 @@
     form.setAttribute('aria-busy', isSubmitting ? 'true' : 'false');
   }
 
+  function showSubmissionSuccess(message) {
+    var existing = document.querySelector('.submission-success-notice');
+    if (existing) existing.remove();
+
+    var notice = document.createElement('div');
+    notice.className = 'submission-success-notice';
+    notice.setAttribute('role', 'alert');
+    notice.setAttribute('aria-live', 'assertive');
+
+    var icon = document.createElement('span');
+    icon.className = 'submission-success-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = '✓';
+
+    var text = document.createElement('p');
+    text.textContent = message;
+
+    var close = document.createElement('button');
+    close.type = 'button';
+    close.setAttribute('aria-label', 'Close');
+    close.textContent = '×';
+    close.addEventListener('click', function () { notice.remove(); });
+
+    notice.appendChild(icon);
+    notice.appendChild(text);
+    notice.appendChild(close);
+    document.body.appendChild(notice);
+    window.setTimeout(function () { if (notice.isConnected) notice.remove(); }, 8000);
+  }
+
   form.addEventListener('input', function (event) {
     event.target.classList.remove('is-invalid');
   });
@@ -144,10 +174,16 @@
 
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'generate_lead', { method: 'contact_form', page_language: language });
+        window.gtag('event', 'contact_form_success', {
+          form_name: 'contact',
+          page_language: language,
+          page_location: window.location.href
+        });
       }
 
       form.reset();
       status.textContent = messages.success;
+      showSubmissionSuccess(messages.success);
     }).catch(function (error) {
       console.error(error);
       status.textContent = messages.error;

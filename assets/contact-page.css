@@ -194,6 +194,52 @@
   font-size: 13px;
 }
 
+.submission-success-notice {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 10000;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 28px;
+  width: min(430px, calc(100vw - 32px));
+  padding: 18px 16px;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid #b7ddca;
+  background: #f4fbf7;
+  box-shadow: 0 18px 50px rgba(19, 43, 58, .18);
+  color: #143b2a;
+}
+
+.submission-success-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: #137a4b;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.submission-success-notice p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.submission-success-notice button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #486457;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+}
+
 .contact-form .is-invalid {
   border-color: #b14d37 !important;
 }
@@ -241,6 +287,7 @@
 }
 
 @media (max-width: 760px) {
+  .submission-success-notice { top: 16px; right: 16px; }
   .contact-wrap { width: min(100% - 32px, 920px); }
   .contact-intro { padding: 52px 0 40px; }
   .contact-intro .breadcrumb { margin-bottom: 48px; }

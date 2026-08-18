@@ -692,6 +692,52 @@
   opacity: .68;
 }
 
+.submission-success-notice {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 10000;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 28px;
+  width: min(430px, calc(100vw - 32px));
+  padding: 18px 16px;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid #b7ddca;
+  background: #f4fbf7;
+  box-shadow: 0 18px 50px rgba(19, 43, 58, .18);
+  color: #143b2a;
+}
+
+.submission-success-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  background: #137a4b;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.submission-success-notice p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.submission-success-notice button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #486457;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+}
+
 .catalog-sample-dialog small {
   display: block;
   margin-top: 18px;
@@ -792,6 +838,7 @@
 }
 
 @media (max-width: 720px) {
+  .submission-success-notice { top: 16px; right: 16px; }
   .catalog-breadcrumbs,
   .catalog-product-shell,
   .catalog-information,

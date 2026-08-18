@@ -1,4 +1,16 @@
 (function () {
+  if (typeof window.gtag !== "function") {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag("js", new Date());
+    window.gtag("config", "G-YX56MW1TBB");
+
+    var analyticsScript = document.createElement("script");
+    analyticsScript.async = true;
+    analyticsScript.src = "https://www.googletagmanager.com/gtag/js?id=G-YX56MW1TBB";
+    document.head.appendChild(analyticsScript);
+  }
+
   var gallery = document.querySelector("[data-product-gallery]");
   var mainImage = document.querySelector("[data-gallery-main]");
   var dialog = document.querySelector("[data-gallery-dialog]");
@@ -96,7 +108,7 @@
     en: {
       required: "Please enter a valid business email.",
       sending: "Sending your sample request…",
-      success: "Your sample request has been sent. HLC will contact you by email.",
+      success: "Sample request sent successfully. HLC will contact you by email.",
       error: "The sample request could not be sent. Please try again shortly.",
       button: "Send sample request",
       description: "Enter your business email. HLC will receive your email address together with this product name, Style# and page link.",
@@ -208,6 +220,36 @@
     if (sampleForm) sampleForm.setAttribute("aria-busy", isSubmitting ? "true" : "false");
   }
 
+  function showSubmissionSuccess(message) {
+    var existing = document.querySelector(".submission-success-notice");
+    if (existing) existing.remove();
+
+    var notice = document.createElement("div");
+    notice.className = "submission-success-notice";
+    notice.setAttribute("role", "alert");
+    notice.setAttribute("aria-live", "assertive");
+
+    var icon = document.createElement("span");
+    icon.className = "submission-success-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = "✓";
+
+    var text = document.createElement("p");
+    text.textContent = message;
+
+    var close = document.createElement("button");
+    close.type = "button";
+    close.setAttribute("aria-label", "Close");
+    close.textContent = "×";
+    close.addEventListener("click", function () { notice.remove(); });
+
+    notice.appendChild(icon);
+    notice.appendChild(text);
+    notice.appendChild(close);
+    document.body.appendChild(notice);
+    window.setTimeout(function () { if (notice.isConnected) notice.remove(); }, 8000);
+  }
+
   function openSampleDialog() {
     if (!sampleDialog) return;
     setSampleStatus("", false);
@@ -283,9 +325,17 @@
             item_id: styleNumber,
             page_language: sampleLanguage
           });
+          window.gtag("event", "sample_request_success", {
+            form_name: "sample_request",
+            item_name: productName,
+            item_id: styleNumber,
+            page_language: sampleLanguage,
+            page_location: window.location.href
+          });
         }
         sampleForm.reset();
         setSampleStatus(sampleMessages.success, true);
+        showSubmissionSuccess(sampleMessages.success);
       }).catch(function (error) {
         console.error(error);
         setSampleStatus(sampleMessages.error, false);
