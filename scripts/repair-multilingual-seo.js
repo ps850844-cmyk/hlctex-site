@@ -36,14 +36,21 @@ const localeFiles = Object.fromEntries(
 
 const bambooCatalogFiles = [
   path.join(root, 'textile', 'bamboo-fabric', 'index.html'),
+  path.join(root, 'zh', 'textile', 'bamboo-fabric', 'index.html'),
   ...Object.keys(localeFiles).map((locale) => path.join(root, locale, 'textile', 'bamboo-fabric', 'index.html')),
 ].filter((file) => fs.existsSync(file));
 
-// The legacy Simplified Chinese bamboo page is intentionally a noindex redirect.
-// It must not remain in hreflang clusters because alternates must be indexable.
-replaceInFiles(bambooCatalogFiles, [
-  ['<link rel="alternate" hreflang="zh-Hans" href="https://hlctex.com/zh/textile/bamboo-fabric/">', ''],
-]);
+// Simplified Chinese is a full, indexable bamboo catalog and must remain in
+// every reciprocal hreflang cluster.
+for (const file of bambooCatalogFiles) {
+  const original = fs.readFileSync(file, 'utf8');
+  if (original.includes('hreflang="zh-Hans"')) continue;
+  const updated = original.replace(
+    /(<link\b[^>]*hreflang=["']en["'][^>]*>)/i,
+    '$1\n<link rel="alternate" hreflang="zh-Hans" href="https://hlctex.com/zh/textile/bamboo-fabric/">',
+  );
+  if (updated !== original) fs.writeFileSync(file, updated, 'utf8');
+}
 
 const localizedApplications = {
   ko: '컴프레션 웨어, 레깅스, 트레이닝 톱, 스포츠 브라, 베이스 레이어 및 고기능성 스트레치 의류',
