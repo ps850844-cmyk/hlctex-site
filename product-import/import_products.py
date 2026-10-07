@@ -97,6 +97,7 @@ TEST_RESULT_IMAGE_HEADER = "测试结果图片路径（可选）"
 TEST_RESULT_ALT_HEADER = "测试结果图片ALT（英文）"
 TEST_RESULT_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 TEST_RESULT_SOURCE_EXTENSIONS = TEST_RESULT_IMAGE_EXTENSIONS | {".pdf"}
+DISALLOWED_REVIEW_SCHEMA_FIELDS = {"review", "aggregateRating"}
 
 ALT_FIELDS = [
     "主图ALT（英文）",
@@ -120,6 +121,20 @@ def clean(value: Any) -> str:
     if isinstance(value, float) and value.is_integer():
         return str(int(value))
     return str(value).strip()
+
+
+def strip_review_schema_fields(value: Any) -> Any:
+    """Remove review markup that HLC does not publish or maintain."""
+    if isinstance(value, dict):
+        for key in list(value):
+            if key in DISALLOWED_REVIEW_SCHEMA_FIELDS:
+                del value[key]
+            else:
+                strip_review_schema_fields(value[key])
+    elif isinstance(value, list):
+        for item in value:
+            strip_review_schema_fields(item)
+    return value
 
 
 def serialize_html(soup: BeautifulSoup) -> str:
@@ -1701,6 +1716,7 @@ def generate_page(
     }
 
     for schema_payload in (structured_data, breadcrumb_data):
+        strip_review_schema_fields(schema_payload)
         schema = soup.new_tag("script", type="application/ld+json")
         schema.string = json.dumps(schema_payload, ensure_ascii=False, indent=2)
         soup.head.append(schema)

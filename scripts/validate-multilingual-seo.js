@@ -53,6 +53,19 @@ function visibleText(html) {
     .trim();
 }
 
+function findDisallowedReviewFields(value, found = new Set()) {
+  if (Array.isArray(value)) {
+    for (const item of value) findDisallowedReviewFields(item, found);
+    return found;
+  }
+  if (!value || typeof value !== 'object') return found;
+  for (const [key, child] of Object.entries(value)) {
+    if (key === 'review' || key === 'aggregateRating') found.add(key);
+    findDisallowedReviewFields(child, found);
+  }
+  return found;
+}
+
 function localTarget(href, currentRoute) {
   if (!href || /^(?:#|mailto:|tel:|javascript:|data:)/i.test(href)) return null;
   let url;
@@ -153,7 +166,10 @@ for (const record of indexable) {
   for (const match of record.html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
     if (attr(match[1], 'type').toLowerCase() !== 'application/ld+json') continue;
     try {
-      JSON.parse(match[2]);
+      const payload = JSON.parse(match[2]);
+      for (const field of findDisallowedReviewFields(payload)) {
+        errors.push(`${record.route}: disallowed ${field} structured data`);
+      }
     } catch (error) {
       errors.push(`${record.route}: invalid JSON-LD (${error.message})`);
     }
